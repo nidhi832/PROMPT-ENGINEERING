@@ -1,0 +1,7 @@
+name,technique,n,accuracy,macro_f1,ambiguous_accuracy,json_validity,usable_output_rate,review_flag_rate,errors_caught_by_review,calls,input_tokens,output_tokens,tokens_per_txn,latency_s
+zero_shot_plain,Zero-shot (free text),60,0.6833,0.6956,0.3,0.0,1.0,0.0,0.0,3,560,199,12.7,0.002
+zero_shot_json,Zero-shot + JSON schema,60,0.6833,0.6956,0.3,1.0,1.0,0.35,0.9474,3,769,2036,46.8,0.002
+role_guided,Role + guide + rules + JSON (Arm A: best manual),60,0.8167,0.8381,0.3,1.0,1.0,0.2167,0.9091,3,1754,2043,63.3,0.002
+few_shot,Few-shot (Arm B),60,0.8167,0.8381,0.3,1.0,1.0,0.2,0.9091,3,2261,2039,71.7,0.002
+optimized_bootstrap,"Auto-optimised demos (Arm C, DSPy-style)",60,0.8667,0.8748,0.5,1.0,1.0,0.1,0.375,3,2255,2040,71.6,0.002
+optimized_textgrad,"Feedback-refined rules (Arm D, TextGrad-style)",60,0.9167,0.9181,0.8,1.0,1.0,0.1333,1.0,3,2243,2031,71.2,0.003

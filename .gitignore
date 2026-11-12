@@ -1,0 +1,11 @@
+results/llm_cache.json
+__pycache__/
+*.pyc
+.env
+.streamlit/secrets.toml
+.venv/
+.agents/
+.claude/
+.DS_Store
+results/llm_cache.json
+results/evaluation_log.txt

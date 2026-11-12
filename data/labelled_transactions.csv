@@ -1,0 +1,202 @@
+id,date,description,amount,category,ambiguous,split
+T001,2026-09-09,UPI/899787/Cult.fit membership,1310.89,Health,0,dev
+T002,2026-09-11,PVR CINEMAS,404.2,Entertainment,0,dev
+T003,2026-10-07,Haircut at salon,521.11,Other,0,dev
+T004,2026-08-04,SWIGGY ORDER #5506,488.35,Food,0,dev
+T005,2026-08-14,UPI/184714/Reliance,940.86,Shopping,1,dev
+T006,2026-08-30,Laundry service,303.33,Other,0,dev
+T007,2026-08-17,POS 4411 MUMBAI,1708.03,Other,1,dev
+T008,2026-09-18,Dominos Pizza,737.0,Food,0,dev
+T009,2026-09-26,LOCAL BAKERY,134.52,Food,0,dev
+T010,2026-09-02,Concert ticket Insider,1000.02,Entertainment,0,dev
+T011,2026-09-16,Nykaa beauty,1047.79,Shopping,0,dev
+T012,2026-08-09,Apple.com/bill,131.72,Entertainment,1,dev
+T013,2026-09-12,H&M store,2151.47,Shopping,0,dev
+T014,2026-09-18,University exam fee,1477.61,Education,0,dev
+T015,2026-08-11,Starbucks Coffee,495.26,Food,0,dev
+T016,2026-10-22,Spotify Premium,125.33,Entertainment,0,dev
+T017,2026-08-02,Birthday gift for friend,830.08,Other,0,dev
+T018,2026-09-25,Uber Eats,329.43,Food,1,dev
+T019,2026-10-28,Local bakery,212.47,Food,0,dev
+T020,2026-10-13,MONTHLY RENT TRANSFER,13274.33,Bills,0,dev
+T021,2026-08-08,UPI/656968/ATM cash withdrawal,1530.13,Other,0,dev
+T022,2026-08-24,OLA AUTO,133.06,Transport,0,dev
+T023,2026-10-13,Netflix subscription,465.44,Entertainment,0,dev
+T024,2026-09-30,LPG cylinder Indane,914.06,Bills,0,dev
+T025,2026-08-12,Paytm payment,87.93,Other,1,dev
+T026,2026-08-18,Sapna Book House,707.85,Education,0,dev
+T027,2026-09-07,Udemy course,791.1,Education,0,dev
+T028,2026-10-17,Croma electronics,3037.78,Shopping,0,dev
+T029,2026-10-05,Chai point,30.7,Food,0,dev
+T030,2026-10-14,Chai point,89.83,Food,0,dev
+T031,2026-08-14,UPI/680097/BMTC BUS PASS,862.18,Transport,0,dev
+T032,2026-10-18,AMAZON FRESH,1664.08,Food,1,dev
+T033,2026-10-23,AMAZON PRIME RENEWAL,664.24,Entertainment,1,dev
+T034,2026-09-23,HAIRCUT AT SALON,587.17,Other,0,dev
+T035,2026-08-10,UPI/465962/IRCTC train ticket,1967.69,Transport,0,dev
+T036,2026-10-23,BMTC bus pass,1172.7,Transport,0,dev
+T037,2026-10-06,JIO RECHARGE,581.5,Bills,0,dev
+T038,2026-08-25,Coursera subscription,2884.08,Education,0,dev
+T039,2026-09-24,NAMMA METRO CARD RECHARGE,217.54,Transport,0,dev
+T040,2026-08-07,LPG cylinder Indane,1012.94,Bills,0,dev
+T041,2026-09-14,Dominos Pizza,785.21,Food,0,dev
+T042,2026-10-17,Indigo flight booking,7338.11,Transport,0,dev
+T043,2026-10-04,Sapna Book House,1004.33,Education,0,dev
+T044,2026-10-29,Tata 1mg,690.63,Health,1,dev
+T045,2026-08-17,UPI/986088/Stationery store,204.11,Education,0,dev
+T046,2026-08-16,STEAM GAME PURCHASE,1976.82,Entertainment,0,dev
+T047,2026-10-16,PVR CINEMAS,251.37,Entertainment,0,dev
+T048,2026-08-02,Laundry service,370.88,Other,0,dev
+T049,2026-10-02,Library fine,108.97,Education,0,dev
+T050,2026-08-30,Decathlon,1263.67,Shopping,0,dev
+T051,2026-09-04,PRACTO DOCTOR CONSULT,597.52,Health,0,dev
+T052,2026-09-11,UPI/540869/Nykaa beauty,1097.92,Shopping,0,dev
+T053,2026-10-15,Zomato - Meghana Foods,484.28,Food,0,dev
+T054,2026-09-08,Bowling at Smaaash,1179.44,Entertainment,0,dev
+T055,2026-09-22,POS 4411 MUMBAI,2298.02,Other,1,dev
+T056,2026-08-04,LPG cylinder Indane,909.64,Bills,0,dev
+T057,2026-09-08,IKEA,3446.18,Shopping,0,dev
+T058,2026-10-28,ACT FIBERNET BROADBAND,865.44,Bills,0,dev
+T059,2026-09-05,H&M store,2809.15,Shopping,0,dev
+T060,2026-09-24,Airtel postpaid,677.73,Bills,0,dev
+T061,2026-08-20,DOMINOS PIZZA,447.44,Food,0,dev
+T062,2026-09-03,WATER BILL BWSSB,416.43,Bills,0,dev
+T063,2026-08-05,HAIRCUT AT SALON,297.02,Other,0,dev
+T064,2026-08-21,Cult.fit membership,1436.18,Health,0,dev
+T065,2026-08-29,Gym + protein shake,733.82,Health,1,dev
+T066,2026-08-04,Decathlon,1676.31,Shopping,0,dev
+T067,2026-08-05,DECATHLON,1483.94,Shopping,0,dev
+T068,2026-08-05,Croma electronics,3509.42,Shopping,0,dev
+T069,2026-09-29,IKEA,4071.81,Shopping,0,dev
+T070,2026-08-29,Water bill BWSSB,384.11,Bills,0,dev
+T071,2026-09-04,McDonalds,150.97,Food,0,dev
+T072,2026-08-01,BLINKIT - MILK & BREAD,314.83,Food,0,dev
+T073,2026-09-03,Local bakery,184.82,Food,0,dev
+T074,2026-09-29,Ola auto,52.73,Transport,0,dev
+T075,2026-09-12,Paytm payment,672.36,Other,1,dev
+T076,2026-10-21,BOOKMYSHOW MOVIE TICKETS,589.14,Entertainment,0,dev
+T077,2026-09-28,SAPNA BOOK HOUSE,1195.55,Education,0,dev
+T078,2026-09-25,Dental clinic,1302.65,Health,0,dev
+T079,2026-09-22,PVR cinemas,587.54,Entertainment,0,dev
+T080,2026-10-27,UPI/552855/UBER EATS,193.45,Food,1,dev
+T081,2026-08-09,LOCAL BAKERY,187.45,Food,0,dev
+T082,2026-09-23,Monthly rent transfer,14284.68,Bills,0,dev
+T083,2026-08-04,Google Play,628.97,Entertainment,1,dev
+T084,2026-10-07,Bowling at Smaaash,688.7,Entertainment,0,dev
+T085,2026-10-13,Concert ticket Insider,3406.84,Entertainment,0,dev
+T086,2026-08-20,University exam fee,2525.75,Education,0,dev
+T087,2026-09-03,PRACTO DOCTOR CONSULT,374.49,Health,0,dev
+T088,2026-09-28,Reliance,1180.43,Shopping,1,dev
+T089,2026-08-06,HP Petrol pump,679.64,Transport,0,dev
+T090,2026-10-15,Donation to NGO,1022.3,Other,0,dev
+T091,2026-08-27,UPI/776856/IRCTC train ticket,834.99,Transport,0,dev
+T092,2026-10-02,UPI TRANSFER TO RAHUL,942.43,Other,1,dev
+T093,2026-10-04,Indigo flight booking,3915.34,Transport,0,dev
+T094,2026-08-15,Udemy course,772.06,Education,0,dev
+T095,2026-10-24,Nykaa beauty,1100.27,Shopping,0,dev
+T096,2026-08-30,Cult.fit membership,1105.84,Health,0,dev
+T097,2026-10-29,UPI/821024/BESCOM electricity bill,608.87,Bills,0,dev
+T098,2026-10-23,BookMyShow movie tickets,564.27,Entertainment,0,dev
+T099,2026-09-22,OLA AUTO,128.95,Transport,0,dev
+T100,2026-08-31,UPI transfer to Rahul,1813.22,Other,1,dev
+T101,2026-09-11,1MG MEDICINES,776.97,Health,0,dev
+T102,2026-10-01,Haircut at salon,360.75,Other,0,dev
+T103,2026-08-24,Gym + protein shake,445.72,Health,1,dev
+T104,2026-10-13,Donation to NGO,1384.81,Other,0,dev
+T105,2026-08-22,Birthday gift for friend,1119.76,Other,0,dev
+T106,2026-08-19,Google Play,693.95,Entertainment,1,dev
+T107,2026-08-07,UPI/632060/POS 4411 MUMBAI,610.57,Other,1,test
+T108,2026-08-08,UPI/989227/PAYTM PAYMENT,668.14,Other,1,test
+T109,2026-08-31,HP Petrol pump,994.7,Transport,0,dev
+T110,2026-10-04,1mg medicines,817.07,Health,0,dev
+T111,2026-10-18,Reliance,1399.34,Shopping,1,dev
+T112,2026-08-10,Library fine,104.48,Education,0,dev
+T113,2026-09-18,Namma Metro card recharge,336.5,Transport,0,dev
+T114,2026-10-28,MYNTRA ORDER,1881.31,Shopping,0,dev
+T115,2026-09-04,UPI/258157/ACT Fibernet broadband,815.63,Bills,0,dev
+T116,2026-08-14,Dental clinic,2156.46,Health,0,dev
+T117,2026-09-24,INDIGO FLIGHT BOOKING,6367.01,Transport,0,dev
+T118,2026-08-28,CULT.FIT MEMBERSHIP,1827.54,Health,0,dev
+T119,2026-10-13,Gym + protein shake,772.9,Health,1,dev
+T120,2026-10-26,UPI/148458/BESCOM electricity bill,991.75,Bills,0,dev
+T121,2026-09-17,Amazon Prime renewal,1361.5,Entertainment,1,dev
+T122,2026-10-10,Udemy course,735.56,Education,0,dev
+T123,2026-08-21,STARBUCKS COFFEE,529.1,Food,0,dev
+T124,2026-09-23,Apollo Pharmacy,441.14,Health,0,dev
+T125,2026-09-21,Coursera subscription,2826.5,Education,0,dev
+T126,2026-10-11,Zomato - Vidyarthi Bhavan,338.72,Food,0,dev
+T127,2026-08-13,Uber Eats,579.12,Food,1,dev
+T128,2026-10-17,BigBasket groceries,1196.86,Food,0,dev
+T129,2026-09-12,Library fine,135.37,Education,0,dev
+T130,2026-10-10,McDonalds,311.09,Food,0,dev
+T131,2026-09-05,LPG cylinder Indane,1037.26,Bills,0,dev
+T132,2026-09-30,Dental clinic,2992.36,Health,0,test
+T133,2026-10-25,DECATHLON,1585.88,Shopping,0,dev
+T134,2026-10-12,Spotify Premium,123.14,Entertainment,0,dev
+T135,2026-09-13,OLA AUTO,69.44,Transport,0,dev
+T136,2026-09-10,IRCTC train ticket,2192.39,Transport,0,dev
+T137,2026-10-03,AMAZON PRIME RENEWAL,765.37,Entertainment,1,dev
+T138,2026-10-13,1mg medicines,722.33,Health,0,test
+T139,2026-10-07,Stationery store,279.17,Education,0,test
+T140,2026-10-09,Uber ride,354.7,Transport,0,dev
+T141,2026-10-15,UPI/724932/Google Play,101.55,Entertainment,1,dev
+T142,2026-09-30,BESCOM electricity bill,911.1,Bills,0,dev
+T143,2026-10-30,Croma electronics,6494.86,Shopping,0,dev
+T144,2026-08-07,Rapido bike taxi,140.33,Transport,0,test
+T145,2026-09-25,Myntra order,2490.31,Shopping,0,test
+T146,2026-10-11,Airtel postpaid,799.55,Bills,0,test
+T147,2026-08-21,Myntra order,779.68,Shopping,0,test
+T148,2026-10-09,UPI/329258/Swiggy order #2424,266.33,Food,0,dev
+T149,2026-08-19,CHAI POINT,38.39,Food,0,dev
+T150,2026-09-25,BookMyShow movie tickets,306.33,Entertainment,0,dev
+T151,2026-09-22,Flipkart - headphones,3394.47,Shopping,0,test
+T152,2026-10-21,BigBasket groceries,517.47,Food,0,test
+T153,2026-09-26,Jio recharge,669.66,Bills,0,test
+T154,2026-08-07,Coursera subscription,2876.23,Education,0,test
+T155,2026-08-19,Amazon,2908.36,Shopping,1,test
+T156,2026-08-30,ATM cash withdrawal,2259.73,Other,0,test
+T157,2026-08-22,IKEA,2008.35,Shopping,0,test
+T158,2026-10-15,UBER RIDE,218.21,Transport,0,test
+T159,2026-08-25,Bowling at Smaaash,1181.29,Entertainment,0,test
+T160,2026-09-20,UPI/584125/Water bill BWSSB,213.61,Bills,0,test
+T161,2026-08-05,Uber ride,361.83,Transport,0,test
+T162,2026-10-10,COURSERA SUBSCRIPTION,2231.84,Education,0,test
+T163,2026-08-09,Tata 1mg,684.11,Health,1,test
+T164,2026-10-26,AMAZON FRESH,1142.11,Food,1,test
+T165,2026-09-27,Steam game purchase,835.27,Entertainment,0,test
+T166,2026-10-26,Amazon Fresh,857.21,Food,1,test
+T167,2026-10-03,Birthday gift for friend,606.39,Other,0,test
+T168,2026-10-12,PRACTO DOCTOR CONSULT,649.87,Health,0,test
+T169,2026-10-10,Steam game purchase,853.09,Entertainment,0,test
+T170,2026-10-29,Concert ticket Insider,3156.34,Entertainment,0,test
+T171,2026-10-26,IKEA,4251.76,Shopping,0,test
+T172,2026-09-03,UPI/755674/McDonalds,239.53,Food,0,test
+T173,2026-09-10,CAMPUS CANTEEN,119.41,Food,0,test
+T174,2026-09-08,UPI/499889/Donation to NGO,1229.46,Other,0,test
+T175,2026-08-23,APPLE.COM/BILL,133.09,Entertainment,1,test
+T176,2026-10-09,UPI/599948/Namma Metro card recharge,350.86,Transport,0,test
+T177,2026-10-31,Campus canteen,168.04,Food,0,test
+T178,2026-08-20,Blinkit - milk & bread,213.8,Food,0,test
+T179,2026-08-13,ATM cash withdrawal,614.98,Other,0,test
+T180,2026-09-18,University exam fee,1304.21,Education,0,test
+T181,2026-09-29,ACT FIBERNET BROADBAND,1152.42,Bills,0,test
+T182,2026-09-30,Jio recharge,372.11,Bills,0,test
+T183,2026-08-22,UPI/126925/Netflix subscription,617.0,Entertainment,0,test
+T184,2026-08-08,UPI/171262/HP Petrol pump,1110.26,Transport,0,test
+T185,2026-09-21,Water bill BWSSB,336.94,Bills,0,test
+T186,2026-08-20,UPI/360247/Apollo Pharmacy,247.93,Health,0,test
+T187,2026-10-24,Steam game purchase,2492.59,Entertainment,0,test
+T188,2026-10-20,Netflix subscription,506.92,Entertainment,0,test
+T189,2026-09-15,UPI/918011/FLIPKART - HEADPHONES,2591.63,Shopping,0,test
+T190,2026-08-16,Udemy course,462.35,Education,0,test
+T191,2026-09-09,BLINKIT - MILK & BREAD,82.84,Food,0,test
+T192,2026-10-13,STARBUCKS COFFEE,475.11,Food,0,test
+T193,2026-10-24,LAUNDRY SERVICE,111.83,Other,0,test
+T194,2026-09-18,Tata 1mg,224.38,Health,1,test
+T195,2026-10-18,Gym + protein shake,387.21,Health,1,test
+T196,2026-08-21,CHAI POINT,89.73,Food,0,test
+T197,2026-09-01,PVR cinemas,217.22,Entertainment,0,test
+T198,2026-10-11,UPI/662636/Amazon,546.05,Shopping,1,test
+T199,2026-09-19,UNIVERSITY EXAM FEE,2410.46,Education,0,test
+T200,2026-08-22,Rapido bike taxi,147.32,Transport,0,test
+T201,2026-09-17,BMTC bus pass,921.01,Transport,0,test
