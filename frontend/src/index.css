@@ -1,0 +1,287 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #171717;
+    background-color: #FFFFFF;
+  }
+}
+
+.font-cursive {
+  font-family: 'Caveat', cursive;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F7F8FA;
+}
+::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}
+
+/* RealByte Authentic Hero Gradient */
+.realbyte-hero-bg {
+  background: linear-gradient(135deg, #FF665C 0%, #FF5A4E 35%, #FF7454 100%);
+}
+
+/* RealByte Phone Mockup Frame */
+.rb-phone {
+  position: relative;
+  border-radius: 46px;
+  background: #111111;
+  padding: 10px;
+  box-shadow: 0 35px 80px -20px rgba(0, 0, 0, 0.35), 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+  border: 4px solid #282828;
+}
+
+.rb-phone-screen {
+  border-radius: 36px;
+  overflow: hidden;
+  background: #FFFFFF;
+  position: relative;
+}
+
+.rb-phone-notch {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 20px;
+  background: #111111;
+  border-radius: 20px;
+  z-index: 50;
+}
+
+/* RealByte Monitor Frame for Help Center / Web Manager */
+.rb-monitor {
+  position: relative;
+  background: #0D1117;
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.25);
+  border: 1px solid #2D333B;
+}
+
+.rb-monitor-screen {
+  background: #FFFFFF;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.rb-monitor-stand {
+  width: 140px;
+  height: 48px;
+  background: linear-gradient(180deg, #A8B2C1 0%, #768396 100%);
+  margin: 0 auto;
+  border-radius: 0 0 14px 14px;
+}
+
+.rb-monitor-base {
+  width: 240px;
+  height: 12px;
+  background: #5E6977;
+  margin: 0 auto;
+  border-radius: 6px;
+}
+
+/* Authentic RealByte Animations & Moving Elements */
+@keyframes rb-drift-slow {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(12px, -18px) scale(1.08);
+  }
+}
+
+@keyframes rb-drift-medium {
+  0%, 100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate(-14px, -24px) scale(0.92) rotate(45deg);
+  }
+}
+
+@keyframes rb-drift-reverse {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-10px, 16px) scale(1.05);
+  }
+}
+
+@keyframes rb-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes rb-float-delayed {
+  0%, 100% {
+    transform: translateY(0px) rotate(6deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(4deg);
+  }
+}
+
+@keyframes rb-float-left {
+  0%, 100% {
+    transform: translateY(0px) rotate(-6deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(-4deg);
+  }
+}
+
+@keyframes rb-pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 102, 92, 0.65), 0 10px 25px -4px rgba(255, 102, 92, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 18px rgba(255, 102, 92, 0), 0 10px 25px -4px rgba(255, 102, 92, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 102, 92, 0), 0 10px 25px -4px rgba(255, 102, 92, 0);
+  }
+}
+
+/* Organic independent bobbing animations for the 6 feature icons */
+@keyframes rb-icon-bob-1 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes rb-icon-bob-2 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-9px); }
+}
+
+@keyframes rb-icon-bob-3 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes rb-icon-bob-4 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes rb-icon-bob-5 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes rb-icon-bob-6 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes rb-icon-active-bounce {
+  0%, 100% {
+    transform: translateY(0) scale(1.1);
+  }
+  50% {
+    transform: translateY(-6px) scale(1.14);
+  }
+}
+
+@keyframes rb-piggy-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+@keyframes rb-twinkle {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: rotate(15deg) scale(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes rb-wobble {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-6deg);
+  }
+  75% {
+    transform: rotate(6deg);
+  }
+}
+
+.animate-rb-drift-slow {
+  animation: rb-drift-slow 7s ease-in-out infinite;
+}
+
+.animate-rb-drift-medium {
+  animation: rb-drift-medium 6s ease-in-out infinite;
+}
+
+.animate-rb-drift-reverse {
+  animation: rb-drift-reverse 8s ease-in-out infinite;
+}
+
+.animate-rb-float {
+  animation: rb-float 4.8s ease-in-out infinite;
+}
+
+.animate-rb-float-left {
+  animation: rb-float-left 5.4s ease-in-out infinite;
+}
+
+.animate-rb-float-delayed {
+  animation: rb-float-delayed 5.8s ease-in-out infinite;
+}
+
+.animate-rb-pulse-ring {
+  animation: rb-pulse-ring 2.2s infinite;
+}
+
+.animate-rb-icon-active {
+  animation: rb-icon-active-bounce 2s ease-in-out infinite;
+}
+
+.animate-rb-piggy {
+  animation: rb-piggy-pulse 2.8s ease-in-out infinite;
+}
+
+.animate-rb-twinkle {
+  animation: rb-twinkle 3s ease-in-out infinite;
+}
+
+.animate-rb-wobble {
+  animation: rb-wobble 4s ease-in-out infinite;
+}
+
+.animate-rb-icon-1 { animation: rb-icon-bob-1 3.4s ease-in-out infinite; }
+.animate-rb-icon-2 { animation: rb-icon-bob-2 4.1s ease-in-out infinite 0.4s; }
+.animate-rb-icon-3 { animation: rb-icon-bob-3 3.7s ease-in-out infinite 0.8s; }
+.animate-rb-icon-4 { animation: rb-icon-bob-4 4.3s ease-in-out infinite 0.2s; }
+.animate-rb-icon-5 { animation: rb-icon-bob-5 3.9s ease-in-out infinite 0.6s; }
+.animate-rb-icon-6 { animation: rb-icon-bob-6 4.5s ease-in-out infinite 1.0s; }

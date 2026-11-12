@@ -1,8 +1,13 @@
-results/llm_cache.json
+# Node / Frontend
+node_modules/
+dist/
+.vite-temp/
+*.local
+
+# Python / Environment
 __pycache__/
 *.pyc
 .env
-.streamlit/secrets.toml
 .venv/
 .agents/
 .claude/

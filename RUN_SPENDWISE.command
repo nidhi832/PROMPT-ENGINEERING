@@ -45,5 +45,13 @@ if [ "$BACKEND" != "offline-simulator" ]; then
 fi
 
 echo
-echo "=== Step 2/2: starting the SpendWise app (close this window to stop it) ==="
-streamlit run app.py
+echo "=== Step 2/2: starting the SpendWise FastAPI backend & React frontend ==="
+python -m uvicorn api:app --host 0.0.0.0 --port 8000 &
+BACKEND_PID=$!
+trap "kill $BACKEND_PID 2>/dev/null" EXIT
+
+cd frontend
+if [ ! -d node_modules ]; then
+  npm install
+fi
+npm run dev -- --port 3000 --host 0.0.0.0
