@@ -69,7 +69,7 @@ export const Features: React.FC = () => {
     {
       id: 1,
       title: 'Smart Categorization',
-      desc: 'Zero-shot and few-shot classification into 6 categories with review flags',
+      desc: 'Zero-shot and few-shot classification into 8 categories with review flags',
       icon: <Tag className="w-7 h-7" />,
       animClass: 'animate-rb-icon-2',
       preview: (
@@ -234,7 +234,7 @@ export const Features: React.FC = () => {
 
             <div className="space-y-1 text-[10px] bg-white p-2 rounded-xl border border-[#EEEEEE]">
               <div className="font-bold text-[#171717] mb-1">Key Observations:</div>
-              <div className="text-[#666666] text-[9px] leading-tight">• 38 transactions across 6 categories</div>
+              <div className="text-[#666666] text-[9px] leading-tight">• 38 transactions across 8 categories</div>
               <div className="text-[#666666] text-[9px] leading-tight">• Largest single spend: ₹6,450 (Work Desk)</div>
               <div className="text-[#666666] text-[9px] leading-tight">• Savings rate achieved: 49.5%</div>
             </div>

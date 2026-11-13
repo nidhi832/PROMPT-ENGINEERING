@@ -149,8 +149,8 @@ export const Hero: React.FC<HeroProps> = ({ onGetStarted, onExplore }) => {
                         </div>
                         <div className="flex justify-between items-center py-1 border-b border-[#F5F5F5]">
                           <div>
-                            <div className="font-bold text-[#171717]">TechCorp Salary Credit</div>
-                            <div className="text-[10px] text-[#858585]">Salary • HDFC Salary Acc</div>
+                            <div className="font-bold text-[#171717]">Monthly Salary Credit</div>
+                            <div className="text-[10px] text-[#858585]">Salary • Salary Account</div>
                           </div>
                           <span className="font-extrabold text-[#3498F3]">+₹85,000</span>
                         </div>
@@ -166,14 +166,14 @@ export const Hero: React.FC<HeroProps> = ({ onGetStarted, onExplore }) => {
                           <div className="flex justify-between items-center py-0.5">
                             <div>
                               <div className="font-bold text-[#171717]">IKEA Work Desk</div>
-                              <div className="text-[10px] text-[#858585]">Shopping • Axis Credit</div>
+                              <div className="text-[10px] text-[#858585]">Shopping • Credit Card</div>
                             </div>
                             <span className="font-extrabold text-[#FF665C]">-₹6,450</span>
                           </div>
                           <div className="flex justify-between items-center py-0.5">
                             <div>
                               <div className="font-bold text-[#171717]">Swiggy Gourmet Dinner</div>
-                              <div className="text-[10px] text-[#858585]">Food • SBI UPI</div>
+                              <div className="text-[10px] text-[#858585]">Food • UPI</div>
                             </div>
                             <span className="font-extrabold text-[#FF665C]">-₹1,280</span>
                           </div>
@@ -189,7 +189,7 @@ export const Hero: React.FC<HeroProps> = ({ onGetStarted, onExplore }) => {
                         <div className="flex justify-between items-center py-0.5">
                           <div>
                             <div className="font-bold text-[#171717]">Uber Premier Airport</div>
-                            <div className="text-[10px] text-[#858585]">Transport • SBI UPI</div>
+                            <div className="text-[10px] text-[#858585]">Transport • UPI</div>
                           </div>
                           <span className="font-extrabold text-[#FF665C]">-₹850</span>
                         </div>
