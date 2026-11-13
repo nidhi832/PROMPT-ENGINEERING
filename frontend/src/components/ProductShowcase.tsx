@@ -122,14 +122,14 @@ export const ProductShowcase: React.FC = () => {
               </div>
               <div className="flex justify-between items-center py-1 border-b border-[#F5F5F5]">
                 <div>
-                  <div className="font-bold">HDFC Bank Salary</div>
+                  <div className="font-bold">Salary Account</div>
                   <div className="text-[9px] text-[#858585]">Active Checking</div>
                 </div>
                 <span className="font-extrabold text-[#3498F3]">₹2,768.06</span>
               </div>
               <div className="flex justify-between items-center py-1 border-b border-[#F5F5F5]">
                 <div>
-                  <div className="font-bold">Axis Credit Card</div>
+                  <div className="font-bold">Credit Card</div>
                   <div className="text-[9px] text-[#858585]">Due in 12 days</div>
                 </div>
                 <span className="font-extrabold text-[#FF665C]">₹2,183.61</span>
