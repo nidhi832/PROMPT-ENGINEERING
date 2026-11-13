@@ -61,12 +61,16 @@ def run_evaluation(llm: LLM, log=print, optimise: bool = True) -> dict:
     dev, test = df[df["split"] == "dev"], df[df["split"] == "test"]
     dev_rows = dev.to_dict("records")
     arms: dict[str, PromptTemplate] = builtin_strategies(dev_rows)
+    start_model = llm.model
     opt_history = {}
     if optimise:
         log("Optimising prompts on DEV split only...")
         c, opt_history["bootstrap"] = optimizer.bootstrap_fewshot(dev_rows, llm, log=log)
         d, opt_history["textgrad"] = optimizer.textgrad_rules(dev_rows, llm, log=log)
         arms[c.name], arms[d.name] = c, d
+    if llm.model != start_model:
+        raise RuntimeError(f"Model changed during the run ({start_model} -> {llm.model}); results would mix models. "
+                           "Re-run with a pinned --model.")
     out = {"backend": llm.name, "model": llm.model, "is_real_llm": llm.is_real,
            "timestamp": datetime.now().isoformat(timespec="seconds"),
            "dataset": {"total": len(df), "dev": len(dev), "test": len(test),
@@ -76,6 +80,8 @@ def run_evaluation(llm: LLM, log=print, optimise: bool = True) -> dict:
     for name, p in arms.items():
         log(f"Evaluating {name} on {len(test)} held-out test transactions...")
         out["arms"].append(score(p, test, llm))
+    if llm.model != start_model:
+        raise RuntimeError(f"Model changed during the run ({start_model} -> {llm.model}); results not saved.")
     RESULTS.mkdir(exist_ok=True)
     tag = llm.name if not llm.is_real else f"{llm.name}_{llm.model}".replace("/", "-")
     (RESULTS / f"eval_{tag}.json").write_text(json.dumps(out, indent=1))

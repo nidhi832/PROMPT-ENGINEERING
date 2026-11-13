@@ -1,0 +1,4417 @@
+{
+ "backend": "openai-compatible",
+ "model": "openai/gpt-oss-20b",
+ "is_real_llm": true,
+ "timestamp": "2026-11-13T15:48:17",
+ "dataset": {
+  "total": 201,
+  "dev": 141,
+  "test": 60,
+  "test_ambiguous": 10
+ },
+ "arms": [
+  {
+   "name": "zero_shot_plain",
+   "technique": "Zero-shot (free text)",
+   "description": "Bare instruction, no schema, no examples. Output must be scraped with regex.",
+   "n": 60,
+   "accuracy": 0.9333,
+   "macro_f1": 0.9311,
+   "ambiguous_accuracy": 0.8,
+   "json_validity": 0.0,
+   "usable_output_rate": 1.0,
+   "review_flag_rate": 0.0,
+   "errors_caught_by_review": 0.0,
+   "calls": 3,
+   "input_tokens": 900,
+   "output_tokens": 3511,
+   "tokens_per_txn": 73.5,
+   "latency_s": 27.838,
+   "per_category": {
+    "Food": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 10
+    },
+    "Transport": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 7
+    },
+    "Shopping": {
+     "precision": 0.727,
+     "recall": 1.0,
+     "f1": 0.842,
+     "support": 8
+    },
+    "Bills": {
+     "precision": 0.857,
+     "recall": 1.0,
+     "f1": 0.923,
+     "support": 6
+    },
+    "Entertainment": {
+     "precision": 1.0,
+     "recall": 0.889,
+     "f1": 0.941,
+     "support": 9
+    },
+    "Health": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 7
+    },
+    "Education": {
+     "precision": 1.0,
+     "recall": 0.833,
+     "f1": 0.909,
+     "support": 6
+    },
+    "Other": {
+     "precision": 1.0,
+     "recall": 0.714,
+     "f1": 0.833,
+     "support": 7
+    }
+   },
+   "confusion": [
+    [
+     10,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     7,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     8,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     6,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     1,
+     8,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     7,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     5,
+     0
+    ],
+    [
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0,
+     5
+    ]
+   ],
+   "predictions": [
+    {
+     "id": "T107",
+     "description": "UPI/632060/POS 4411 MUMBAI",
+     "true": "Other",
+     "pred": "Shopping",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T108",
+     "description": "UPI/989227/PAYTM PAYMENT",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T132",
+     "description": "Dental clinic",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T138",
+     "description": "1mg medicines",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T139",
+     "description": "Stationery store",
+     "true": "Education",
+     "pred": "Shopping",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T144",
+     "description": "Rapido bike taxi",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T145",
+     "description": "Myntra order",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T146",
+     "description": "Airtel postpaid",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T147",
+     "description": "Myntra order",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T151",
+     "description": "Flipkart - headphones",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T152",
+     "description": "BigBasket groceries",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T153",
+     "description": "Jio recharge",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T154",
+     "description": "Coursera subscription",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T155",
+     "description": "Amazon",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T156",
+     "description": "ATM cash withdrawal",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T157",
+     "description": "IKEA",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T158",
+     "description": "UBER RIDE",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T159",
+     "description": "Bowling at Smaaash",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T160",
+     "description": "UPI/584125/Water bill BWSSB",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T161",
+     "description": "Uber ride",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T162",
+     "description": "COURSERA SUBSCRIPTION",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T163",
+     "description": "Tata 1mg",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T164",
+     "description": "AMAZON FRESH",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T165",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T166",
+     "description": "Amazon Fresh",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T167",
+     "description": "Birthday gift for friend",
+     "true": "Other",
+     "pred": "Shopping",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T168",
+     "description": "PRACTO DOCTOR CONSULT",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T169",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T170",
+     "description": "Concert ticket Insider",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T171",
+     "description": "IKEA",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T172",
+     "description": "UPI/755674/McDonalds",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T173",
+     "description": "CAMPUS CANTEEN",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T174",
+     "description": "UPI/499889/Donation to NGO",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T175",
+     "description": "APPLE.COM/BILL",
+     "true": "Entertainment",
+     "pred": "Bills",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T176",
+     "description": "UPI/599948/Namma Metro card recharge",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T177",
+     "description": "Campus canteen",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T178",
+     "description": "Blinkit - milk & bread",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T179",
+     "description": "ATM cash withdrawal",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T180",
+     "description": "University exam fee",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T181",
+     "description": "ACT FIBERNET BROADBAND",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T182",
+     "description": "Jio recharge",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T183",
+     "description": "UPI/126925/Netflix subscription",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T184",
+     "description": "UPI/171262/HP Petrol pump",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T185",
+     "description": "Water bill BWSSB",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T186",
+     "description": "UPI/360247/Apollo Pharmacy",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T187",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T188",
+     "description": "Netflix subscription",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T189",
+     "description": "UPI/918011/FLIPKART - HEADPHONES",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T190",
+     "description": "Udemy course",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T191",
+     "description": "BLINKIT - MILK & BREAD",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T192",
+     "description": "STARBUCKS COFFEE",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T193",
+     "description": "LAUNDRY SERVICE",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T194",
+     "description": "Tata 1mg",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T195",
+     "description": "Gym + protein shake",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T196",
+     "description": "CHAI POINT",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T197",
+     "description": "PVR cinemas",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T198",
+     "description": "UPI/662636/Amazon",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T199",
+     "description": "UNIVERSITY EXAM FEE",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T200",
+     "description": "Rapido bike taxi",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    },
+    {
+     "id": "T201",
+     "description": "BMTC bus pass",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.5,
+     "needs_review": false,
+     "explanation": "Parsed from free-text output (no confidence given)"
+    }
+   ]
+  },
+  {
+   "name": "zero_shot_json",
+   "technique": "Zero-shot + JSON schema",
+   "description": "Same bare instruction, but the output is constrained to a validated JSON schema.",
+   "n": 60,
+   "accuracy": 0.9333,
+   "macro_f1": 0.9311,
+   "ambiguous_accuracy": 0.8,
+   "json_validity": 0.3333,
+   "usable_output_rate": 1.0,
+   "review_flag_rate": 0.0333,
+   "errors_caught_by_review": 0.25,
+   "calls": 5,
+   "input_tokens": 1853,
+   "output_tokens": 8251,
+   "tokens_per_txn": 168.4,
+   "latency_s": 68.33,
+   "per_category": {
+    "Food": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 10
+    },
+    "Transport": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 7
+    },
+    "Shopping": {
+     "precision": 0.727,
+     "recall": 1.0,
+     "f1": 0.842,
+     "support": 8
+    },
+    "Bills": {
+     "precision": 0.857,
+     "recall": 1.0,
+     "f1": 0.923,
+     "support": 6
+    },
+    "Entertainment": {
+     "precision": 1.0,
+     "recall": 0.889,
+     "f1": 0.941,
+     "support": 9
+    },
+    "Health": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 7
+    },
+    "Education": {
+     "precision": 1.0,
+     "recall": 0.833,
+     "f1": 0.909,
+     "support": 6
+    },
+    "Other": {
+     "precision": 1.0,
+     "recall": 0.714,
+     "f1": 0.833,
+     "support": 7
+    }
+   },
+   "confusion": [
+    [
+     10,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     7,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     8,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     6,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     1,
+     8,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     7,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     5,
+     0
+    ],
+    [
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0,
+     5
+    ]
+   ],
+   "predictions": [
+    {
+     "id": "T107",
+     "description": "UPI/632060/POS 4411 MUMBAI",
+     "true": "Other",
+     "pred": "Shopping",
+     "confidence": 0.6,
+     "needs_review": true,
+     "explanation": "POS purchase at 4411 MUMBAI"
+    },
+    {
+     "id": "T108",
+     "description": "UPI/989227/PAYTM PAYMENT",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.6,
+     "needs_review": true,
+     "explanation": "Generic Paytm payment"
+    },
+    {
+     "id": "T132",
+     "description": "Dental clinic",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Dental clinic visit"
+    },
+    {
+     "id": "T138",
+     "description": "1mg medicines",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Medicine purchase at 1mg"
+    },
+    {
+     "id": "T139",
+     "description": "Stationery store",
+     "true": "Education",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Bought stationery items"
+    },
+    {
+     "id": "T144",
+     "description": "Rapido bike taxi",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Rapido bike taxi ride"
+    },
+    {
+     "id": "T145",
+     "description": "Myntra order",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Myntra clothing order"
+    },
+    {
+     "id": "T146",
+     "description": "Airtel postpaid",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Airtel postpaid bill payment"
+    },
+    {
+     "id": "T147",
+     "description": "Myntra order",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Myntra clothing order"
+    },
+    {
+     "id": "T151",
+     "description": "Flipkart - headphones",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Flipkart headphones purchase"
+    },
+    {
+     "id": "T152",
+     "description": "BigBasket groceries",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "BigBasket groceries"
+    },
+    {
+     "id": "T153",
+     "description": "Jio recharge",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Jio recharge payment"
+    },
+    {
+     "id": "T154",
+     "description": "Coursera subscription",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Coursera subscription"
+    },
+    {
+     "id": "T155",
+     "description": "Amazon",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Amazon purchase"
+    },
+    {
+     "id": "T156",
+     "description": "ATM cash withdrawal",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "ATM cash withdrawal"
+    },
+    {
+     "id": "T157",
+     "description": "IKEA",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "IKEA furniture purchase"
+    },
+    {
+     "id": "T158",
+     "description": "UBER RIDE",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Uber ride"
+    },
+    {
+     "id": "T159",
+     "description": "Bowling at Smaaash",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Bowling at Smaaash"
+    },
+    {
+     "id": "T160",
+     "description": "UPI/584125/Water bill BWSSB",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Water bill payment"
+    },
+    {
+     "id": "T161",
+     "description": "Uber ride",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Uber ride"
+    },
+    {
+     "id": "T162",
+     "description": "COURSERA SUBSCRIPTION",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Online course subscription"
+    },
+    {
+     "id": "T163",
+     "description": "Tata 1mg",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Online pharmacy purchase"
+    },
+    {
+     "id": "T164",
+     "description": "AMAZON FRESH",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Online grocery delivery"
+    },
+    {
+     "id": "T165",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Digital game purchase"
+    },
+    {
+     "id": "T166",
+     "description": "Amazon Fresh",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Online grocery"
+    },
+    {
+     "id": "T167",
+     "description": "Birthday gift for friend",
+     "true": "Other",
+     "pred": "Shopping",
+     "confidence": 0.85,
+     "needs_review": false,
+     "explanation": "Gift purchase"
+    },
+    {
+     "id": "T168",
+     "description": "PRACTO DOCTOR CONSULT",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Doctor consultation fee"
+    },
+    {
+     "id": "T169",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Digital game purchase"
+    },
+    {
+     "id": "T170",
+     "description": "Concert ticket Insider",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Concert ticket purchase"
+    },
+    {
+     "id": "T171",
+     "description": "IKEA",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Furniture purchase"
+    },
+    {
+     "id": "T172",
+     "description": "UPI/755674/McDonalds",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Fast food purchase"
+    },
+    {
+     "id": "T173",
+     "description": "CAMPUS CANTEEN",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Campus meal"
+    },
+    {
+     "id": "T174",
+     "description": "UPI/499889/Donation to NGO",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Charitable donation"
+    },
+    {
+     "id": "T175",
+     "description": "APPLE.COM/BILL",
+     "true": "Entertainment",
+     "pred": "Bills",
+     "confidence": 0.85,
+     "needs_review": false,
+     "explanation": "Apple subscription payment"
+    },
+    {
+     "id": "T176",
+     "description": "UPI/599948/Namma Metro card recharge",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Metro card recharge"
+    },
+    {
+     "id": "T177",
+     "description": "Campus canteen",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Campus meal"
+    },
+    {
+     "id": "T178",
+     "description": "Blinkit - milk & bread",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Grocery delivery"
+    },
+    {
+     "id": "T179",
+     "description": "ATM cash withdrawal",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "ATM cash withdrawal, not a specific category"
+    },
+    {
+     "id": "T180",
+     "description": "University exam fee",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "University exam fee, education expense"
+    },
+    {
+     "id": "T181",
+     "description": "ACT FIBERNET BROADBAND",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Broadband subscription fee, monthly bill"
+    },
+    {
+     "id": "T182",
+     "description": "Jio recharge",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Mobile recharge for Jio service"
+    },
+    {
+     "id": "T183",
+     "description": "UPI/126925/Netflix subscription",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Netflix subscription via UPI"
+    },
+    {
+     "id": "T184",
+     "description": "UPI/171262/HP Petrol pump",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Fuel purchase at HP petrol pump"
+    },
+    {
+     "id": "T185",
+     "description": "Water bill BWSSB",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Water bill payment to BWSSB"
+    },
+    {
+     "id": "T186",
+     "description": "UPI/360247/Apollo Pharmacy",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Purchase at Apollo Pharmacy"
+    },
+    {
+     "id": "T187",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Steam game purchase"
+    },
+    {
+     "id": "T188",
+     "description": "Netflix subscription",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Netflix subscription"
+    },
+    {
+     "id": "T189",
+     "description": "UPI/918011/FLIPKART - HEADPHONES",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Headphones purchase on Flipkart"
+    },
+    {
+     "id": "T190",
+     "description": "Udemy course",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Udemy online course purchase"
+    },
+    {
+     "id": "T191",
+     "description": "BLINKIT - MILK & BREAD",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Milk and bread purchase at Blinkit"
+    },
+    {
+     "id": "T192",
+     "description": "STARBUCKS COFFEE",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Coffee purchase at Starbucks"
+    },
+    {
+     "id": "T193",
+     "description": "LAUNDRY SERVICE",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Laundry service payment"
+    },
+    {
+     "id": "T194",
+     "description": "Tata 1mg",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Purchase at Tata 1mg pharmacy"
+    },
+    {
+     "id": "T195",
+     "description": "Gym + protein shake",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Gym membership and protein shake"
+    },
+    {
+     "id": "T196",
+     "description": "CHAI POINT",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Coffee purchase at Chai Point"
+    },
+    {
+     "id": "T197",
+     "description": "PVR cinemas",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Cinema ticket at PVR"
+    },
+    {
+     "id": "T198",
+     "description": "UPI/662636/Amazon",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Amazon purchase via UPI"
+    },
+    {
+     "id": "T199",
+     "description": "UNIVERSITY EXAM FEE",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "University exam fee payment"
+    },
+    {
+     "id": "T200",
+     "description": "Rapido bike taxi",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Rapido bike taxi ride"
+    },
+    {
+     "id": "T201",
+     "description": "BMTC bus pass",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "BMTC bus pass purchase"
+    }
+   ]
+  },
+  {
+   "name": "role_guided",
+   "technique": "Role + guide + rules + JSON (Arm A: best manual)",
+   "description": "Persona, category definitions, explicit ambiguity rules and the JSON schema.",
+   "n": 60,
+   "accuracy": 1.0,
+   "macro_f1": 1.0,
+   "ambiguous_accuracy": 1.0,
+   "json_validity": 1.0,
+   "usable_output_rate": 1.0,
+   "review_flag_rate": 0.0667,
+   "errors_caught_by_review": 0.0,
+   "calls": 3,
+   "input_tokens": 2115,
+   "output_tokens": 4628,
+   "tokens_per_txn": 112.4,
+   "latency_s": 51.017,
+   "per_category": {
+    "Food": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 10
+    },
+    "Transport": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 7
+    },
+    "Shopping": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 8
+    },
+    "Bills": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 6
+    },
+    "Entertainment": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 9
+    },
+    "Health": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 7
+    },
+    "Education": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 6
+    },
+    "Other": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 7
+    }
+   },
+   "confusion": [
+    [
+     10,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     7,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     8,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     6,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     9,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     7,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     6,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     7
+    ]
+   ],
+   "predictions": [
+    {
+     "id": "T107",
+     "description": "UPI/632060/POS 4411 MUMBAI",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.5,
+     "needs_review": true,
+     "explanation": "POS transaction at 4411 MUMBAI"
+    },
+    {
+     "id": "T108",
+     "description": "UPI/989227/PAYTM PAYMENT",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.5,
+     "needs_review": true,
+     "explanation": "Paytm UPI payment"
+    },
+    {
+     "id": "T132",
+     "description": "Dental clinic",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Dental clinic visit"
+    },
+    {
+     "id": "T138",
+     "description": "1mg medicines",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "1mg medicines purchase"
+    },
+    {
+     "id": "T139",
+     "description": "Stationery store",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Stationery store purchase"
+    },
+    {
+     "id": "T144",
+     "description": "Rapido bike taxi",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Rapido bike taxi ride"
+    },
+    {
+     "id": "T145",
+     "description": "Myntra order",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Myntra order"
+    },
+    {
+     "id": "T146",
+     "description": "Airtel postpaid",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Airtel postpaid recharge"
+    },
+    {
+     "id": "T147",
+     "description": "Myntra order",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Myntra order"
+    },
+    {
+     "id": "T151",
+     "description": "Flipkart - headphones",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Flipkart headphones"
+    },
+    {
+     "id": "T152",
+     "description": "BigBasket groceries",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "BigBasket groceries"
+    },
+    {
+     "id": "T153",
+     "description": "Jio recharge",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Jio recharge"
+    },
+    {
+     "id": "T154",
+     "description": "Coursera subscription",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Coursera subscription"
+    },
+    {
+     "id": "T155",
+     "description": "Amazon",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Amazon purchase"
+    },
+    {
+     "id": "T156",
+     "description": "ATM cash withdrawal",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "ATM cash withdrawal"
+    },
+    {
+     "id": "T157",
+     "description": "IKEA",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "IKEA furniture"
+    },
+    {
+     "id": "T158",
+     "description": "UBER RIDE",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Uber ride"
+    },
+    {
+     "id": "T159",
+     "description": "Bowling at Smaaash",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Bowling at Smaaash"
+    },
+    {
+     "id": "T160",
+     "description": "UPI/584125/Water bill BWSSB",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Water bill payment"
+    },
+    {
+     "id": "T161",
+     "description": "Uber ride",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Uber ride"
+    },
+    {
+     "id": "T162",
+     "description": "COURSERA SUBSCRIPTION",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Online course subscription"
+    },
+    {
+     "id": "T163",
+     "description": "Tata 1mg",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Online pharmacy purchase"
+    },
+    {
+     "id": "T164",
+     "description": "AMAZON FRESH",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Online grocery delivery"
+    },
+    {
+     "id": "T165",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Digital game purchase"
+    },
+    {
+     "id": "T166",
+     "description": "Amazon Fresh",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Online grocery"
+    },
+    {
+     "id": "T167",
+     "description": "Birthday gift for friend",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Gift purchase"
+    },
+    {
+     "id": "T168",
+     "description": "PRACTO DOCTOR CONSULT",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Doctor consultation"
+    },
+    {
+     "id": "T169",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Digital game purchase"
+    },
+    {
+     "id": "T170",
+     "description": "Concert ticket Insider",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Concert ticket purchase"
+    },
+    {
+     "id": "T171",
+     "description": "IKEA",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Furniture purchase"
+    },
+    {
+     "id": "T172",
+     "description": "UPI/755674/McDonalds",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Food purchase via UPI"
+    },
+    {
+     "id": "T173",
+     "description": "CAMPUS CANTEEN",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Campus canteen meal"
+    },
+    {
+     "id": "T174",
+     "description": "UPI/499889/Donation to NGO",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Donation via UPI"
+    },
+    {
+     "id": "T175",
+     "description": "APPLE.COM/BILL",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.55,
+     "needs_review": true,
+     "explanation": "Apple subscription bill"
+    },
+    {
+     "id": "T176",
+     "description": "UPI/599948/Namma Metro card recharge",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Metro card recharge"
+    },
+    {
+     "id": "T177",
+     "description": "Campus canteen",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Campus canteen meal"
+    },
+    {
+     "id": "T178",
+     "description": "Blinkit - milk & bread",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Online grocery delivery"
+    },
+    {
+     "id": "T179",
+     "description": "ATM cash withdrawal",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Cash withdrawal"
+    },
+    {
+     "id": "T180",
+     "description": "University exam fee",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Exam fee payment"
+    },
+    {
+     "id": "T181",
+     "description": "ACT FIBERNET BROADBAND",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Broadband subscription"
+    },
+    {
+     "id": "T182",
+     "description": "Jio recharge",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Mobile recharge via Jio"
+    },
+    {
+     "id": "T183",
+     "description": "UPI/126925/Netflix subscription",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Netflix subscription via UPI"
+    },
+    {
+     "id": "T184",
+     "description": "UPI/171262/HP Petrol pump",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Fuel purchase at HP petrol pump"
+    },
+    {
+     "id": "T185",
+     "description": "Water bill BWSSB",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Water bill payment to BWSSB"
+    },
+    {
+     "id": "T186",
+     "description": "UPI/360247/Apollo Pharmacy",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Medicine purchase at Apollo Pharmacy"
+    },
+    {
+     "id": "T187",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Game purchase on Steam"
+    },
+    {
+     "id": "T188",
+     "description": "Netflix subscription",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Netflix subscription"
+    },
+    {
+     "id": "T189",
+     "description": "UPI/918011/FLIPKART - HEADPHONES",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Headphones purchase on Flipkart"
+    },
+    {
+     "id": "T190",
+     "description": "Udemy course",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Udemy course purchase"
+    },
+    {
+     "id": "T191",
+     "description": "BLINKIT - MILK & BREAD",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Milk and bread from Blinkit"
+    },
+    {
+     "id": "T192",
+     "description": "STARBUCKS COFFEE",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Coffee at Starbucks"
+    },
+    {
+     "id": "T193",
+     "description": "LAUNDRY SERVICE",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.55,
+     "needs_review": true,
+     "explanation": "Laundry service payment"
+    },
+    {
+     "id": "T194",
+     "description": "Tata 1mg",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Medicine purchase at Tata 1mg"
+    },
+    {
+     "id": "T195",
+     "description": "Gym + protein shake",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Gym membership and protein shake"
+    },
+    {
+     "id": "T196",
+     "description": "CHAI POINT",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Coffee at Chai Point"
+    },
+    {
+     "id": "T197",
+     "description": "PVR cinemas",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Cinema ticket at PVR"
+    },
+    {
+     "id": "T198",
+     "description": "UPI/662636/Amazon",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Amazon purchase"
+    },
+    {
+     "id": "T199",
+     "description": "UNIVERSITY EXAM FEE",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Exam fee payment"
+    },
+    {
+     "id": "T200",
+     "description": "Rapido bike taxi",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Rapido bike taxi ride"
+    },
+    {
+     "id": "T201",
+     "description": "BMTC bus pass",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "BMTC bus pass purchase"
+    }
+   ]
+  },
+  {
+   "name": "few_shot",
+   "technique": "Few-shot (Arm B)",
+   "description": "Arm A plus 16 labelled demonstrations covering every category.",
+   "n": 60,
+   "accuracy": 1.0,
+   "macro_f1": 1.0,
+   "ambiguous_accuracy": 1.0,
+   "json_validity": 1.0,
+   "usable_output_rate": 1.0,
+   "review_flag_rate": 0.05,
+   "errors_caught_by_review": 0.0,
+   "calls": 3,
+   "input_tokens": 2685,
+   "output_tokens": 3591,
+   "tokens_per_txn": 104.6,
+   "latency_s": 45.962,
+   "per_category": {
+    "Food": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 10
+    },
+    "Transport": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 7
+    },
+    "Shopping": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 8
+    },
+    "Bills": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 6
+    },
+    "Entertainment": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 9
+    },
+    "Health": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 7
+    },
+    "Education": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 6
+    },
+    "Other": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 7
+    }
+   },
+   "confusion": [
+    [
+     10,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     7,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     8,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     6,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     9,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     7,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     6,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     7
+    ]
+   ],
+   "predictions": [
+    {
+     "id": "T107",
+     "description": "UPI/632060/POS 4411 MUMBAI",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.4,
+     "needs_review": true,
+     "explanation": "POS transaction, unclear merchant"
+    },
+    {
+     "id": "T108",
+     "description": "UPI/989227/PAYTM PAYMENT",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.4,
+     "needs_review": true,
+     "explanation": "UPI payment to Paytm, unclear merchant"
+    },
+    {
+     "id": "T132",
+     "description": "Dental clinic",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Dental clinic visit"
+    },
+    {
+     "id": "T138",
+     "description": "1mg medicines",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Online pharmacy purchase"
+    },
+    {
+     "id": "T139",
+     "description": "Stationery store",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Stationery purchase"
+    },
+    {
+     "id": "T144",
+     "description": "Rapido bike taxi",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Bike taxi ride"
+    },
+    {
+     "id": "T145",
+     "description": "Myntra order",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Online clothing order"
+    },
+    {
+     "id": "T146",
+     "description": "Airtel postpaid",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Mobile postpaid bill"
+    },
+    {
+     "id": "T147",
+     "description": "Myntra order",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Online clothing order"
+    },
+    {
+     "id": "T151",
+     "description": "Flipkart - headphones",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Headphones purchase"
+    },
+    {
+     "id": "T152",
+     "description": "BigBasket groceries",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Groceries purchase"
+    },
+    {
+     "id": "T153",
+     "description": "Jio recharge",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Mobile recharge"
+    },
+    {
+     "id": "T154",
+     "description": "Coursera subscription",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Online course subscription"
+    },
+    {
+     "id": "T155",
+     "description": "Amazon",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.8,
+     "needs_review": false,
+     "explanation": "Amazon purchase"
+    },
+    {
+     "id": "T156",
+     "description": "ATM cash withdrawal",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Cash withdrawal"
+    },
+    {
+     "id": "T157",
+     "description": "IKEA",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Furniture purchase"
+    },
+    {
+     "id": "T158",
+     "description": "UBER RIDE",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Ride share"
+    },
+    {
+     "id": "T159",
+     "description": "Bowling at Smaaash",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Bowling game"
+    },
+    {
+     "id": "T160",
+     "description": "UPI/584125/Water bill BWSSB",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Water bill payment"
+    },
+    {
+     "id": "T161",
+     "description": "Uber ride",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Ride share"
+    },
+    {
+     "id": "T162",
+     "description": "COURSERA SUBSCRIPTION",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Coursera subscription for online learning"
+    },
+    {
+     "id": "T163",
+     "description": "Tata 1mg",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Tata 1mg pharmacy medicine purchase"
+    },
+    {
+     "id": "T164",
+     "description": "AMAZON FRESH",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Amazon Fresh grocery order"
+    },
+    {
+     "id": "T165",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Steam game purchase"
+    },
+    {
+     "id": "T166",
+     "description": "Amazon Fresh",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Amazon Fresh grocery order"
+    },
+    {
+     "id": "T167",
+     "description": "Birthday gift for friend",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Birthday gift transfer to friend"
+    },
+    {
+     "id": "T168",
+     "description": "PRACTO DOCTOR CONSULT",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Practo doctor consultation fee"
+    },
+    {
+     "id": "T169",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Steam game purchase"
+    },
+    {
+     "id": "T170",
+     "description": "Concert ticket Insider",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Concert ticket purchase"
+    },
+    {
+     "id": "T171",
+     "description": "IKEA",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "IKEA furniture purchase"
+    },
+    {
+     "id": "T172",
+     "description": "UPI/755674/McDonalds",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "UPI payment to McDonalds"
+    },
+    {
+     "id": "T173",
+     "description": "CAMPUS CANTEEN",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Campus canteen meal"
+    },
+    {
+     "id": "T174",
+     "description": "UPI/499889/Donation to NGO",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Donation to NGO via UPI"
+    },
+    {
+     "id": "T175",
+     "description": "APPLE.COM/BILL",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.55,
+     "needs_review": true,
+     "explanation": "Apple.com bill, likely subscription"
+    },
+    {
+     "id": "T176",
+     "description": "UPI/599948/Namma Metro card recharge",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Namma Metro card recharge via UPI"
+    },
+    {
+     "id": "T177",
+     "description": "Campus canteen",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Campus canteen meal"
+    },
+    {
+     "id": "T178",
+     "description": "Blinkit - milk & bread",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Blinkit grocery order"
+    },
+    {
+     "id": "T179",
+     "description": "ATM cash withdrawal",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "ATM cash withdrawal"
+    },
+    {
+     "id": "T180",
+     "description": "University exam fee",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "University exam fee payment"
+    },
+    {
+     "id": "T181",
+     "description": "ACT FIBERNET BROADBAND",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Broadband internet bill"
+    },
+    {
+     "id": "T182",
+     "description": "Jio recharge",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Mobile recharge via Jio"
+    },
+    {
+     "id": "T183",
+     "description": "UPI/126925/Netflix subscription",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Netflix subscription via UPI"
+    },
+    {
+     "id": "T184",
+     "description": "UPI/171262/HP Petrol pump",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Fuel purchase at HP petrol pump"
+    },
+    {
+     "id": "T185",
+     "description": "Water bill BWSSB",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Water bill BWSSB"
+    },
+    {
+     "id": "T186",
+     "description": "UPI/360247/Apollo Pharmacy",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Apollo Pharmacy purchase"
+    },
+    {
+     "id": "T187",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Steam game purchase"
+    },
+    {
+     "id": "T188",
+     "description": "Netflix subscription",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Netflix subscription"
+    },
+    {
+     "id": "T189",
+     "description": "UPI/918011/FLIPKART - HEADPHONES",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Flipkart headphones"
+    },
+    {
+     "id": "T190",
+     "description": "Udemy course",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Udemy course"
+    },
+    {
+     "id": "T191",
+     "description": "BLINKIT - MILK & BREAD",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Blinkit groceries"
+    },
+    {
+     "id": "T192",
+     "description": "STARBUCKS COFFEE",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Starbucks coffee"
+    },
+    {
+     "id": "T193",
+     "description": "LAUNDRY SERVICE",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Laundry service"
+    },
+    {
+     "id": "T194",
+     "description": "Tata 1mg",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Tata 1mg pharmacy"
+    },
+    {
+     "id": "T195",
+     "description": "Gym + protein shake",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Gym and protein shake"
+    },
+    {
+     "id": "T196",
+     "description": "CHAI POINT",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Chai Point cafe"
+    },
+    {
+     "id": "T197",
+     "description": "PVR cinemas",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "PVR cinema ticket"
+    },
+    {
+     "id": "T198",
+     "description": "UPI/662636/Amazon",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Amazon purchase"
+    },
+    {
+     "id": "T199",
+     "description": "UNIVERSITY EXAM FEE",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "University exam fee"
+    },
+    {
+     "id": "T200",
+     "description": "Rapido bike taxi",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Rapido bike taxi"
+    },
+    {
+     "id": "T201",
+     "description": "BMTC bus pass",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "BMTC bus pass"
+    }
+   ]
+  },
+  {
+   "name": "optimized_bootstrap",
+   "technique": "Auto-optimised demos (Arm C, DSPy-style)",
+   "description": "Bootstrapped 11 demonstrations (balanced + hard cases) selected by dev-validation accuracy from 4 candidates.",
+   "n": 60,
+   "accuracy": 1.0,
+   "macro_f1": 1.0,
+   "ambiguous_accuracy": 1.0,
+   "json_validity": 0.6667,
+   "usable_output_rate": 1.0,
+   "review_flag_rate": 0.0833,
+   "errors_caught_by_review": 0.0,
+   "calls": 4,
+   "input_tokens": 3246,
+   "output_tokens": 5166,
+   "tokens_per_txn": 140.2,
+   "latency_s": 53.379,
+   "per_category": {
+    "Food": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 10
+    },
+    "Transport": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 7
+    },
+    "Shopping": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 8
+    },
+    "Bills": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 6
+    },
+    "Entertainment": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 9
+    },
+    "Health": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 7
+    },
+    "Education": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 6
+    },
+    "Other": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 7
+    }
+   },
+   "confusion": [
+    [
+     10,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     7,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     8,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     6,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     9,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     7,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     6,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     7
+    ]
+   ],
+   "predictions": [
+    {
+     "id": "T107",
+     "description": "UPI/632060/POS 4411 MUMBAI",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.4,
+     "needs_review": true,
+     "explanation": "POS transaction, unclear merchant"
+    },
+    {
+     "id": "T108",
+     "description": "UPI/989227/PAYTM PAYMENT",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.4,
+     "needs_review": true,
+     "explanation": "UPI to Paytm, unclear merchant"
+    },
+    {
+     "id": "T132",
+     "description": "Dental clinic",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Dental clinic visit"
+    },
+    {
+     "id": "T138",
+     "description": "1mg medicines",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Online pharmacy purchase"
+    },
+    {
+     "id": "T139",
+     "description": "Stationery store",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.8,
+     "needs_review": false,
+     "explanation": "Stationery purchase"
+    },
+    {
+     "id": "T144",
+     "description": "Rapido bike taxi",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Bike taxi ride"
+    },
+    {
+     "id": "T145",
+     "description": "Myntra order",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Online clothing order"
+    },
+    {
+     "id": "T146",
+     "description": "Airtel postpaid",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Postpaid mobile bill"
+    },
+    {
+     "id": "T147",
+     "description": "Myntra order",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Online clothing order"
+    },
+    {
+     "id": "T151",
+     "description": "Flipkart - headphones",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Electronics purchase"
+    },
+    {
+     "id": "T152",
+     "description": "BigBasket groceries",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Groceries purchase"
+    },
+    {
+     "id": "T153",
+     "description": "Jio recharge",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Mobile recharge"
+    },
+    {
+     "id": "T154",
+     "description": "Coursera subscription",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Online course subscription"
+    },
+    {
+     "id": "T155",
+     "description": "Amazon",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.55,
+     "needs_review": true,
+     "explanation": "Amazon purchase, category unclear"
+    },
+    {
+     "id": "T156",
+     "description": "ATM cash withdrawal",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.4,
+     "needs_review": true,
+     "explanation": "Cash withdrawal"
+    },
+    {
+     "id": "T157",
+     "description": "IKEA",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Furniture purchase"
+    },
+    {
+     "id": "T158",
+     "description": "UBER RIDE",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Cab ride"
+    },
+    {
+     "id": "T159",
+     "description": "Bowling at Smaaash",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Bowling game"
+    },
+    {
+     "id": "T160",
+     "description": "UPI/584125/Water bill BWSSB",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Water bill payment"
+    },
+    {
+     "id": "T161",
+     "description": "Uber ride",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Uber cab ride"
+    },
+    {
+     "id": "T162",
+     "description": "COURSERA SUBSCRIPTION",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Coursera subscription"
+    },
+    {
+     "id": "T163",
+     "description": "Tata 1mg",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Tata 1mg pharmacy"
+    },
+    {
+     "id": "T164",
+     "description": "AMAZON FRESH",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Amazon Fresh groceries"
+    },
+    {
+     "id": "T165",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Steam game purchase"
+    },
+    {
+     "id": "T166",
+     "description": "Amazon Fresh",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Amazon Fresh groceries"
+    },
+    {
+     "id": "T167",
+     "description": "Birthday gift for friend",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.8,
+     "needs_review": false,
+     "explanation": "Birthday gift"
+    },
+    {
+     "id": "T168",
+     "description": "PRACTO DOCTOR CONSULT",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Practo doctor consult"
+    },
+    {
+     "id": "T169",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Steam game purchase"
+    },
+    {
+     "id": "T170",
+     "description": "Concert ticket Insider",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Concert ticket"
+    },
+    {
+     "id": "T171",
+     "description": "IKEA",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "IKEA furniture"
+    },
+    {
+     "id": "T172",
+     "description": "UPI/755674/McDonalds",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.8,
+     "needs_review": false,
+     "explanation": "UPI to McDonalds"
+    },
+    {
+     "id": "T173",
+     "description": "CAMPUS CANTEEN",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Campus canteen"
+    },
+    {
+     "id": "T174",
+     "description": "UPI/499889/Donation to NGO",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.8,
+     "needs_review": false,
+     "explanation": "Donation to NGO"
+    },
+    {
+     "id": "T175",
+     "description": "APPLE.COM/BILL",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.55,
+     "needs_review": true,
+     "explanation": "Apple.com bill"
+    },
+    {
+     "id": "T176",
+     "description": "UPI/599948/Namma Metro card recharge",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Metro card recharge"
+    },
+    {
+     "id": "T177",
+     "description": "Campus canteen",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Campus canteen"
+    },
+    {
+     "id": "T178",
+     "description": "Blinkit - milk & bread",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Blinkit groceries"
+    },
+    {
+     "id": "T179",
+     "description": "ATM cash withdrawal",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "ATM cash withdrawal"
+    },
+    {
+     "id": "T180",
+     "description": "University exam fee",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "University exam fee"
+    },
+    {
+     "id": "T181",
+     "description": "ACT FIBERNET BROADBAND",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Broadband internet"
+    },
+    {
+     "id": "T182",
+     "description": "Jio recharge",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Mobile recharge via Jio"
+    },
+    {
+     "id": "T183",
+     "description": "UPI/126925/Netflix subscription",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Netflix subscription via UPI"
+    },
+    {
+     "id": "T184",
+     "description": "UPI/171262/HP Petrol pump",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Fuel purchase at HP petrol pump"
+    },
+    {
+     "id": "T185",
+     "description": "Water bill BWSSB",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Water bill payment to BWSSB"
+    },
+    {
+     "id": "T186",
+     "description": "UPI/360247/Apollo Pharmacy",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Medicine purchase at Apollo Pharmacy"
+    },
+    {
+     "id": "T187",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Game purchase on Steam"
+    },
+    {
+     "id": "T188",
+     "description": "Netflix subscription",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Netflix subscription"
+    },
+    {
+     "id": "T189",
+     "description": "UPI/918011/FLIPKART - HEADPHONES",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Headphones purchase on Flipkart"
+    },
+    {
+     "id": "T190",
+     "description": "Udemy course",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Udemy course purchase"
+    },
+    {
+     "id": "T191",
+     "description": "BLINKIT - MILK & BREAD",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Milk and bread from Blinkit"
+    },
+    {
+     "id": "T192",
+     "description": "STARBUCKS COFFEE",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Coffee at Starbucks"
+    },
+    {
+     "id": "T193",
+     "description": "LAUNDRY SERVICE",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.8,
+     "needs_review": false,
+     "explanation": "Laundry service payment"
+    },
+    {
+     "id": "T194",
+     "description": "Tata 1mg",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Medicine purchase at Tata 1mg"
+    },
+    {
+     "id": "T195",
+     "description": "Gym + protein shake",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Gym and protein shake purchase"
+    },
+    {
+     "id": "T196",
+     "description": "CHAI POINT",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Coffee at Chai Point"
+    },
+    {
+     "id": "T197",
+     "description": "PVR cinemas",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Cinema tickets at PVR"
+    },
+    {
+     "id": "T198",
+     "description": "UPI/662636/Amazon",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Amazon purchase"
+    },
+    {
+     "id": "T199",
+     "description": "UNIVERSITY EXAM FEE",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "University exam fee"
+    },
+    {
+     "id": "T200",
+     "description": "Rapido bike taxi",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Rapido bike taxi ride"
+    },
+    {
+     "id": "T201",
+     "description": "BMTC bus pass",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "BMTC bus pass purchase"
+    }
+   ]
+  },
+  {
+   "name": "optimized_textgrad",
+   "technique": "Feedback-refined rules (Arm D, TextGrad-style)",
+   "description": "Arm A plus 11 correction rules the model wrote from its own dev errors.",
+   "n": 60,
+   "accuracy": 1.0,
+   "macro_f1": 1.0,
+   "ambiguous_accuracy": 1.0,
+   "json_validity": 1.0,
+   "usable_output_rate": 1.0,
+   "review_flag_rate": 0.0,
+   "errors_caught_by_review": 0.0,
+   "calls": 3,
+   "input_tokens": 2484,
+   "output_tokens": 4338,
+   "tokens_per_txn": 113.7,
+   "latency_s": 46.555,
+   "per_category": {
+    "Food": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 10
+    },
+    "Transport": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 7
+    },
+    "Shopping": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 8
+    },
+    "Bills": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 6
+    },
+    "Entertainment": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 9
+    },
+    "Health": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 7
+    },
+    "Education": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 6
+    },
+    "Other": {
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 7
+    }
+   },
+   "confusion": [
+    [
+     10,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     7,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     8,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     6,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     9,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     7,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     6,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     7
+    ]
+   ],
+   "predictions": [
+    {
+     "id": "T107",
+     "description": "UPI/632060/POS 4411 MUMBAI",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "UPI transfer to POS 4411"
+    },
+    {
+     "id": "T108",
+     "description": "UPI/989227/PAYTM PAYMENT",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "UPI payment to Paytm"
+    },
+    {
+     "id": "T132",
+     "description": "Dental clinic",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Dental clinic visit"
+    },
+    {
+     "id": "T138",
+     "description": "1mg medicines",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "1mg medicine purchase"
+    },
+    {
+     "id": "T139",
+     "description": "Stationery store",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Stationery store purchase"
+    },
+    {
+     "id": "T144",
+     "description": "Rapido bike taxi",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Rapido bike taxi ride"
+    },
+    {
+     "id": "T145",
+     "description": "Myntra order",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Myntra clothing order"
+    },
+    {
+     "id": "T146",
+     "description": "Airtel postpaid",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Airtel postpaid bill"
+    },
+    {
+     "id": "T147",
+     "description": "Myntra order",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Myntra order"
+    },
+    {
+     "id": "T151",
+     "description": "Flipkart - headphones",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Flipkart headphones"
+    },
+    {
+     "id": "T152",
+     "description": "BigBasket groceries",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "BigBasket groceries"
+    },
+    {
+     "id": "T153",
+     "description": "Jio recharge",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Jio mobile recharge"
+    },
+    {
+     "id": "T154",
+     "description": "Coursera subscription",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Coursera subscription"
+    },
+    {
+     "id": "T155",
+     "description": "Amazon",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.9,
+     "needs_review": false,
+     "explanation": "Amazon purchase"
+    },
+    {
+     "id": "T156",
+     "description": "ATM cash withdrawal",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "ATM cash withdrawal"
+    },
+    {
+     "id": "T157",
+     "description": "IKEA",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "IKEA furniture purchase"
+    },
+    {
+     "id": "T158",
+     "description": "UBER RIDE",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Uber ride"
+    },
+    {
+     "id": "T159",
+     "description": "Bowling at Smaaash",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Bowling at Smaaash"
+    },
+    {
+     "id": "T160",
+     "description": "UPI/584125/Water bill BWSSB",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Water bill payment"
+    },
+    {
+     "id": "T161",
+     "description": "Uber ride",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Uber ride"
+    },
+    {
+     "id": "T162",
+     "description": "COURSERA SUBSCRIPTION",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Coursera subscription"
+    },
+    {
+     "id": "T163",
+     "description": "Tata 1mg",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Tata 1mg pharmacy"
+    },
+    {
+     "id": "T164",
+     "description": "AMAZON FRESH",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Amazon Fresh groceries"
+    },
+    {
+     "id": "T165",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Steam game purchase"
+    },
+    {
+     "id": "T166",
+     "description": "Amazon Fresh",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Amazon Fresh groceries"
+    },
+    {
+     "id": "T167",
+     "description": "Birthday gift for friend",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Birthday gift"
+    },
+    {
+     "id": "T168",
+     "description": "PRACTO DOCTOR CONSULT",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Practo doctor consult"
+    },
+    {
+     "id": "T169",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Steam game purchase"
+    },
+    {
+     "id": "T170",
+     "description": "Concert ticket Insider",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Concert ticket"
+    },
+    {
+     "id": "T171",
+     "description": "IKEA",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "IKEA furniture"
+    },
+    {
+     "id": "T172",
+     "description": "UPI/755674/McDonalds",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "UPI to McDonalds"
+    },
+    {
+     "id": "T173",
+     "description": "CAMPUS CANTEEN",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Campus canteen"
+    },
+    {
+     "id": "T174",
+     "description": "UPI/499889/Donation to NGO",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Donation to NGO"
+    },
+    {
+     "id": "T175",
+     "description": "APPLE.COM/BILL",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Apple.com entertainment"
+    },
+    {
+     "id": "T176",
+     "description": "UPI/599948/Namma Metro card recharge",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "UPI Metro recharge"
+    },
+    {
+     "id": "T177",
+     "description": "Campus canteen",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Campus canteen"
+    },
+    {
+     "id": "T178",
+     "description": "Blinkit - milk & bread",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Blinkit food delivery"
+    },
+    {
+     "id": "T179",
+     "description": "ATM cash withdrawal",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "ATM cash withdrawal"
+    },
+    {
+     "id": "T180",
+     "description": "University exam fee",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "University exam fee"
+    },
+    {
+     "id": "T181",
+     "description": "ACT FIBERNET BROADBAND",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 1.0,
+     "needs_review": false,
+     "explanation": "Broadband internet bill"
+    },
+    {
+     "id": "T182",
+     "description": "Jio recharge",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Jio recharge"
+    },
+    {
+     "id": "T183",
+     "description": "UPI/126925/Netflix subscription",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Netflix subscription"
+    },
+    {
+     "id": "T184",
+     "description": "UPI/171262/HP Petrol pump",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "HP Petrol pump"
+    },
+    {
+     "id": "T185",
+     "description": "Water bill BWSSB",
+     "true": "Bills",
+     "pred": "Bills",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Water bill BWSSB"
+    },
+    {
+     "id": "T186",
+     "description": "UPI/360247/Apollo Pharmacy",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Apollo Pharmacy"
+    },
+    {
+     "id": "T187",
+     "description": "Steam game purchase",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Steam game purchase"
+    },
+    {
+     "id": "T188",
+     "description": "Netflix subscription",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Netflix subscription"
+    },
+    {
+     "id": "T189",
+     "description": "UPI/918011/FLIPKART - HEADPHONES",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Flipkart headphones"
+    },
+    {
+     "id": "T190",
+     "description": "Udemy course",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Udemy course"
+    },
+    {
+     "id": "T191",
+     "description": "BLINKIT - MILK & BREAD",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Blinkit milk & bread"
+    },
+    {
+     "id": "T192",
+     "description": "STARBUCKS COFFEE",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Starbucks coffee"
+    },
+    {
+     "id": "T193",
+     "description": "LAUNDRY SERVICE",
+     "true": "Other",
+     "pred": "Other",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Laundry service"
+    },
+    {
+     "id": "T194",
+     "description": "Tata 1mg",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Tata 1mg"
+    },
+    {
+     "id": "T195",
+     "description": "Gym + protein shake",
+     "true": "Health",
+     "pred": "Health",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Gym + protein shake"
+    },
+    {
+     "id": "T196",
+     "description": "CHAI POINT",
+     "true": "Food",
+     "pred": "Food",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Chai Point"
+    },
+    {
+     "id": "T197",
+     "description": "PVR cinemas",
+     "true": "Entertainment",
+     "pred": "Entertainment",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "PVR cinemas"
+    },
+    {
+     "id": "T198",
+     "description": "UPI/662636/Amazon",
+     "true": "Shopping",
+     "pred": "Shopping",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Amazon"
+    },
+    {
+     "id": "T199",
+     "description": "UNIVERSITY EXAM FEE",
+     "true": "Education",
+     "pred": "Education",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "University exam fee"
+    },
+    {
+     "id": "T200",
+     "description": "Rapido bike taxi",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "Rapido bike taxi"
+    },
+    {
+     "id": "T201",
+     "description": "BMTC bus pass",
+     "true": "Transport",
+     "pred": "Transport",
+     "confidence": 0.95,
+     "needs_review": false,
+     "explanation": "BMTC bus pass"
+    }
+   ]
+  }
+ ],
+ "optimizer_history": {
+  "bootstrap": [
+   {
+    "candidate": 0,
+    "n_demos": 11,
+    "dev_val_accuracy": 0.96
+   },
+   {
+    "candidate": 1,
+    "n_demos": 11,
+    "dev_val_accuracy": 0.94
+   },
+   {
+    "candidate": 2,
+    "n_demos": 11,
+    "dev_val_accuracy": 0.96
+   },
+   {
+    "candidate": 3,
+    "n_demos": 11,
+    "dev_val_accuracy": 1.0
+   }
+  ],
+  "textgrad": [
+   {
+    "iteration": 0,
+    "rules": 0,
+    "dev_val_accuracy": 0.96,
+    "accepted": true
+   },
+   {
+    "iteration": 1,
+    "rules": 3,
+    "dev_val_accuracy": 0.96,
+    "accepted": true,
+    "proposed": [
+     "descriptions containing \"pos 4411\" -> Other",
+     "descriptions containing \"upi/184714\" -> Shopping",
+     "descriptions containing \"cult.fit\" -> Health"
+    ]
+   },
+   {
+    "iteration": 2,
+    "rules": 6,
+    "dev_val_accuracy": 0.96,
+    "accepted": true,
+    "proposed": [
+     "stationery store -> Education",
+     "cult.fit membership -> Health",
+     "nykaa beauty -> Shopping"
+    ]
+   },
+   {
+    "iteration": 3,
+    "rules": 11,
+    "dev_val_accuracy": 0.96,
+    "accepted": true,
+    "proposed": [
+     "descriptions containing \"apple.com\" -> Entertainment",
+     "descriptions containing \"netflix\" -> Entertainment",
+     "descriptions containing \"spotify\" -> Entertainment",
+     "descriptions containing \"prime\" -> Entertainment",
+     "descriptions containing \"amazon.com/prime\" -> Entertainment"
+    ]
+   }
+  ]
+ },
+ "prompts": {
+  "zero_shot_plain": {
+   "name": "zero_shot_plain",
+   "technique": "Zero-shot (free text)",
+   "description": "Bare instruction, no schema, no examples. Output must be scraped with regex.",
+   "system": "You are a helpful assistant.",
+   "instructions": "Categorise each transaction into one of: Food, Transport, Shopping, Bills, Entertainment, Health, Education, Other.\nAnswer with one line per transaction in the form `id: Category`.",
+   "json_mode": false,
+   "examples": [],
+   "learned_rules": []
+  },
+  "zero_shot_json": {
+   "name": "zero_shot_json",
+   "technique": "Zero-shot + JSON schema",
+   "description": "Same bare instruction, but the output is constrained to a validated JSON schema.",
+   "system": "You are a helpful assistant.",
+   "instructions": "Categorise each transaction into one of: Food, Transport, Shopping, Bills, Entertainment, Health, Education, Other.\n\nReturn ONLY valid JSON (no markdown fences) with this exact shape:\n{\"results\": [{\"id\": \"<transaction id>\", \"category\": \"<one allowed category>\", \"confidence\": <0.0-1.0>,\n  \"explanation\": \"<max 15 words, based only on the description>\", \"needs_review\": <true|false>}]}\nReturn one result per transaction, in the same order, using the same ids.",
+   "json_mode": true,
+   "examples": [],
+   "learned_rules": []
+  },
+  "role_guided": {
+   "name": "role_guided",
+   "technique": "Role + guide + rules + JSON (Arm A: best manual)",
+   "description": "Persona, category definitions, explicit ambiguity rules and the JSON schema.",
+   "system": "You are SpendWise, a careful personal-finance categorisation assistant. You label bank transactions for a student budgeting app. You never guess details that are not in the description.",
+   "instructions": "Category guide:\n- Food: restaurants, cafes, groceries, bakeries, canteens, food delivery (Swiggy, Zomato, Blinkit, BigBasket)\n- Transport: cabs and autos (Uber, Ola, Rapido), metro, bus, train (IRCTC), flights, fuel, petrol\n- Shopping: clothing, electronics, online retail orders (Myntra, Flipkart), sports goods, beauty, furniture\n- Bills: rent, electricity, water, gas cylinder, mobile recharge or postpaid, broadband internet\n- Entertainment: streaming and music subscriptions (Netflix, Spotify), movies, cinema, games, concerts, events\n- Health: pharmacy, medicines, doctor, clinic, gym or fitness membership\n- Education: courses (Coursera, Udemy), books, exam or tuition fees, stationery, library\n- Other: cash withdrawals, transfers to people, gifts, donations, personal services, anything unclear\n\nRules:\n1. Choose exactly one category from: Food, Transport, Shopping, Bills, Entertainment, Health, Education, Other.\n2. Use the transaction description only. Do not infer facts that are not present.\n3. If the merchant could reasonably belong to more than one category, or is unrecognisable, choose the most\n   likely category, lower the confidence below 0.6 and set needs_review to true.\n4. Payments to people (UPI transfer to a name) and cash withdrawals are Other.\n\nReturn ONLY valid JSON (no markdown fences) with this exact shape:\n{\"results\": [{\"id\": \"<transaction id>\", \"category\": \"<one allowed category>\", \"confidence\": <0.0-1.0>,\n  \"explanation\": \"<max 15 words, based only on the description>\", \"needs_review\": <true|false>}]}\nReturn one result per transaction, in the same order, using the same ids.",
+   "json_mode": true,
+   "examples": [],
+   "learned_rules": []
+  },
+  "few_shot": {
+   "name": "few_shot",
+   "technique": "Few-shot (Arm B)",
+   "description": "Arm A plus 16 labelled demonstrations covering every category.",
+   "system": "You are SpendWise, a careful personal-finance categorisation assistant. You label bank transactions for a student budgeting app. You never guess details that are not in the description.",
+   "instructions": "Category guide:\n- Food: restaurants, cafes, groceries, bakeries, canteens, food delivery (Swiggy, Zomato, Blinkit, BigBasket)\n- Transport: cabs and autos (Uber, Ola, Rapido), metro, bus, train (IRCTC), flights, fuel, petrol\n- Shopping: clothing, electronics, online retail orders (Myntra, Flipkart), sports goods, beauty, furniture\n- Bills: rent, electricity, water, gas cylinder, mobile recharge or postpaid, broadband internet\n- Entertainment: streaming and music subscriptions (Netflix, Spotify), movies, cinema, games, concerts, events\n- Health: pharmacy, medicines, doctor, clinic, gym or fitness membership\n- Education: courses (Coursera, Udemy), books, exam or tuition fees, stationery, library\n- Other: cash withdrawals, transfers to people, gifts, donations, personal services, anything unclear\n\nRules:\n1. Choose exactly one category from: Food, Transport, Shopping, Bills, Entertainment, Health, Education, Other.\n2. Use the transaction description only. Do not infer facts that are not present.\n3. If the merchant could reasonably belong to more than one category, or is unrecognisable, choose the most\n   likely category, lower the confidence below 0.6 and set needs_review to true.\n4. Payments to people (UPI transfer to a name) and cash withdrawals are Other.\n\nReturn ONLY valid JSON (no markdown fences) with this exact shape:\n{\"results\": [{\"id\": \"<transaction id>\", \"category\": \"<one allowed category>\", \"confidence\": <0.0-1.0>,\n  \"explanation\": \"<max 15 words, based only on the description>\", \"needs_review\": <true|false>}]}\nReturn one result per transaction, in the same order, using the same ids.",
+   "json_mode": true,
+   "examples": [
+    [
+     "Local bakery",
+     "Food"
+    ],
+    [
+     "Zomato - Vidyarthi Bhavan",
+     "Food"
+    ],
+    [
+     "Indigo flight booking",
+     "Transport"
+    ],
+    [
+     "NAMMA METRO CARD RECHARGE",
+     "Transport"
+    ],
+    [
+     "Reliance",
+     "Shopping"
+    ],
+    [
+     "H&M store",
+     "Shopping"
+    ],
+    [
+     "UPI/821024/BESCOM electricity bill",
+     "Bills"
+    ],
+    [
+     "Water bill BWSSB",
+     "Bills"
+    ],
+    [
+     "Netflix subscription",
+     "Entertainment"
+    ],
+    [
+     "Spotify Premium",
+     "Entertainment"
+    ],
+    [
+     "Cult.fit membership",
+     "Health"
+    ],
+    [
+     "CULT.FIT MEMBERSHIP",
+     "Health"
+    ],
+    [
+     "Udemy course",
+     "Education"
+    ],
+    [
+     "University exam fee",
+     "Education"
+    ],
+    [
+     "POS 4411 MUMBAI",
+     "Other"
+    ],
+    [
+     "Paytm payment",
+     "Other"
+    ]
+   ],
+   "learned_rules": []
+  },
+  "optimized_bootstrap": {
+   "name": "optimized_bootstrap",
+   "technique": "Auto-optimised demos (Arm C, DSPy-style)",
+   "description": "Bootstrapped 11 demonstrations (balanced + hard cases) selected by dev-validation accuracy from 4 candidates.",
+   "system": "You are SpendWise, a careful personal-finance categorisation assistant. You label bank transactions for a student budgeting app. You never guess details that are not in the description.",
+   "instructions": "Category guide:\n- Food: restaurants, cafes, groceries, bakeries, canteens, food delivery (Swiggy, Zomato, Blinkit, BigBasket)\n- Transport: cabs and autos (Uber, Ola, Rapido), metro, bus, train (IRCTC), flights, fuel, petrol\n- Shopping: clothing, electronics, online retail orders (Myntra, Flipkart), sports goods, beauty, furniture\n- Bills: rent, electricity, water, gas cylinder, mobile recharge or postpaid, broadband internet\n- Entertainment: streaming and music subscriptions (Netflix, Spotify), movies, cinema, games, concerts, events\n- Health: pharmacy, medicines, doctor, clinic, gym or fitness membership\n- Education: courses (Coursera, Udemy), books, exam or tuition fees, stationery, library\n- Other: cash withdrawals, transfers to people, gifts, donations, personal services, anything unclear\n\nRules:\n1. Choose exactly one category from: Food, Transport, Shopping, Bills, Entertainment, Health, Education, Other.\n2. Use the transaction description only. Do not infer facts that are not present.\n3. If the merchant could reasonably belong to more than one category, or is unrecognisable, choose the most\n   likely category, lower the confidence below 0.6 and set needs_review to true.\n4. Payments to people (UPI transfer to a name) and cash withdrawals are Other.\n\nReturn ONLY valid JSON (no markdown fences) with this exact shape:\n{\"results\": [{\"id\": \"<transaction id>\", \"category\": \"<one allowed category>\", \"confidence\": <0.0-1.0>,\n  \"explanation\": \"<max 15 words, based only on the description>\", \"needs_review\": <true|false>}]}\nReturn one result per transaction, in the same order, using the same ids.",
+   "json_mode": true,
+   "examples": [
+    [
+     "Chai point",
+     "Food"
+    ],
+    [
+     "OLA AUTO",
+     "Transport"
+    ],
+    [
+     "H&M store",
+     "Shopping"
+    ],
+    [
+     "MONTHLY RENT TRANSFER",
+     "Bills"
+    ],
+    [
+     "BOOKMYSHOW MOVIE TICKETS",
+     "Entertainment"
+    ],
+    [
+     "PRACTO DOCTOR CONSULT",
+     "Health"
+    ],
+    [
+     "SAPNA BOOK HOUSE",
+     "Education"
+    ],
+    [
+     "Paytm payment",
+     "Other"
+    ],
+    [
+     "UPI/899787/Cult.fit membership",
+     "Health"
+    ],
+    [
+     "UPI/184714/Reliance",
+     "Shopping"
+    ],
+    [
+     "POS 4411 MUMBAI",
+     "Other"
+    ]
+   ],
+   "learned_rules": []
+  },
+  "optimized_textgrad": {
+   "name": "optimized_textgrad",
+   "technique": "Feedback-refined rules (Arm D, TextGrad-style)",
+   "description": "Arm A plus 11 correction rules the model wrote from its own dev errors.",
+   "system": "You are SpendWise, a careful personal-finance categorisation assistant. You label bank transactions for a student budgeting app. You never guess details that are not in the description.",
+   "instructions": "Category guide:\n- Food: restaurants, cafes, groceries, bakeries, canteens, food delivery (Swiggy, Zomato, Blinkit, BigBasket)\n- Transport: cabs and autos (Uber, Ola, Rapido), metro, bus, train (IRCTC), flights, fuel, petrol\n- Shopping: clothing, electronics, online retail orders (Myntra, Flipkart), sports goods, beauty, furniture\n- Bills: rent, electricity, water, gas cylinder, mobile recharge or postpaid, broadband internet\n- Entertainment: streaming and music subscriptions (Netflix, Spotify), movies, cinema, games, concerts, events\n- Health: pharmacy, medicines, doctor, clinic, gym or fitness membership\n- Education: courses (Coursera, Udemy), books, exam or tuition fees, stationery, library\n- Other: cash withdrawals, transfers to people, gifts, donations, personal services, anything unclear\n\nRules:\n1. Choose exactly one category from: Food, Transport, Shopping, Bills, Entertainment, Health, Education, Other.\n2. Use the transaction description only. Do not infer facts that are not present.\n3. If the merchant could reasonably belong to more than one category, or is unrecognisable, choose the most\n   likely category, lower the confidence below 0.6 and set needs_review to true.\n4. Payments to people (UPI transfer to a name) and cash withdrawals are Other.\n\nReturn ONLY valid JSON (no markdown fences) with this exact shape:\n{\"results\": [{\"id\": \"<transaction id>\", \"category\": \"<one allowed category>\", \"confidence\": <0.0-1.0>,\n  \"explanation\": \"<max 15 words, based only on the description>\", \"needs_review\": <true|false>}]}\nReturn one result per transaction, in the same order, using the same ids.",
+   "json_mode": true,
+   "examples": [],
+   "learned_rules": [
+    "descriptions containing \"pos 4411\" -> Other",
+    "descriptions containing \"upi/184714\" -> Shopping",
+    "descriptions containing \"cult.fit\" -> Health",
+    "stationery store -> Education",
+    "cult.fit membership -> Health",
+    "nykaa beauty -> Shopping",
+    "descriptions containing \"apple.com\" -> Entertainment",
+    "descriptions containing \"netflix\" -> Entertainment",
+    "descriptions containing \"spotify\" -> Entertainment",
+    "descriptions containing \"prime\" -> Entertainment",
+    "descriptions containing \"amazon.com/prime\" -> Entertainment"
+   ]
+  }
+ }
+}
