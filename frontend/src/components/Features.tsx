@@ -272,7 +272,7 @@ export const Features: React.FC = () => {
           </p>
         </div>
 
-        {/* RealByte Centered Phone Layout with 3 Left and 3 Right Items */}
+        {/* Centered Phone Layout with 3 Left and 3 Right Items */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center max-w-6xl mx-auto">
           
           {/* Left Column (Features 1 to 3) */}

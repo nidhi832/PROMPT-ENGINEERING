@@ -19,7 +19,7 @@ export const HelpCenter: React.FC<HelpCenterProps> = ({ onOpenDashboard }) => {
           </p>
         </div>
 
-        {/* RealByte Desktop Monitor & Text Two-Column Layout */}
+        {/* Desktop Monitor & Text Two-Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center max-w-6xl mx-auto">
           {/* Left: Desktop Monitor Mockup */}
           <div className="lg:col-span-7">
@@ -42,16 +42,16 @@ export const HelpCenter: React.FC<HelpCenterProps> = ({ onOpenDashboard }) => {
                 <div className="bg-white rounded-xl p-4 border border-[#EEEEEE] shadow-xs">
                   <div className="flex justify-between items-center mb-3">
                     <div className="text-sm font-bold">Knowledge Base &amp; Tutorials</div>
-                    <span className="text-xs text-[#FF665C] font-semibold">User Manuals v2.4</span>
+                    <span className="text-xs text-[#FF665C] font-semibold">Project docs</span>
                   </div>
                   <div className="grid grid-cols-2 gap-3 text-xs">
                     <div className="p-3 rounded-lg border border-[#EEEEEE] bg-[#FAFAFA]">
-                      <div className="font-bold text-[#171717] mb-1">Android &amp; iOS Guide</div>
-                      <div className="text-[11px] text-[#858585]">Sync, backup, and CSV imports</div>
+                      <div className="font-bold text-[#171717] mb-1">CSV Import Guide</div>
+                      <div className="text-[11px] text-[#858585]">Columns, date formats and validation</div>
                     </div>
                     <div className="p-3 rounded-lg border border-[#EEEEEE] bg-[#FAFAFA]">
-                      <div className="font-bold text-[#171717] mb-1">Double-Entry Ledger</div>
-                      <div className="text-[11px] text-[#858585]">Balancing assets &amp; liabilities</div>
+                      <div className="font-bold text-[#171717] mb-1">Prompt Lab Guide</div>
+                      <div className="text-[11px] text-[#858585]">Reading the evaluation results</div>
                     </div>
                   </div>
                 </div>
