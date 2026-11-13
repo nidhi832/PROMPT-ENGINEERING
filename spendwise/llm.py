@@ -20,6 +20,12 @@ from pathlib import Path
 
 CACHE_PATH = Path(__file__).resolve().parent.parent / "results" / "llm_cache.json"
 
+# Cloudflare (in front of Groq and other APIs) blocks Python's default "Python-urllib" User-Agent
+# with "error code: 1010". Send our own User-Agent on every request instead.
+_opener = urllib.request.build_opener()
+_opener.addheaders = [("User-Agent", "SpendWise/1.0 (course project)")]
+urllib.request.install_opener(_opener)
+
 
 @dataclass
 class LLMResponse:
