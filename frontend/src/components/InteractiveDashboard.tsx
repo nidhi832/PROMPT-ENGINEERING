@@ -139,7 +139,7 @@ export const InteractiveDashboard: React.FC = () => {
   const [newAmount, setNewAmount] = useState('');
   const [newType, setNewType] = useState<'expense' | 'income'>('expense');
   const [newCategory, setNewCategory] = useState<Transaction['category']>('Food');
-  const [newAccount, setNewAccount] = useState('SBI UPI');
+  const [newAccount, setNewAccount] = useState('UPI');
 
   // AI Categorization State
   const [strategy, setStrategy] = useState('few_shot');
@@ -933,11 +933,21 @@ export const InteractiveDashboard: React.FC = () => {
                             : 'bg-white border border-[#EEEEEE] text-[#171717] rounded-bl-none shadow-xs'
                         }`}>
                           <p>{msg.content}</p>
-                          {msg.role === 'assistant' && msg.intent && (
+                          {msg.role === 'assistant' && msg.intent && msg.intent !== 'welcome' && (
                             <div className="mt-2 pt-2 border-t border-[#F0F0F0] flex flex-wrap gap-1.5 items-center">
-                              <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-[#2ED573]/10 text-[#2ED573]">
-                                ✓ Grounded · {msg.figuresCount || 1} figure verified
-                              </span>
+                              {msg.intent === 'error' ? (
+                                <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-[#FFF5F4] text-[#C0392B]">
+                                  Not answered
+                                </span>
+                              ) : msg.grounded ? (
+                                <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-[#2ED573]/10 text-[#2ED573]">
+                                  {'✓'} Grounded {'·'} {msg.figuresCount || 0} figure{msg.figuresCount === 1 ? '' : 's'} checked
+                                </span>
+                              ) : (
+                                <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-[#FFF5F4] text-[#C0392B]">
+                                  {'⚠'} Grounding check failed
+                                </span>
+                              )}
                               <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-[#3498F3]/10 text-[#3498F3]">
                                 intent: {msg.intent}
                               </span>
@@ -1461,11 +1471,11 @@ export const InteractiveDashboard: React.FC = () => {
                     onChange={(e) => setNewAccount(e.target.value)}
                     className="w-full px-3 py-2 rounded-xl border border-[#EEEEEE] text-xs bg-white focus:outline-none focus:border-[#FF665C]"
                   >
-                    <option value="SBI UPI">SBI UPI</option>
-                    <option value="HDFC Salary Acc">HDFC Salary Acc</option>
-                    <option value="Axis Credit Card">Axis Credit Card</option>
+                    <option value="UPI">UPI</option>
+                    <option value="Salary Account">Salary Account</option>
+                    <option value="Credit Card">Credit Card</option>
                     <option value="Cash">Cash in Hand</option>
-                    <option value="ICICI Savings">ICICI Savings</option>
+                    <option value="Savings Account">Savings Account</option>
                   </select>
                 </div>
               </div>
