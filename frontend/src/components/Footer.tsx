@@ -1,5 +1,5 @@
 import React from 'react';
-import { Wallet, Heart, ExternalLink } from 'lucide-react';
+import { Wallet, ExternalLink } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
@@ -17,7 +17,7 @@ export const Footer: React.FC = () => {
               </span>
             </div>
             <p className="text-xs sm:text-sm text-[#666666] max-w-sm leading-relaxed mb-4">
-              An intelligent personal-finance assistant built on prompt engineering, automated prompt optimization, and double-entry bookkeeping inspired by RealByte Money Manager.
+              An intelligent personal-finance assistant built on prompt engineering, automated prompt optimization and grounded LLM explanations. A course prototype using synthetic data.
             </p>
             <div className="flex items-center gap-2 text-xs text-[#858585]">
               <span>Course: Prompt Engineering &amp; Optimization for GenAI</span>
@@ -58,7 +58,6 @@ export const Footer: React.FC = () => {
               Support &amp; Legal
             </h4>
             <ul className="space-y-2.5 text-xs text-[#666666]">
-              <li><a href="https://www.realbyteapps.com" target="_blank" rel="noreferrer" className="hover:text-[#FF665C] transition-colors inline-flex items-center gap-1">RealByte Reference <ExternalLink className="w-3 h-3" /></a></li>
               <li><a href="https://github.com/nidhi832/PROMPT-ENGINEERING" target="_blank" rel="noreferrer" className="hover:text-[#FF665C] transition-colors inline-flex items-center gap-1">GitHub Repository <ExternalLink className="w-3 h-3" /></a></li>
               <li><span className="text-[#858585]">Privacy Policy (Client-Side)</span></li>
               <li><span className="text-[#858585]">Terms of Service</span></li>
@@ -73,9 +72,7 @@ export const Footer: React.FC = () => {
             © {new Date().getFullYear()} SpendWise. All rights reserved. Educational personal-finance assistant, not financial advice.
           </div>
           <div className="flex items-center gap-1">
-            <span>Crafted with</span>
-            <Heart className="w-3.5 h-3.5 text-[#FF665C] fill-[#FF665C]" />
-            <span>inspired by RealByte Money Manager design system.</span>
+            <span>Course project prototype</span>
           </div>
         </div>
       </div>

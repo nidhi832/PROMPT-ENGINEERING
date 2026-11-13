@@ -84,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAuth }) => {
                   : 'text-white/90 hover:text-white'
               }`}
             >
-              Sign In
+              Open demo
             </button>
             <button
               onClick={() => onOpenAuth('signup')}
@@ -137,7 +137,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAuth }) => {
               }}
               className="w-full text-center py-2.5 rounded-xl border border-[#EEEEEE] text-[14px] font-semibold text-[#171717]"
             >
-              Sign In
+              Open demo
             </button>
             <button
               onClick={() => {
@@ -146,7 +146,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAuth }) => {
               }}
               className="w-full text-center py-2.5 rounded-xl bg-[#FF665C] text-white text-[14px] font-semibold shadow-md shadow-[#FF665C]/25"
             >
-              Get Started Free
+              Try the demo
             </button>
           </div>
         </div>
