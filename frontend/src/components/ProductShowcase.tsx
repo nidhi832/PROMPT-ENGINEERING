@@ -287,7 +287,7 @@ export const ProductShowcase: React.FC = () => {
             </p>
           </div>
 
-          {/* RealByte Authentic Light / Dark Switcher */}
+          {/* Light / Dark Switcher */}
           <div className="flex items-center gap-6 text-sm font-bold">
             <button
               onClick={() => setThemeMode('light')}
@@ -347,7 +347,7 @@ export const ProductShowcase: React.FC = () => {
             ))}
           </div>
 
-          {/* RealByte Pagination Dots */}
+          {/* Pagination Dots */}
           <div className="flex justify-center items-center gap-2.5 mt-10">
             {slides.map((_, dotIdx) => (
               <button

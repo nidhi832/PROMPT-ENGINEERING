@@ -30,12 +30,12 @@
   background: #9CA3AF;
 }
 
-/* RealByte Authentic Hero Gradient */
+/* Hero gradient */
 .realbyte-hero-bg {
   background: linear-gradient(135deg, #FF665C 0%, #FF5A4E 35%, #FF7454 100%);
 }
 
-/* RealByte Phone Mockup Frame */
+/* Phone mockup frame */
 .rb-phone {
   position: relative;
   border-radius: 46px;
@@ -64,7 +64,7 @@
   z-index: 50;
 }
 
-/* RealByte Monitor Frame for Help Center / Web Manager */
+/* Monitor frame for Help Center / Web Manager */
 .rb-monitor {
   position: relative;
   background: #0D1117;
@@ -96,7 +96,7 @@
   border-radius: 6px;
 }
 
-/* Authentic RealByte Animations & Moving Elements */
+/* Animations & Moving Elements */
 @keyframes rb-drift-slow {
   0%, 100% {
     transform: translate(0, 0) scale(1);

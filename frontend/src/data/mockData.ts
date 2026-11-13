@@ -77,34 +77,4 @@ export const BUDGET_CATEGORIES: BudgetCategory[] = [
   { category: 'Health', spent: 2499, limit: 3500, color: '#00C9A7' },
 ];
 
-export const ACCOUNTS_LIST: AccountBalance[] = [
-  { id: 'ACC-1', name: 'HDFC Corporate Salary Account', type: 'Bank', balance: 142500, accountNumber: '•••• 4821', institution: 'HDFC Bank' },
-  { id: 'ACC-2', name: 'ICICI Wealth Savings', type: 'Bank', balance: 68400, accountNumber: '•••• 9104', institution: 'ICICI Bank' },
-  { id: 'ACC-3', name: 'Axis Neo Platinum Card', type: 'Credit Card', balance: -18450, accountNumber: '•••• 7732', institution: 'Axis Bank' },
-  { id: 'ACC-4', name: 'Physical Wallet & Cash', type: 'Cash', balance: 4200, accountNumber: 'Cash in Hand', institution: 'Self' },
-  { id: 'ACC-5', name: 'Zerodha Mutual Funds & Equity', type: 'Investment', balance: 215000, accountNumber: '•••• 6620', institution: 'Zerodha' },
-];
 
-export const TESTIMONIALS = [
-  {
-    name: 'Ananya Sharma',
-    role: 'Product Manager, Bangalore',
-    quote: 'SpendWise gives me the exact clarity I need. The daily ledger layout and category progress bars helped me trim 18% off unnecessary food delivery expenses in just one month.',
-    rating: 5,
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80',
-  },
-  {
-    name: 'Rohan Mehta',
-    role: 'Software Architect, Mumbai',
-    quote: 'The double-entry tracking feels effortless. Having automatic categorization paired with prompt-optimized insights makes it way ahead of traditional clunky banking apps.',
-    rating: 5,
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80',
-  },
-  {
-    name: 'Pooja Iyer',
-    role: 'Independent Consultant, Delhi',
-    quote: 'I love that all my numbers are kept 100% private and verified against deterministic arithmetic. Clean, gorgeous charts and completely stress-free budgeting.',
-    rating: 5,
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&auto=format&fit=crop&q=80',
-  },
-];
