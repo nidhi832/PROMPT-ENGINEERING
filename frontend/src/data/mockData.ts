@@ -26,18 +26,18 @@ export interface AccountBalance {
 }
 
 export const INITIAL_TRANSACTIONS: Transaction[] = [
-  { id: 'T001', title: 'Salary Credit - TechCorp Solutions', category: 'Salary', amount: 85000, date: '12 Nov 2026', account: 'HDFC Salary Acc', icon: '💼', status: 'verified' },
-  { id: 'T002', title: 'IKEA Furnishing - Work Desk', category: 'Shopping', amount: -6450, date: '11 Nov 2026', account: 'Axis Credit Card', icon: '🛍️', status: 'verified' },
-  { id: 'T003', title: 'Swiggy Gourmet - Dinner with Friends', category: 'Food', amount: -1280, date: '11 Nov 2026', account: 'SBI UPI', icon: '🍔', status: 'verified' },
-  { id: 'T004', title: 'Uber Premier - Airport Transit', category: 'Transport', amount: -850, date: '10 Nov 2026', account: 'SBI UPI', icon: '🚗', status: 'verified' },
-  { id: 'T005', title: 'Cult.Fit Gym Membership Renewal', category: 'Health', amount: -2499, date: '09 Nov 2026', account: 'Axis Credit Card', icon: '💊', status: 'verified' },
-  { id: 'T006', title: 'Freelance UI Design Milestone', category: 'Salary', amount: 22000, date: '08 Nov 2026', account: 'ICICI Savings', icon: '🎨', status: 'verified' },
-  { id: 'T007', title: 'Electricity & High-speed Wifi Bill', category: 'Bills', amount: -3200, date: '07 Nov 2026', account: 'HDFC Salary Acc', icon: '🧾', status: 'verified' },
-  { id: 'T008', title: 'Amazon Kindle & Tech Books', category: 'Education', amount: -1150, date: '06 Nov 2026', account: 'Axis Credit Card', icon: '📚', status: 'verified' },
-  { id: 'T009', title: 'PVR IMAX - Movie Night', category: 'Entertainment', amount: -940, date: '05 Nov 2026', account: 'SBI UPI', icon: '🎬', status: 'verified' },
-  { id: 'T010', title: 'Whole Foods & Weekly Organic Groceries', category: 'Food', amount: -3120, date: '04 Nov 2026', account: 'SBI UPI', icon: '🍔', status: 'verified' },
+  { id: 'T001', title: 'Salary Credit - Employer', category: 'Salary', amount: 85000, date: '12 Nov 2026', account: 'Salary Account', icon: '💼', status: 'verified' },
+  { id: 'T002', title: 'IKEA Furnishing - Work Desk', category: 'Shopping', amount: -6450, date: '11 Nov 2026', account: 'Credit Card', icon: '🛍️', status: 'verified' },
+  { id: 'T003', title: 'Swiggy Gourmet - Dinner with Friends', category: 'Food', amount: -1280, date: '11 Nov 2026', account: 'UPI', icon: '🍔', status: 'verified' },
+  { id: 'T004', title: 'Uber Premier - Airport Transit', category: 'Transport', amount: -850, date: '10 Nov 2026', account: 'UPI', icon: '🚗', status: 'verified' },
+  { id: 'T005', title: 'Cult.Fit Gym Membership Renewal', category: 'Health', amount: -2499, date: '09 Nov 2026', account: 'Credit Card', icon: '💊', status: 'verified' },
+  { id: 'T006', title: 'Freelance UI Design Milestone', category: 'Salary', amount: 22000, date: '08 Nov 2026', account: 'Savings Account', icon: '🎨', status: 'verified' },
+  { id: 'T007', title: 'Electricity & High-speed Wifi Bill', category: 'Bills', amount: -3200, date: '07 Nov 2026', account: 'Salary Account', icon: '🧾', status: 'verified' },
+  { id: 'T008', title: 'Amazon Kindle & Tech Books', category: 'Education', amount: -1150, date: '06 Nov 2026', account: 'Credit Card', icon: '📚', status: 'verified' },
+  { id: 'T009', title: 'PVR IMAX - Movie Night', category: 'Entertainment', amount: -940, date: '05 Nov 2026', account: 'UPI', icon: '🎬', status: 'verified' },
+  { id: 'T010', title: 'Whole Foods & Weekly Organic Groceries', category: 'Food', amount: -3120, date: '04 Nov 2026', account: 'UPI', icon: '🍔', status: 'verified' },
   { id: 'T011', title: 'Starbucks Coffee & Snacks', category: 'Food', amount: -480, date: '03 Nov 2026', account: 'Cash', icon: '☕', status: 'verified' },
-  { id: 'T012', title: 'Metro Smart Card Auto-recharge', category: 'Transport', amount: -500, date: '02 Nov 2026', account: 'SBI UPI', icon: '🚇', status: 'verified' },
+  { id: 'T012', title: 'Metro Smart Card Auto-recharge', category: 'Transport', amount: -500, date: '02 Nov 2026', account: 'UPI', icon: '🚇', status: 'verified' },
 ];
 
 export const MONTHLY_CASHFLOW = [
