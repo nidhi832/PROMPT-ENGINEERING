@@ -69,6 +69,9 @@ class LLM:
         self.temperature = temperature
         self.cache = _Cache() if use_cache else None
         self.calls = 0
+        # pin_model=True (set by evaluate.py): never switch to another model. An experiment that silently
+        # changes model half-way compares prompts on different models, so it must wait or fail instead.
+        self.pin_model = False
 
     def _call(self, system: str, user: str, json_mode: bool) -> tuple[str, int, int]:
         raise NotImplementedError
@@ -83,7 +86,8 @@ class LLM:
             return LLMResponse(**{**hit, "cached": True, "latency_s": 0.0})
         t0 = time.perf_counter()
         last_err = None
-        for attempt in range(10):            # retry with backoff; switch model if one stays overloaded
+        attempts = 12 if self.pin_model else 10
+        for attempt in range(attempts):      # retry with backoff; (unpinned) switch model if one stays overloaded
             try:
                 text, tin, tout = self._call(system, user, json_mode)
                 break
@@ -102,9 +106,13 @@ class LLM:
                     continue
             except (TimeoutError, socket.timeout, urllib.error.URLError, ConnectionError) as e:
                 last_err = f"network/timeout: {e}"
-            if attempt >= 1 and self._on_overloaded(last_err):
+            if attempt >= 1 and not self.pin_model and self._on_overloaded(last_err):
                 continue                     # switched to another model - retry immediately
-            time.sleep(min(2 ** attempt * 2, 20))
+            wait = min(2 ** attempt * 2, 60 if self.pin_model else 20)
+            if self.pin_model:
+                print(f"[{self.name}] {self.model} busy ({(last_err or '')[:40]}...) - retry {attempt + 1}/{attempts} "
+                      f"in {wait}s (model pinned for evaluation)", flush=True)
+            time.sleep(wait)
         else:
             raise RuntimeError(f"{self.name} failed after retries: {last_err}")
         self.calls += 1
@@ -163,11 +171,14 @@ class GeminiLLM(LLM):
             return False
         print(f"[gemini] {self.model} unavailable ({err[:60]}...) -> switching to {prefs[0]}", flush=True)
         self.model = prefs[0]
+        self._tried = tried | {prefs[0]}     # never bounce back to a model already tried
         return True
 
     def _pick_fallback(self) -> str | None:
         names = self.available_models()
-        flash = [n for n in names if "flash" in n and not any(x in n for x in ("lite", "image", "tts", "live", "audio", "exp"))]
+        tried = getattr(self, "_tried", set())
+        flash = [n for n in names if "flash" in n and n not in tried
+                 and not any(x in n for x in ("lite", "image", "tts", "live", "audio", "exp"))]
         flash.sort(key=lambda n: ("latest" not in n, [-int(x) if x.isdigit() else 0 for x in re.split(r"[.-]", n)]))
         return (flash or names or [None])[0]
 
@@ -196,6 +207,9 @@ class GeminiLLM(LLM):
         except urllib.error.HTTPError as e:
             if e.code != 404:
                 raise
+            if self.pin_model:
+                raise RuntimeError(f"gemini: model '{self.model}' not found. "
+                                   "Run: python evaluate.py --backend gemini --list-models") from e
             new = self._pick_fallback()           # model retired/renamed -> use a current Flash model
             if not new or new == self.model:
                 raise
@@ -265,6 +279,9 @@ class OpenAICompatLLM(LLM):
                                                             and "not" in msg.lower() and "exist" in msg.lower()))
             if not retired:
                 raise
+            if self.pin_model:
+                raise RuntimeError(f"{self.name}: model '{self.model}' not available. "
+                                   "Run: python evaluate.py --backend openai-compatible --list-models") from e
             new = self._current_model()
             if not new:
                 raise
