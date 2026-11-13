@@ -20,11 +20,12 @@ from spendwise.categorizer import categorise
 from spendwise.data import load_transactions
 from spendwise.evaluation import list_results, load_labelled, run_evaluation
 from spendwise.llm import make_llm
-from spendwise.prompts import builtin_strategies
+from spendwise.prompts import PromptTemplate, builtin_strategies
 from spendwise.schemas import CATEGORIES
 
 ROOT = Path(__file__).parent
 SAMPLE_CSV_PATH = ROOT / "data" / "sample_expenses.csv"
+RESULTS_DIR = ROOT / "results"
 
 app = FastAPI(title="SpendWise AI API", version="2.0.0")
 
@@ -62,6 +63,15 @@ def get_default_df():
         SESSION_DATA["df"] = df
         SESSION_DATA["import_rep"] = rep
     return SESSION_DATA["df"]
+
+
+def _llm(backend: str, model: Optional[str], api_key: Optional[str]):
+    """Build the requested backend, turning setup errors (e.g. missing API key) into a clear 400."""
+    kw = {"api_key": api_key} if api_key else {}
+    try:
+        return make_llm(backend, model or None, **kw)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"{backend}: {e}")
 
 
 @app.get("/api/health")
@@ -137,17 +147,24 @@ class CategorizeRequest(BaseModel):
 @app.post("/api/categorize")
 def run_categorization(req: CategorizeRequest):
     df = get_default_df().copy()
-    kw = {"api_key": req.api_key} if req.api_key else {}
-    llm = make_llm(req.backend, req.model or None, **kw)
+    llm = _llm(req.backend, req.model, req.api_key)
     
     labelled = load_labelled()
     strategies = builtin_strategies(labelled[labelled["split"] == "dev"].to_dict("records"))
+    # Optimised prompts (Arms C/D) come from the latest evaluation run, if one exists
+    for f in sorted(RESULTS_DIR.glob("optimized_prompts_*.json"), key=lambda p: p.stat().st_mtime):
+        for name, d in json.loads(f.read_text()).items():
+            strategies[name] = PromptTemplate.from_dict(d)
     if req.strategy not in strategies:
-        strat = strategies["few_shot"]
-    else:
-        strat = strategies[req.strategy]
+        raise HTTPException(status_code=400,
+                            detail=f"Unknown strategy '{req.strategy}'. Run evaluate.py first for optimised arms. "
+                                   f"Available: {sorted(strategies)}")
+    strat = strategies[req.strategy]
 
-    preds, cstats = categorise(df[["id", "description"]].to_dict("records"), strat, llm)
+    try:
+        preds, cstats = categorise(df[["id", "description"]].to_dict("records"), strat, llm)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     df["category"] = [p.category for p in preds]
     df["confidence"] = [p.confidence for p in preds]
     df["needs_review"] = [p.needs_review for p in preds]
@@ -201,8 +218,7 @@ class AskRequest(BaseModel):
 @app.post("/api/assistant/ask")
 def ask_question(req: AskRequest):
     df = get_default_df()
-    kw = {"api_key": req.api_key} if req.api_key else {}
-    llm = make_llm(req.backend, req.model or None, **kw)
+    llm = _llm(req.backend, req.model, req.api_key)
     try:
         ans = assistant.ask(df, req.question, llm)
         return {
@@ -229,8 +245,7 @@ class BudgetRequest(BaseModel):
 @app.post("/api/assistant/budget")
 def get_budget_advice(req: BudgetRequest):
     df = get_default_df()
-    kw = {"api_key": req.api_key} if req.api_key else {}
-    llm = make_llm(req.backend, req.model or None, **kw)
+    llm = _llm(req.backend, req.model, req.api_key)
     try:
         advice, facts, g, flags, trace = assistant.budget_advice(
             df, llm, monthly_budget=req.monthly_budget, savings_goal=req.savings_goal, income=req.income
@@ -258,8 +273,7 @@ class ReportRequest(BaseModel):
 @app.post("/api/assistant/report")
 def get_monthly_report(req: ReportRequest):
     df = get_default_df()
-    kw = {"api_key": req.api_key} if req.api_key else {}
-    llm = make_llm(req.backend, req.model or None, **kw)
+    llm = _llm(req.backend, req.model, req.api_key)
     try:
         rep, facts, g, trace = assistant.monthly_report(df, req.month, llm)
         return {

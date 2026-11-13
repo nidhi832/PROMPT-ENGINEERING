@@ -56,7 +56,6 @@ import {
   CATEGORY_EXPENSES, 
   WEEKLY_SPENDING, 
   BUDGET_CATEGORIES,
-  ACCOUNTS_LIST,
   Transaction 
 } from '../data/mockData';
 
@@ -99,15 +98,33 @@ const CAT_ICONS: Record<string, string> = {
   Other: '✨',
 };
 
-// Benchmark results matching Section 8 of project plan
-const BENCHMARK_ARMS = [
-  { name: 'Zero-shot (plain)', technique: 'Zero-shot (free text)', accuracy: 68.3, macroF1: 0.696, ambiguous: 30.0, jsonValidity: 0.0, tokens: 12.7, latency: '2ms' },
-  { name: 'Zero-shot (JSON)', technique: 'Zero-shot with schema', accuracy: 78.3, macroF1: 0.778, ambiguous: 50.0, jsonValidity: 95.0, tokens: 18.4, latency: '3ms' },
-  { name: 'Few-shot (baseline)', technique: 'Few-shot demonstrations', accuracy: 88.3, macroF1: 0.884, ambiguous: 80.0, jsonValidity: 100.0, tokens: 34.2, latency: '4ms' },
-  { name: 'Role-prompted', technique: 'Budget coach persona', accuracy: 85.0, macroF1: 0.851, ambiguous: 70.0, jsonValidity: 98.3, tokens: 28.6, latency: '4ms' },
-  { name: 'DSPy optimized', technique: 'BootstrapFewShot', accuracy: 91.7, macroF1: 0.919, ambiguous: 90.0, jsonValidity: 100.0, tokens: 36.8, latency: '5ms' },
-  { name: 'TextGrad refined', technique: 'Textual gradient prompt', accuracy: 93.3, macroF1: 0.935, ambiguous: 90.0, jsonValidity: 100.0, tokens: 38.5, latency: '5ms' },
-];
+// Backend base URL (override with VITE_API_URL)
+const API = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000';
+
+// Shape of one arm in results/eval_*.json (written by spendwise/evaluation.py)
+type EvalArm = {
+  name: string; technique: string; accuracy: number; macro_f1: number;
+  ambiguous_accuracy: number; json_validity: number; tokens_per_txn: number; n: number;
+};
+type EvalRun = {
+  backend: string; model: string; is_real_llm: boolean; timestamp: string;
+  dataset: { total: number; dev: number; test: number; test_ambiguous: number };
+  arms: EvalArm[];
+};
+
+async function postJSON(path: string, body: unknown) {
+  const res = await fetch(`${API}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    let detail = `HTTP ${res.status}`;
+    try { detail = (await res.json()).detail || detail; } catch { /* keep status */ }
+    throw new Error(detail);
+  }
+  return res.json();
+}
 
 export const InteractiveDashboard: React.FC = () => {
   const [activeNav, setActiveNav] = useState('Overview');
@@ -130,10 +147,10 @@ export const InteractiveDashboard: React.FC = () => {
   const [isCategorizing, setIsCategorizing] = useState(false);
   const [catProgress, setCatProgress] = useState(100);
   const [catStats, setCatStats] = useState({
-    calls: 2,
-    tokens: 759,
-    strictValid: 100,
-    flagged: 1,
+    calls: 0,
+    tokens: 0,
+    strictValid: 0,
+    flagged: 0,
     corrections: 0,
   });
 
@@ -150,7 +167,6 @@ export const InteractiveDashboard: React.FC = () => {
       role: 'assistant',
       content: 'Hello! I am SpendWise Assistant. Ask me anything about your spending, categories, or trends. Every rupee figure I provide is verified against Python arithmetic.',
       intent: 'welcome',
-      grounded: true,
       figuresCount: 0,
     }
   ]);
@@ -161,50 +177,81 @@ export const InteractiveDashboard: React.FC = () => {
   const [budgetLimit, setBudgetLimit] = useState(38000);
   const [savingsGoal, setSavingsGoal] = useState(15000);
   const [userIncome, setUserIncome] = useState(85000);
-  const [budgetAdvice, setBudgetAdvice] = useState({
-    summary: 'You average ₹42,860.00 a month, which is ₹4,860.00 above your ₹38,000 target. The suggestions below focus on your largest flexible categories.',
-    suggestions: [
-      {
-        title: 'Plan 2 home-cooked days a week',
-        detail: 'Food delivery and takeout is your largest flexible category (₹14,250/mo). Swapping 2 orders per week for home cooking usually trims ₹2,500+.',
-        saving: 2500,
-        category: 'Food'
-      },
-      {
-        title: 'Swap short cab rides for metro/bus',
-        detail: 'Short app cab trips add up quickly; public transit covers most of your route for ₹40 vs ₹280.',
-        saving: 1200,
-        category: 'Transport'
-      },
-      {
-        title: 'Pause unused entertainment subscriptions',
-        detail: 'You have multiple streaming bills active. Consolidating to one active service saves effortlessly.',
-        saving: 800,
-        category: 'Entertainment'
-      }
-    ],
-    missingInfo: ['No credit card EMI debt reported.'],
-    grounded: true,
-  });
+  const [budgetAdvice, setBudgetAdvice] = useState<null | {
+    summary: string;
+    suggestions: Array<{ title: string; detail: string; saving: number; category: string }>;
+    missingInfo: string[];
+    grounded: boolean;
+    flags: string[];
+    avgMonthly: number;
+    monthsOfData: number;
+  }>(null);
+  const [budgetLoading, setBudgetLoading] = useState(false);
+  const [budgetError, setBudgetError] = useState<string | null>(null);
 
   // Monthly Report State
-  const [selectedReportMonth, setSelectedReportMonth] = useState('October 2026');
-  const [reportData, setReportData] = useState({
-    headline: 'October 2026: ₹42,860.00 spent, led by Food & Dining',
-    observations: [
-      'You spent ₹42,860.00 across 38 transactions in October 2026.',
-      'Food & Dining was your largest category at ₹14,250.00 (33.2% of spending).',
-      'Your single largest transaction was IKEA Work Desk at ₹6,450.00.',
-      'Transport spending fell by 8.4% compared to September.',
-      'Net savings achieved this month: ₹42,140.00 (49.5% savings rate).'
-    ],
-    nextSteps: [
-      'Set a ₹3,500 weekly cap for Food & Dining and check it every Sunday.',
-      'Review the 1 flagged transaction (Amazon Marketplace) so category totals stay accurate.',
-      'Compare next month\'s report against this one to track progress toward your ₹15,000 savings target.'
-    ],
-    grounded: true,
-  });
+  const [selectedReportMonth, setSelectedReportMonth] = useState('2026-10');
+  const [reportData, setReportData] = useState<null | {
+    headline: string; observations: string[]; nextSteps: string[]; grounded: boolean;
+  }>(null);
+  const [reportLoading, setReportLoading] = useState(false);
+  const [reportError, setReportError] = useState<string | null>(null);
+
+  // Prompt Lab: real results from the evaluation harness
+  const [evalRun, setEvalRun] = useState<EvalRun | null>(null);
+  const [evalError, setEvalError] = useState<string | null>(null);
+  const [catError, setCatError] = useState<string | null>(null);
+
+  // Real health check for the header badge
+  const [backendUp, setBackendUp] = useState<boolean | null>(null);
+  useEffect(() => {
+    fetch(`${API}/api/health`).then(r => setBackendUp(r.ok)).catch(() => setBackendUp(false));
+  }, []);
+
+  useEffect(() => {
+    fetch(`${API}/api/evaluation/results`)
+      .then(r => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
+      .then(d => setEvalRun(d.results))
+      .catch(e => setEvalError(`Could not reach the backend (${e.message}). Start it with: uvicorn api:app --port 8000`));
+  }, []);
+
+  const handleGetBudgetAdvice = async () => {
+    setBudgetLoading(true); setBudgetError(null);
+    try {
+      const d = await postJSON('/api/assistant/budget', {
+        monthly_budget: budgetLimit || null, savings_goal: savingsGoal || null, income: userIncome || null, backend,
+      });
+      setBudgetAdvice({
+        summary: d.summary,
+        suggestions: d.suggestions.map((x: any) => ({
+          title: x.title, detail: x.detail, category: x.category || 'Other', saving: x.estimated_monthly_saving || 0,
+        })),
+        missingInfo: d.missing_information || [],
+        grounded: d.grounded,
+        flags: d.flags || [],
+        avgMonthly: d.facts?.average_monthly_total ?? 0,
+        monthsOfData: d.facts?.months_of_data ?? 0,
+      });
+    } catch (e: any) {
+      setBudgetAdvice(null);
+      setBudgetError(`Budget Coach failed: ${e.message}`);
+    } finally {
+      setBudgetLoading(false);
+    }
+  };
+
+  const handleGenerateReport = async () => {
+    setReportLoading(true); setReportError(null);
+    try {
+      const d = await postJSON('/api/assistant/report', { month: selectedReportMonth, backend });
+      setReportData({ headline: d.headline, observations: d.observations, nextSteps: d.next_steps, grounded: d.grounded });
+    } catch (e: any) {
+      setReportData(null);
+      setReportError(`Report generation failed: ${e.message}`);
+    } finally {
+      setReportLoading(false);
+    }
+  };
 
   // CSV Import State
   const [importReport, setImportReport] = useState<{
@@ -255,41 +302,33 @@ export const InteractiveDashboard: React.FC = () => {
     setIsCategorizing(true);
     setCatProgress(15);
     
+    setCatError(null);
     try {
-      // Attempt to call FastAPI backend
-      const res = await fetch('http://localhost:8000/api/categorize', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ strategy, backend })
+      const data = await postJSON('/api/categorize', { strategy, backend });
+      setCatStats({
+        calls: data.stats.calls,
+        tokens: data.stats.tokens,
+        strictValid: data.stats.strict_valid_pct,
+        flagged: data.stats.flagged_count,
+        corrections: catStats.corrections,
       });
-      if (res.ok) {
-        const data = await res.json();
-        setCatProgress(100);
-        setIsCategorizing(false);
-        setCatStats({
-          calls: data.stats.calls,
-          tokens: data.stats.tokens,
-          strictValid: data.stats.strict_valid_pct,
-          flagged: data.stats.flagged_count,
-          corrections: catStats.corrections,
-        });
-        return;
-      }
-    } catch {
-      // Local fallback simulation
+      // Show the backend's actual labels instead of the demo list
+      setTransactions(data.transactions.map((r: any) => ({
+        id: String(r.id),
+        title: r.description,
+        category: r.category,
+        amount: -Math.abs(Number(r.amount)),
+        date: String(r.date),
+        account: 'Sample CSV',
+        icon: CAT_ICONS[r.category] || '💳',
+        status: r.needs_review ? 'review' : 'verified',
+      })));
+    } catch (e: any) {
+      setCatError(`Categorisation failed: ${e.message}. Is the backend running on ${API}?`);
+    } finally {
+      setCatProgress(100);
+      setIsCategorizing(false);
     }
-
-    // Client-side simulation
-    const interval = setInterval(() => {
-      setCatProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setIsCategorizing(false);
-          return 100;
-        }
-        return prev + 25;
-      });
-    }, 200);
   };
 
   // Handle Assistant Chat
@@ -302,68 +341,27 @@ export const InteractiveDashboard: React.FC = () => {
     setIsThinking(true);
 
     try {
-      const res = await fetch('http://localhost:8000/api/assistant/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: q, backend: 'offline-simulator' })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setIsThinking(false);
-        setChatMessages(prev => [...prev, {
-          role: 'assistant',
-          content: data.answer,
-          intent: data.intent,
-          grounded: data.grounded,
-          figuresCount: data.figures_verified,
-          trace: data.trace ? data.trace.map((t: any) => `${t.step}: ${t.tokens || 0} tokens`) : ['Query intent recognized', 'pandas arithmetic executed', 'grounding check passed']
-        }]);
-        return;
-      }
-    } catch {
-      // Local intelligent response fallback
-    }
-
-    setTimeout(() => {
-      setIsThinking(false);
-      let reply = '';
-      let intent = 'general_query';
-      let figures = 1;
-
-      const lowerQ = q.toLowerCase();
-      if (lowerQ.includes('food')) {
-        reply = `You spent ₹14,250.00 on Food across 18 transactions in October 2026. This accounted for 33.2% of your monthly expenditure.`;
-        intent = 'category_total';
-      } else if (lowerQ.includes('top') || lowerQ.includes('category')) {
-        reply = `Your top 3 spending categories are: 1) Food & Dining (₹14,250.00), 2) Shopping (₹8,900.00), and 3) Bills & Utilities (₹7,850.00).`;
-        intent = 'top_categories';
-        figures = 3;
-      } else if (lowerQ.includes('compare') || lowerQ.includes('previous')) {
-        reply = `In October 2026 you spent ₹42,860.00, compared to ₹46,800.00 in September. That is a decrease of ₹3,940.00 (▼ 8.4%).`;
-        intent = 'monthly_comparison';
-        figures = 3;
-      } else if (lowerQ.includes('largest') || lowerQ.includes('highest')) {
-        reply = `Your single largest expense was 'IKEA Furnishing - Work Desk' for ₹6,450.00 on 11 Nov 2026.`;
-        intent = 'max_transaction';
-      } else if (lowerQ.includes('crypto') || lowerQ.includes('invest')) {
-        reply = `SpendWise is an educational personal budgeting assistant and cannot provide investment advice or endorse speculative assets. Focus on your ₹15,000 monthly savings target first!`;
-        intent = 'policy_boundary';
-        figures = 0;
-      } else {
-        reply = `Based on your uploaded records, your total spending is ₹42,860.00 across 38 transactions, with an average daily expenditure of ₹1,382.50.`;
-        intent = 'spending_summary';
-        figures = 2;
-      }
-
+      const data = await postJSON('/api/assistant/ask', { question: q, backend });
       setChatMessages(prev => [...prev, {
         role: 'assistant',
-        content: reply,
-        intent,
-        grounded: true,
-        figuresCount: figures,
-        trace: ['Router identified intent', 'Python computed exact sum from DataFrame', 'Verified 0 arithmetic errors']
+        content: data.answer,
+        intent: data.intent,
+        grounded: data.grounded,
+        figuresCount: data.figures_verified,
+        trace: (data.trace || []).map((t: any) => `${t.step}: ${t.tokens || 0} tokens`),
       }]);
-    }, 600);
+    } catch (e: any) {
+      setChatMessages(prev => [...prev, {
+        role: 'assistant',
+        content: `Sorry, I could not answer: ${e.message}. No figures were generated.`,
+        intent: 'error',
+        grounded: false,
+        figuresCount: 0,
+        trace: [],
+      }]);
+    } finally {
+      setIsThinking(false);
+    }
   };
 
   // Add Transaction
@@ -450,11 +448,11 @@ export const InteractiveDashboard: React.FC = () => {
               </span>
             </div>
             <div className="flex items-center gap-3 text-xs">
-              <span className="flex items-center gap-1.5 font-bold text-[#2ED573] bg-[#2ED573]/10 px-2.5 py-1 rounded-full">
-                <span className="w-2 h-2 rounded-full bg-[#2ED573] animate-pulse" />
-                Backend Connected: 8000 / 8501
+              <span className={`flex items-center gap-1.5 font-bold px-2.5 py-1 rounded-full ${backendUp === null ? 'text-[#858585] bg-[#F7F8FA]' : backendUp ? 'text-[#2ED573] bg-[#2ED573]/10' : 'text-[#C0392B] bg-[#FFF5F4]'}`}>
+                <span className={`w-2 h-2 rounded-full ${backendUp === null ? 'bg-[#858585]' : backendUp ? 'bg-[#2ED573] animate-pulse' : 'bg-[#C0392B]'}`} />
+                {backendUp === null ? 'Checking backend…' : backendUp ? `Backend connected · ${backend}` : 'Backend offline'}
               </span>
-              <span className="text-[#858585] hidden sm:inline">100% Private Ledger</span>
+              <span className="text-[#858585] hidden sm:inline">Synthetic demo data</span>
             </div>
           </div>
 
@@ -511,7 +509,7 @@ export const InteractiveDashboard: React.FC = () => {
                       <h3 className="text-2xl font-extrabold text-[#171717]">Executive Spending Dashboard</h3>
                       <div className="flex items-center gap-2 text-xs text-[#858585] mt-1">
                         <Calendar className="w-3.5 h-3.5" />
-                        <span>RealByte Design System • Last 3 Months (Aug–Oct 2026)</span>
+                        <span>Demo data • Last 3 Months (Aug–Oct 2026)</span>
                       </div>
                     </div>
                     <button
@@ -743,11 +741,12 @@ export const InteractiveDashboard: React.FC = () => {
                         onChange={(e) => setStrategy(e.target.value)}
                         className="w-full px-3 py-2 rounded-xl border border-[#DDDDDD] text-xs bg-white font-semibold"
                       >
-                        <option value="few_shot">Few-Shot Prompt (Labelled Examples)</option>
-                        <option value="zero_shot">Zero-Shot (Schema Constrained)</option>
-                        <option value="role_based">Role-Based Prompting</option>
-                        <option value="dspy_opt">DSPy Optimized Prompt</option>
-                        <option value="textgrad_opt">TextGrad Refined Prompt</option>
+                        <option value="few_shot">Few-shot (Arm B)</option>
+                        <option value="role_guided">Role + guide + JSON (Arm A, best manual)</option>
+                        <option value="zero_shot_json">Zero-shot + JSON schema</option>
+                        <option value="zero_shot_plain">Zero-shot, free text</option>
+                        <option value="optimized_bootstrap">Bootstrap demos (Arm C, DSPy-style)</option>
+                        <option value="optimized_textgrad">Feedback rules (Arm D, TextGrad-style)</option>
                       </select>
                     </div>
 
@@ -759,7 +758,7 @@ export const InteractiveDashboard: React.FC = () => {
                         className="w-full px-3 py-2 rounded-xl border border-[#DDDDDD] text-xs bg-white font-semibold"
                       >
                         <option value="offline-simulator">Offline Simulator (Demo Safe)</option>
-                        <option value="gemini">Google Gemini (gemini-3.8-flash)</option>
+                        <option value="gemini">Google Gemini (key in GEMINI_API_KEY)</option>
                         <option value="anthropic">Anthropic Claude</option>
                         <option value="openai-compatible">OpenAI Compatible (Groq / Ollama)</option>
                       </select>
@@ -785,6 +784,13 @@ export const InteractiveDashboard: React.FC = () => {
                       </button>
                     </div>
                   </div>
+
+                  {catError && (
+                    <div className="p-3 mb-6 rounded-xl border border-[#FF665C] bg-[#FFF5F4] text-xs font-semibold text-[#C0392B] flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                      <span>{catError}</span>
+                    </div>
+                  )}
 
                   {/* Stats Bar */}
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6 text-xs">
@@ -1010,33 +1016,62 @@ export const InteractiveDashboard: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Summary & Suggestions Grid */}
+                  <button
+                    onClick={handleGetBudgetAdvice}
+                    disabled={budgetLoading}
+                    className="mb-6 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#FF665C] hover:bg-[#EE554B] text-white text-xs font-bold shadow-md disabled:opacity-60"
+                  >
+                    {budgetLoading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                    <span>{budgetLoading ? 'Generating…' : 'Get suggestions'}</span>
+                  </button>
+
+                  {budgetError && (
+                    <div className="p-3 mb-6 rounded-xl border border-[#FF665C] bg-[#FFF5F4] text-xs font-semibold text-[#C0392B] flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                      <span>{budgetError}</span>
+                    </div>
+                  )}
+
+                  {!budgetAdvice && !budgetError && (
+                    <p className="text-xs text-[#858585]">
+                      Set your budget and goal, then press <b>Get suggestions</b>. Suggestions are generated by the selected backend ({backend}) from totals computed in Python.
+                    </p>
+                  )}
+
+                  {budgetAdvice && (
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
-                    {/* Gauge Card */}
+                    {/* Gauge Card: every number comes from the backend's verified facts */}
                     <div className="lg:col-span-5 p-5 rounded-2xl border border-[#EEEEEE] bg-[#F7F8FA] flex flex-col justify-between">
                       <div>
                         <span className="text-[10px] font-bold uppercase text-[#858585]">Budget Tracking</span>
                         <h4 className="text-base font-bold text-[#171717] mt-1">Average Monthly Spend</h4>
                         <div className="text-3xl font-extrabold text-[#FF665C] mt-2">
-                          ₹42,860
+                          ₹{budgetAdvice.avgMonthly.toLocaleString('en-IN')}
                         </div>
-                        <p className="text-xs text-[#858585] mt-1">Target limit: ₹{budgetLimit.toLocaleString('en-IN')}</p>
+                        <p className="text-xs text-[#858585] mt-1">
+                          Over {budgetAdvice.monthsOfData} months · Target limit: ₹{budgetLimit.toLocaleString('en-IN')}
+                        </p>
                       </div>
 
-                      <div className="my-4">
-                        <div className="flex justify-between text-xs font-bold mb-1">
-                          <span>Utilization</span>
-                          <span className="text-[#FF665C]">112% (Over by ₹4,860)</span>
+                      {budgetLimit > 0 && (
+                        <div className="my-4">
+                          <div className="flex justify-between text-xs font-bold mb-1">
+                            <span>Utilization</span>
+                            <span className="text-[#FF665C]">{Math.round((100 * budgetAdvice.avgMonthly) / budgetLimit)}%</span>
+                          </div>
+                          <div className="w-full h-3 rounded-full bg-black/10 overflow-hidden">
+                            <div className="h-full bg-[#FF665C] rounded-full" style={{ width: `${Math.min(100, (100 * budgetAdvice.avgMonthly) / budgetLimit)}%` }} />
+                          </div>
                         </div>
-                        <div className="w-full h-3 rounded-full bg-black/10 overflow-hidden">
-                          <div className="h-full bg-[#FF665C] rounded-full" style={{ width: '100%' }} />
-                        </div>
-                      </div>
+                      )}
 
-                      <div className="p-2.5 rounded-xl bg-white border border-[#2ED573] text-[11px] font-bold text-[#2ED573] flex items-center gap-1.5">
-                        <ShieldCheck className="w-4 h-4 flex-shrink-0" />
-                        <span>Grounded: Verified against 38 transactions</span>
+                      <div className={`p-2.5 rounded-xl bg-white border text-[11px] font-bold flex items-center gap-1.5 ${budgetAdvice.grounded ? 'border-[#2ED573] text-[#2ED573]' : 'border-[#FF665C] text-[#FF665C]'}`}>
+                        {budgetAdvice.grounded ? <ShieldCheck className="w-4 h-4 flex-shrink-0" /> : <AlertTriangle className="w-4 h-4 flex-shrink-0" />}
+                        <span>{budgetAdvice.grounded ? 'Grounding check passed: every ₹ figure matches Python totals' : 'Grounding check FAILED: some figures were not in the verified facts'}</span>
                       </div>
+                      {budgetAdvice.flags.map((f, k) => (
+                        <p key={k} className="mt-2 text-[11px] text-[#C0392B]">Guard-rail: {f}</p>
+                      ))}
                     </div>
 
                     {/* Actionable Suggestions */}
@@ -1047,24 +1082,34 @@ export const InteractiveDashboard: React.FC = () => {
                         </p>
                       </div>
 
-                      {budgetAdvice.suggestions.map((s, idx) => (
+                      {budgetAdvice.suggestions.map((sg, idx) => (
                         <div key={idx} className="p-4 rounded-2xl border border-[#EEEEEE] bg-white hover:border-[#FF665C] transition-all">
                           <div className="flex items-center justify-between mb-1">
                             <h5 className="font-bold text-xs sm:text-sm text-[#171717] flex items-center gap-1.5">
-                              <span>{CAT_ICONS[s.category] || '💡'}</span>
-                              <span>{s.title}</span>
+                              <span>{CAT_ICONS[sg.category] || '💡'}</span>
+                              <span>{sg.title}</span>
                             </h5>
-                            <span className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-[#2ED573]/10 text-[#2ED573]">
-                              Save ~₹{s.saving.toLocaleString('en-IN')}/mo
-                            </span>
+                            {sg.saving > 0 && (
+                              <span className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-[#2ED573]/10 text-[#2ED573]">
+                                Save ~₹{sg.saving.toLocaleString('en-IN')}/mo
+                              </span>
+                            )}
                           </div>
                           <p className="text-xs text-[#666666] leading-relaxed mt-1">
-                            {s.detail}
+                            {sg.detail}
                           </p>
                         </div>
                       ))}
+
+                      {budgetAdvice.missingInfo.length > 0 && (
+                        <div className="p-3 rounded-xl bg-[#F7F8FA] text-[11px] text-[#666666]">
+                          <b>Missing information:</b> {budgetAdvice.missingInfo.join('; ')}
+                        </div>
+                      )}
+                      <p className="text-[10px] text-[#858585]">Educational budgeting guidance, not financial advice.</p>
                     </div>
                   </div>
+                  )}
                 </div>
               )}
 
@@ -1085,12 +1130,22 @@ export const InteractiveDashboard: React.FC = () => {
                         onChange={(e) => setSelectedReportMonth(e.target.value)}
                         className="px-3 py-2 rounded-xl border border-[#DDDDDD] text-xs font-bold bg-white"
                       >
-                        <option value="October 2026">October 2026</option>
-                        <option value="September 2026">September 2026</option>
-                        <option value="August 2026">August 2026</option>
+                        <option value="2026-10">October 2026</option>
+                        <option value="2026-09">September 2026</option>
+                        <option value="2026-08">August 2026</option>
                       </select>
                       <button
+                        onClick={handleGenerateReport}
+                        disabled={reportLoading}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#171717] text-white text-xs font-bold disabled:opacity-60"
+                      >
+                        {reportLoading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                        <span>{reportLoading ? 'Generating…' : 'Generate'}</span>
+                      </button>
+                      <button
+                        disabled={!reportData}
                         onClick={() => {
+                          if (!reportData) return;
                           const mdContent = `# SpendWise Monthly Statement - ${selectedReportMonth}\n\n**${reportData.headline}**\n\n## Key Observations\n` +
                             reportData.observations.map(o => `- ${o}`).join('\n') +
                             '\n\n## Next Steps\n' +
@@ -1100,7 +1155,7 @@ export const InteractiveDashboard: React.FC = () => {
                           const url = URL.createObjectURL(blob);
                           const a = document.createElement('a');
                           a.href = url;
-                          a.download = `SpendWise_${selectedReportMonth.replace(' ', '_')}.md`;
+                          a.download = `SpendWise_${selectedReportMonth}.md`;
                           a.click();
                         }}
                         className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-[#DDDDDD] bg-white hover:bg-[#F7F8FA] text-xs font-bold text-[#171717]"
@@ -1109,12 +1164,14 @@ export const InteractiveDashboard: React.FC = () => {
                         <span>Markdown</span>
                       </button>
                       <button
+                        disabled={!reportData}
                         onClick={() => {
+                          if (!reportData) return;
                           const jsonBlob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
                           const url = URL.createObjectURL(jsonBlob);
                           const a = document.createElement('a');
                           a.href = url;
-                          a.download = `SpendWise_${selectedReportMonth.replace(' ', '_')}.json`;
+                          a.download = `SpendWise_${selectedReportMonth}.json`;
                           a.click();
                         }}
                         className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#FF665C] hover:bg-[#EE554B] text-white text-xs font-bold shadow-sm"
@@ -1125,10 +1182,23 @@ export const InteractiveDashboard: React.FC = () => {
                     </div>
                   </div>
 
+                  {reportError && (
+                    <div className="p-3 mb-6 rounded-xl border border-[#FF665C] bg-[#FFF5F4] text-xs font-semibold text-[#C0392B] flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                      <span>{reportError}</span>
+                    </div>
+                  )}
+
+                  {!reportData && !reportError && (
+                    <p className="text-xs text-[#858585]">Pick a month and press <b>Generate</b> to build the report with the selected backend ({backend}).</p>
+                  )}
+
+                  {reportData && (
+                  <>
                   {/* Headline Banner */}
                   <div className="p-6 rounded-2xl bg-gradient-to-r from-[#FF665C] to-[#FF7454] text-white mb-6 shadow-md">
                     <span className="text-[10px] uppercase font-bold tracking-widest text-white/80 block">
-                      {selectedReportMonth} Statement
+                      {selectedReportMonth} statement
                     </span>
                     <h4 className="text-xl sm:text-2xl font-black mt-1">
                       {reportData.headline}
@@ -1161,12 +1231,14 @@ export const InteractiveDashboard: React.FC = () => {
                           </li>
                         ))}
                       </ul>
-                      <div className="mt-4 p-2.5 rounded-xl bg-[#2ED573]/10 text-[#2ED573] text-[11px] font-bold flex items-center gap-1.5">
-                        <CheckCircle2 className="w-4 h-4" />
-                        <span>Pydantic MonthlyReport Schema Validated</span>
+                      <div className={`mt-4 p-2.5 rounded-xl text-[11px] font-bold flex items-center gap-1.5 ${reportData.grounded ? 'bg-[#2ED573]/10 text-[#2ED573]' : 'bg-[#FFF5F4] text-[#C0392B]'}`}>
+                        {reportData.grounded ? <CheckCircle2 className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
+                        <span>{reportData.grounded ? 'Schema validated · grounding check passed' : 'Schema validated · grounding check FAILED'}</span>
                       </div>
                     </div>
                   </div>
+                  </>
+                  )}
                 </div>
               )}
 
@@ -1180,77 +1252,117 @@ export const InteractiveDashboard: React.FC = () => {
                     </p>
                   </div>
 
-                  {/* 4 Research Metrics Cards */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-                    <div className="p-4 rounded-2xl bg-[#F7F8FA] border border-[#EEEEEE]">
-                      <span className="text-[10px] font-bold uppercase text-[#858585]">Best Strategy</span>
-                      <div className="text-lg font-black text-[#171717] mt-1">TextGrad Refined</div>
-                      <div className="text-[10px] text-[#2ED573] font-bold mt-0.5">Iterative textual feedback</div>
+                  {evalError && (
+                    <div className="p-3 mb-6 rounded-xl border border-[#FF665C] bg-[#FFF5F4] text-xs font-semibold text-[#C0392B] flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                      <span>{evalError}</span>
                     </div>
-                    <div className="p-4 rounded-2xl bg-[#F7F8FA] border border-[#EEEEEE]">
-                      <span className="text-[10px] font-bold uppercase text-[#858585]">Peak Accuracy</span>
-                      <div className="text-2xl font-black text-[#2ED573] mt-1">93.3%</div>
-                      <div className="text-[10px] text-[#2ED573] font-bold mt-0.5">+25.0 pts vs Zero-shot</div>
-                    </div>
-                    <div className="p-4 rounded-2xl bg-[#F7F8FA] border border-[#EEEEEE]">
-                      <span className="text-[10px] font-bold uppercase text-[#858585]">Best Macro F1</span>
-                      <div className="text-2xl font-black text-[#3498F3] mt-1">0.935</div>
-                      <div className="text-[10px] text-[#858585] mt-0.5">Balances rare categories</div>
-                    </div>
-                    <div className="p-4 rounded-2xl bg-[#F7F8FA] border border-[#EEEEEE]">
-                      <span className="text-[10px] font-bold uppercase text-[#858585]">Ambiguous Cases</span>
-                      <div className="text-2xl font-black text-[#FF665C] mt-1">90.0%</div>
-                      <div className="text-[10px] text-[#858585] mt-0.5">vs 30% on plain prompt</div>
-                    </div>
-                  </div>
+                  )}
 
-                  {/* Grouped Bar Chart of Arms */}
-                  <div className="p-5 rounded-2xl border border-[#EEEEEE] bg-white mb-6">
-                    <h4 className="text-sm font-bold text-[#171717] mb-1">Prompt Comparison Arms Benchmark</h4>
-                    <p className="text-xs text-[#858585] mb-4">Comparison across Accuracy, Macro F1, Ambiguous Accuracy, and Strict JSON Validity</p>
-                    <div className="h-64 w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={BENCHMARK_ARMS}>
-                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F0F0F0" />
-                          <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#858585' }} axisLine={false} tickLine={false} />
-                          <YAxis tick={{ fontSize: 10, fill: '#858585' }} axisLine={false} tickLine={false} domain={[0, 100]} />
-                          <Tooltip formatter={(val: any) => [`${val}%`, '']} />
-                          <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
-                          <Bar dataKey="accuracy" fill="#FF665C" name="Accuracy (%)" radius={[3, 3, 0, 0]} />
-                          <Bar dataKey="ambiguous" fill="#3498F3" name="Ambiguous Accuracy (%)" radius={[3, 3, 0, 0]} />
-                          <Bar dataKey="jsonValidity" fill="#2ED573" name="JSON Validity (%)" radius={[3, 3, 0, 0]} />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
+                  {!evalRun && !evalError && (
+                    <p className="text-xs text-[#858585]">
+                      No evaluation results yet. Run <code>python evaluate.py --backend gemini</code> (or groq / anthropic) to create them.
+                    </p>
+                  )}
 
-                  {/* Benchmark Data Table */}
-                  <div className="border border-[#EEEEEE] rounded-2xl overflow-hidden bg-white">
-                    <table className="w-full text-left text-xs">
-                      <thead className="bg-[#FAFAFA] border-b border-[#EEEEEE] text-[#858585] uppercase text-[10px]">
-                        <tr>
-                          <th className="py-3 px-4">Prompt Arm</th>
-                          <th className="py-3 px-4">Technique</th>
-                          <th className="py-3 px-4">Accuracy</th>
-                          <th className="py-3 px-4">Macro F1</th>
-                          <th className="py-3 px-4">Ambiguous</th>
-                          <th className="py-3 px-4">Strict JSON</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-[#F7F8FA]">
-                        {BENCHMARK_ARMS.map((arm, idx) => (
-                          <tr key={idx} className="hover:bg-[#FAFAFA]">
-                            <td className="py-3 px-4 font-bold text-[#171717]">{arm.name}</td>
-                            <td className="py-3 px-4 text-[#666666]">{arm.technique}</td>
-                            <td className="py-3 px-4 font-bold text-[#FF665C]">{arm.accuracy}%</td>
-                            <td className="py-3 px-4 font-bold text-[#3498F3]">{arm.macroF1}</td>
-                            <td className="py-3 px-4 font-bold text-[#2ED573]">{arm.ambiguous}%</td>
-                            <td className="py-3 px-4 font-bold text-[#171717]">{arm.jsonValidity}%</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                  {evalRun && (() => {
+                    const arms = evalRun.arms;
+                    const best = arms.reduce((a, b) => (b.accuracy > a.accuracy ? b : a), arms[0]);
+                    const bestF1 = arms.reduce((a, b) => (b.macro_f1 > a.macro_f1 ? b : a), arms[0]);
+                    const plain = arms.find(a => a.name === 'zero_shot_plain');
+                    const pct = (x: number) => Math.round(x * 1000) / 10;
+                    const chart = arms.map(a => ({
+                      name: a.name, accuracy: pct(a.accuracy), ambiguous: pct(a.ambiguous_accuracy), jsonValidity: pct(a.json_validity),
+                    }));
+                    return (
+                      <>
+                        {/* Provenance: which backend produced these numbers */}
+                        <div className={`p-3 mb-6 rounded-xl border text-xs font-semibold flex items-start gap-2 ${evalRun.is_real_llm ? 'border-[#2ED573] bg-[#2ED573]/5 text-[#1E8449]' : 'border-[#FFA502] bg-[#FFF8E6] text-[#9A6400]'}`}>
+                          <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                          <span>
+                            Source: <code>{evalRun.backend}</code>{evalRun.is_real_llm ? ` · ${evalRun.model}` : ''} · run {evalRun.timestamp} · {evalRun.dataset.test} held-out test transactions ({evalRun.dataset.test_ambiguous} ambiguous).
+                            {!evalRun.is_real_llm && ' These come from the offline rule-based simulator, NOT a language model. Do not present them as LLM results.'}
+                            {' '}Optimised arms are compact re-implementations of the DSPy / TextGrad ideas, not the libraries themselves. Single run, no confidence intervals.
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                          <div className="p-4 rounded-2xl bg-[#F7F8FA] border border-[#EEEEEE]">
+                            <span className="text-[10px] font-bold uppercase text-[#858585]">Best arm (accuracy)</span>
+                            <div className="text-base font-black text-[#171717] mt-1 break-words">{best.name}</div>
+                            <div className="text-[10px] text-[#858585] mt-0.5">{best.technique}</div>
+                          </div>
+                          <div className="p-4 rounded-2xl bg-[#F7F8FA] border border-[#EEEEEE]">
+                            <span className="text-[10px] font-bold uppercase text-[#858585]">Peak accuracy</span>
+                            <div className="text-2xl font-black text-[#2ED573] mt-1">{pct(best.accuracy)}%</div>
+                            {plain && (
+                              <div className="text-[10px] text-[#858585] mt-0.5">
+                                {(pct(best.accuracy) - pct(plain.accuracy)).toFixed(1)} pts vs zero-shot plain
+                              </div>
+                            )}
+                          </div>
+                          <div className="p-4 rounded-2xl bg-[#F7F8FA] border border-[#EEEEEE]">
+                            <span className="text-[10px] font-bold uppercase text-[#858585]">Best macro F1</span>
+                            <div className="text-2xl font-black text-[#3498F3] mt-1">{bestF1.macro_f1.toFixed(3)}</div>
+                            <div className="text-[10px] text-[#858585] mt-0.5">{bestF1.name}</div>
+                          </div>
+                          <div className="p-4 rounded-2xl bg-[#F7F8FA] border border-[#EEEEEE]">
+                            <span className="text-[10px] font-bold uppercase text-[#858585]">Ambiguous (best arm)</span>
+                            <div className="text-2xl font-black text-[#FF665C] mt-1">{pct(best.ambiguous_accuracy)}%</div>
+                            <div className="text-[10px] text-[#858585] mt-0.5">of {evalRun.dataset.test_ambiguous} ambiguous rows</div>
+                          </div>
+                        </div>
+
+                        <div className="p-5 rounded-2xl border border-[#EEEEEE] bg-white mb-6">
+                          <h4 className="text-sm font-bold text-[#171717] mb-1">Prompt arms on the held-out test split</h4>
+                          <p className="text-xs text-[#858585] mb-4">Accuracy, ambiguous-merchant accuracy and strict JSON validity (%), loaded from the evaluation results file</p>
+                          <div className="h-64 w-full">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <BarChart data={chart}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F0F0F0" />
+                                <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#858585' }} axisLine={false} tickLine={false} />
+                                <YAxis tick={{ fontSize: 10, fill: '#858585' }} axisLine={false} tickLine={false} domain={[0, 100]} />
+                                <Tooltip formatter={(val: any) => [`${val}%`, '']} />
+                                <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
+                                <Bar dataKey="accuracy" fill="#FF665C" name="Accuracy (%)" radius={[3, 3, 0, 0]} />
+                                <Bar dataKey="ambiguous" fill="#3498F3" name="Ambiguous accuracy (%)" radius={[3, 3, 0, 0]} />
+                                <Bar dataKey="jsonValidity" fill="#2ED573" name="Strict JSON validity (%)" radius={[3, 3, 0, 0]} />
+                              </BarChart>
+                            </ResponsiveContainer>
+                          </div>
+                        </div>
+
+                        <div className="border border-[#EEEEEE] rounded-2xl overflow-x-auto bg-white">
+                          <table className="w-full text-left text-xs">
+                            <thead className="bg-[#FAFAFA] border-b border-[#EEEEEE] text-[#858585] uppercase text-[10px]">
+                              <tr>
+                                <th className="py-3 px-4">Arm</th>
+                                <th className="py-3 px-4">Technique</th>
+                                <th className="py-3 px-4">Accuracy</th>
+                                <th className="py-3 px-4">Macro F1</th>
+                                <th className="py-3 px-4">Ambiguous</th>
+                                <th className="py-3 px-4">Strict JSON</th>
+                                <th className="py-3 px-4">Tokens / txn</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-[#F7F8FA]">
+                              {arms.map((arm, idx) => (
+                                <tr key={idx} className="hover:bg-[#FAFAFA]">
+                                  <td className="py-3 px-4 font-bold text-[#171717]">{arm.name}</td>
+                                  <td className="py-3 px-4 text-[#666666]">{arm.technique}</td>
+                                  <td className="py-3 px-4 font-bold text-[#FF665C]">{pct(arm.accuracy)}%</td>
+                                  <td className="py-3 px-4 font-bold text-[#3498F3]">{arm.macro_f1.toFixed(3)}</td>
+                                  <td className="py-3 px-4 font-bold text-[#2ED573]">{pct(arm.ambiguous_accuracy)}%</td>
+                                  <td className="py-3 px-4 font-bold text-[#171717]">{pct(arm.json_validity)}%</td>
+                                  <td className="py-3 px-4 text-[#666666]">{arm.tokens_per_txn}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </>
+                    );
+                  })()}
                 </div>
               )}
 
