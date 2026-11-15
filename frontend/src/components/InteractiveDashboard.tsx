@@ -190,12 +190,33 @@ export const InteractiveDashboard: React.FC = () => {
   const [budgetError, setBudgetError] = useState<string | null>(null);
 
   // Monthly Report State
-  const [selectedReportMonth, setSelectedReportMonth] = useState('2026-10');
-  const [reportData, setReportData] = useState<null | {
-    headline: string; observations: string[]; nextSteps: string[]; grounded: boolean;
+  const [reportMonths, setReportMonths] = useState<string[]>([]);
+  const [selectedReportMonth, setSelectedReportMonth] = useState('');
+  const [generatedReport, setGeneratedReport] = useState<null | {
+    month: string; headline: string; observations: string[]; nextSteps: string[]; grounded: boolean;
   }>(null);
+  const reportData = generatedReport?.month === selectedReportMonth ? generatedReport : null;
   const [reportLoading, setReportLoading] = useState(false);
   const [reportError, setReportError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (activeNav !== 'Monthly Report') return;
+    const controller = new AbortController();
+    setReportError(null);
+    fetch(`${API}/api/data/months`, { signal: controller.signal })
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then(({ months }: { months: string[] }) => {
+        setReportMonths(months);
+        setSelectedReportMonth(month => months.includes(month) ? month : months[0] ?? '');
+      })
+      .catch(e => {
+        if (!controller.signal.aborted) setReportError(`Could not load available months: ${e.message}`);
+      });
+    return () => controller.abort();
+  }, [activeNav]);
 
   // Prompt Lab: real results from the evaluation harness
   const [evalRun, setEvalRun] = useState<EvalRun | null>(null);
@@ -241,12 +262,19 @@ export const InteractiveDashboard: React.FC = () => {
   };
 
   const handleGenerateReport = async () => {
+    if (!selectedReportMonth) return;
     setReportLoading(true); setReportError(null);
     try {
       const d = await postJSON('/api/assistant/report', { month: selectedReportMonth, backend });
-      setReportData({ headline: d.headline, observations: d.observations, nextSteps: d.next_steps, grounded: d.grounded });
+      setGeneratedReport({
+        month: selectedReportMonth,
+        headline: d.headline,
+        observations: d.observations,
+        nextSteps: d.next_steps,
+        grounded: d.grounded,
+      });
     } catch (e: any) {
-      setReportData(null);
+      setGeneratedReport(null);
       setReportError(`Report generation failed: ${e.message}`);
     } finally {
       setReportLoading(false);
@@ -1137,16 +1165,26 @@ export const InteractiveDashboard: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <select
                         value={selectedReportMonth}
-                        onChange={(e) => setSelectedReportMonth(e.target.value)}
+                        disabled={reportLoading || !reportMonths.length}
+                        onChange={(e) => {
+                          setSelectedReportMonth(e.target.value);
+                          setGeneratedReport(null);
+                          setReportError(null);
+                        }}
                         className="px-3 py-2 rounded-xl border border-[#DDDDDD] text-xs font-bold bg-white"
                       >
-                        <option value="2026-10">October 2026</option>
-                        <option value="2026-09">September 2026</option>
-                        <option value="2026-08">August 2026</option>
+                        {!reportMonths.length && <option value="">No months available</option>}
+                        {reportMonths.map(month => (
+                          <option key={month} value={month}>
+                            {new Date(`${month}-01T00:00:00Z`).toLocaleDateString('en', {
+                              month: 'long', year: 'numeric', timeZone: 'UTC',
+                            })}
+                          </option>
+                        ))}
                       </select>
                       <button
                         onClick={handleGenerateReport}
-                        disabled={reportLoading}
+                        disabled={reportLoading || !selectedReportMonth}
                         className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#171717] text-white text-xs font-bold disabled:opacity-60"
                       >
                         {reportLoading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
