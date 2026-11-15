@@ -1,6 +1,7 @@
 """CSV import + validation with explicit rules (Feature 1). No LLM involved here."""
 from __future__ import annotations
 
+import math
 import re
 from dataclasses import dataclass, field
 
@@ -40,9 +41,10 @@ def _parse_amount(x) -> float | None:
     if s.startswith("(") and s.endswith(")"):
         s = "-" + s[1:-1]
     try:
-        return float(s)
+        amount = float(s)
     except ValueError:
         return None
+    return amount if math.isfinite(amount) else None
 
 
 def clean_description(s: str) -> str:
@@ -73,7 +75,7 @@ def load_transactions(source) -> tuple[pd.DataFrame, ImportReport]:
                                       if c in mapping.values()]].copy()
 
     df["date"] = pd.to_datetime(df["date"], errors="coerce", format="mixed", dayfirst=False)
-    df["amount"] = df["amount"].map(_parse_amount)
+    df["amount"] = df["amount"].map(_parse_amount).astype(float).round(2)
     df["description"] = df["description"].fillna("").map(clean_description)
 
     keep = []
@@ -92,17 +94,15 @@ def load_transactions(source) -> tuple[pd.DataFrame, ImportReport]:
 
     if (df["amount"] < 0).mean() > 0.5:
         rep.notes.append("Most amounts were negative (bank-export style); treated them as spending.")
-    if (df["amount"] < 0).any():
-        df["amount"] = df["amount"].abs()
+    df["amount"] = df["amount"].abs()
 
     dups = df.duplicated(subset=["date", "description", "amount"]).sum()
     if dups:
         rep.notes.append(f"{dups} exact duplicate row(s) found and kept - check they are genuine.")
 
-    df = df.sort_values("date").reset_index(drop=True)
+    df = df.sort_values("date", kind="stable").reset_index(drop=True)
     df.insert(0, "id", [f"T{i + 1:03d}" for i in range(len(df))])
     df["month"] = df["date"].dt.strftime("%Y-%m")
     df["merchant"] = df["description"].map(merchant_key)
-    df["amount"] = df["amount"].round(2)
     rep.rows_ok = len(df)
     return df, rep
