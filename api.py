@@ -116,7 +116,7 @@ async def upload_csv(file: UploadFile = File(...)):
         
         SESSION_DATA["df"] = df
         SESSION_DATA["import_rep"] = rep
-        
+
         records = df.to_dict("records")
         for r in records:
             if "date" in r and hasattr(r["date"], "isoformat"):
@@ -264,18 +264,26 @@ def get_budget_advice(req: BudgetRequest):
 
 
 class ReportRequest(BaseModel):
-    month: str = "2026-10"
+    month: Optional[str] = None
     backend: str = "offline-simulator"
     model: Optional[str] = None
     api_key: Optional[str] = None
 
 
+@app.get("/api/data/months")
+def get_available_months():
+    return {"months": sorted(get_default_df()["month"].unique(), reverse=True)}
+
+
 @app.post("/api/assistant/report")
 def get_monthly_report(req: ReportRequest):
     df = get_default_df()
+    month = req.month if req.month is not None else df["month"].max()
+    if month not in df["month"].values:
+        raise HTTPException(status_code=404, detail=f"No transactions available for {month}.")
     llm = _llm(req.backend, req.model, req.api_key)
     try:
-        rep, facts, g, trace = assistant.monthly_report(df, req.month, llm)
+        rep, facts, g, trace = assistant.monthly_report(df, month, llm)
         return {
             "headline": rep.headline,
             "observations": rep.observations,
