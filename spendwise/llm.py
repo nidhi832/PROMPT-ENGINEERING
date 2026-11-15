@@ -7,6 +7,7 @@ That makes prompt changes visibly change its behaviour, but its scores must neve
 """
 from __future__ import annotations
 
+import calendar
 import hashlib
 import json
 import os
@@ -411,22 +412,22 @@ class OfflineSimulator(LLM):
                "uber": "Transport", "movies": "Entertainment", "subscriptions": "Entertainment", "rent": "Bills",
                "medicine": "Health", "courses": "Education", "clothes": "Shopping"}
         cat = cat or next((c for w, c in syn.items() if w in q), None)
-        found = []
+        matches = [(match.start(), match.group()) for match in
+                   re.finditer(r"\b[0-9]{4}-(?:0[1-9]|1[0-2])\b", q)]
+        explicit_months = {month for _, month in matches}
         for m in months:
-            import calendar
             name = calendar.month_name[int(m[5:])].lower()
-            if name in q or name[:3] + " " in q + " ":
-                found.append(m)
-        if re.search(r"last month|this month|latest month|recent month", q) and not found:
+            match = re.search(rf"\b(?:{name}|{name[:3]})\b", q)
+            if match and m not in explicit_months:
+                matches.append((match.start(), m))
+        found = [m for _, m in sorted(matches)]
+        if months and re.search(r"last month|this month|latest month|recent month", q) and not found:
             found.append(months[-1])
         n = int(m.group(1)) if (m := re.search(r"\b(\d{1,2})\b", q)) else 5
         if re.search(r"invest|stock|crypto|salary|income|loan|credit score|mutual fund", q):
             intent = "unsupported"
         elif re.search(r"compare|vs\.?|versus|than|change|differ", q):
             intent = "compare_months"
-            if len(found) < 2 and len(months) >= 2:
-                found = [found[0] if found else months[-1]]
-                found.append(months[months.index(found[0]) - 1] if months.index(found[0]) > 0 else months[-1])
         elif re.search(r"(biggest|largest|most expensive|highest).*(transaction|purchase|payment|expense)", q):
             intent = "largest"
         elif re.search(r"\btop\b|most|biggest|highest|which categor", q):
@@ -451,6 +452,8 @@ class OfflineSimulator(LLM):
         if it == "unsupported":
             return ("I can only answer questions about the transactions you uploaded. Your data has no information "
                     "about income, investments or loans, so I can't answer that without guessing.")
+        if "comparison_unavailable" in r:
+            return r["comparison_unavailable"]
         if r.get("matching_transactions", 1) == 0:
             return f"I couldn't find any transactions for {scope}, so there is nothing to total."
         if it == "total":
@@ -466,10 +469,13 @@ class OfflineSimulator(LLM):
             return f"For {scope}, your biggest categories were {lead}. Total spending was ₹{r['total']:,.2f}."
         if it == "compare_months":
             a, b = r["month"], r["month_b"]
+            totals = (f"You spent ₹{r['total_month']:,.2f} in {a} versus ₹{r['total_month_b']:,.2f} in {b}"
+                      f" ({r['scope_category']}).")
+            if r["difference"] == 0:
+                return totals + " Spending was the same."
             direction = "more" if r["difference"] > 0 else "less"
-            return (f"You spent ₹{r['total_month']:,.2f} in {a} versus ₹{r['total_month_b']:,.2f} in {b}"
-                    f" ({r['scope_category']}) - that's ₹{abs(r['difference']):,.2f} {direction} "
-                    f"({r['difference_pct']:+.1f}%).")
+            pct = f" ({r['difference_pct']:+.1f}%)" if r["difference_pct"] is not None else ""
+            return totals + f" That's ₹{abs(r['difference']):,.2f} {direction}{pct}."
         if it in ("largest", "list"):
             rows = r["transactions"][:3]
             lead = "; ".join(f"{t['description']} ₹{t['amount']:,.2f} on {t['date']}" for t in rows)

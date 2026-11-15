@@ -82,13 +82,18 @@ def execute_intent(df: pd.DataFrame, q: QueryIntent) -> dict:
         return res
     if q.intent == "compare_months":
         months = sorted(df["month"].unique())
-        a = q.month or months[-1]
-        b = q.month_b or (months[months.index(a) - 1] if months.index(a) > 0 else months[-1])
+        a = q.month or (months[-1] if months else None)
+        b = q.month_b or next((month for month in reversed(months) if a and month < a), None)
+        if a not in months or b not in months or a == b:
+            res["comparison_unavailable"] = (
+                "A comparison needs two distinct months with transaction data."
+            )
+            return res
         ta, tb = (round(float(d[d["month"] == m]["amount"].sum()), 2) for m in (a, b))
         res.update({"month": analytics.month_label(a), "month_b": analytics.month_label(b),
                     "scope_category": q.category or "all categories", "total_month": ta, "total_month_b": tb,
                     "difference": round(ta - tb, 2),
-                    "difference_pct": round(100 * (ta - tb) / tb, 1) if tb else 0.0,
+                    "difference_pct": round(100 * (ta - tb) / tb, 1) if tb else None,
                     "matching_transactions": int(len(d[d["month"].isin([a, b])]))})
         return res
     res["total"] = round(float(d["amount"].sum()), 2)

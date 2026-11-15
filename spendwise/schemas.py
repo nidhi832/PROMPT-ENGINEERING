@@ -1,6 +1,7 @@
 """Pydantic schemas: every LLM output is validated against one of these before it is shown."""
 from __future__ import annotations
 
+import re
 from typing import Literal, Optional
 
 from pydantic import BaseModel, Field, field_validator
@@ -34,7 +35,7 @@ class QueryIntent(BaseModel):
     def _month_fmt(cls, v):
         if v is None:
             return v
-        if len(v) != 7 or v[4] != "-":
+        if not re.fullmatch(r"[0-9]{4}-(0[1-9]|1[0-2])", v) or v.startswith("0000-"):
             raise ValueError("month must be YYYY-MM")
         return v
 

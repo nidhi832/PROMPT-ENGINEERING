@@ -1,6 +1,8 @@
 import io
 
 import pandas as pd
+import pytest
+from pydantic import ValidationError
 
 from spendwise import analytics, assistant
 from spendwise.categorizer import categorise, parse_lenient, parse_strict
@@ -24,6 +26,15 @@ def test_import_validation_maps_columns_and_rejects_bad_rows():
     assert list(df["description"]) == ["Netflix subscription", "Swiggy order #1234", "Uber ride"]
     assert df["amount"].tolist() == [499.0, 1250.5, 300.0]
     assert len(rep.issues) == 3
+
+
+def test_import_rejects_infinite_and_sub_cent_amounts():
+    csv = io.BytesIO(b"date,description,amount\n2026-10-01,A,inf\n2026-10-01,B,-inf\n"
+                     b"2026-10-01,C,0.001\n2026-10-01,D,-12.50\n")
+    df, rep = load_transactions(csv)
+    assert df["amount"].tolist() == [12.50]
+    assert [issue["row"] for issue in rep.issues] == [2, 3, 4]
+    assert "negative" in rep.notes[0]
 
 
 def test_strict_and_lenient_parsing():
@@ -51,6 +62,32 @@ def test_python_does_the_math():
     r = assistant.execute_intent(df, QueryIntent(intent="compare_months", month="2026-10", month_b="2026-09"))
     assert r["difference"] == 150.0 and r["difference_pct"] == 150.0
     assert analytics.month_facts(df, "2026-10")["total_spent"] == 250.0
+
+
+@pytest.mark.parametrize("month", ["abcd-ef", "2026-00", "2026-13", "0000-01"])
+def test_query_intent_rejects_invalid_months(month):
+    with pytest.raises(ValidationError):
+        QueryIntent(intent="total", month=month)
+
+
+def test_offline_comparison_respects_month_order_and_reports_missing_data():
+    df, _ = load_transactions(io.BytesIO(CSV))
+    df["category"] = "Food"
+    llm = make_llm("offline-simulator")
+    answer = assistant.ask(df, "Compare October versus September", llm)
+    assert answer.result["month"] == "October 2026"
+    assert answer.result["difference"] == 1051.5
+    for question in ("Compare September", "Compare 2025-12 versus 2026-10"):
+        answer = assistant.ask(df, question, llm)
+        assert answer.text == answer.result["comparison_unavailable"]
+
+
+def test_category_comparison_omits_percent_when_previous_spend_is_zero():
+    df, _ = load_transactions(io.BytesIO(CSV))
+    df["category"] = ["Entertainment", "Food", "Food"]
+    answer = assistant.ask(df, "Compare Food in October versus September", make_llm("offline-simulator"))
+    assert answer.result["difference_pct"] is None
+    assert "%" not in answer.text
 
 
 def test_end_to_end_offline():
