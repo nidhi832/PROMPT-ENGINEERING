@@ -665,6 +665,43 @@ export const InteractiveDashboard: React.FC = () => {
                       </ResponsiveContainer>
                     </div>
                   </div>
+
+                  {/* Recent Transactions Ledger */}
+                  <div className="p-5 rounded-2xl border border-[#EEEEEE] bg-white">
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <h4 className="text-sm font-bold text-[#171717]">Recent Transactions</h4>
+                        <p className="text-xs text-[#858585]">Latest entries with payment accounts and income/expense flows</p>
+                      </div>
+                      <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#F7F8FA] text-[#858585] border border-[#EEEEEE]">
+                        {transactions.length} Total
+                      </span>
+                    </div>
+                    <div className="divide-y divide-[#F7F8FA]">
+                      {transactions.slice(0, 8).map((t) => (
+                        <div key={t.id} className="py-3 flex items-center justify-between hover:bg-[#FAFAFA] px-2 rounded-xl transition-colors">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-xl bg-[#F7F8FA] flex items-center justify-center text-base border border-[#EEEEEE] flex-shrink-0">
+                              {t.icon}
+                            </div>
+                            <div>
+                              <div className="font-bold text-xs text-[#171717]">{t.title}</div>
+                              <div className="text-[10px] text-[#858585] flex items-center gap-2 mt-0.5">
+                                <span>{t.date}</span>
+                                <span>•</span>
+                                <span className="px-1.5 py-0.5 rounded bg-[#F0F2F5] font-semibold text-[#555555]">{t.account}</span>
+                                <span>•</span>
+                                <span className="text-[#858585]">{t.category}</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className={`font-black text-xs sm:text-sm ${t.amount > 0 ? 'text-[#3498F3]' : 'text-[#FF665C]'}`}>
+                            {t.amount > 0 ? `+₹${t.amount.toLocaleString('en-IN')}` : `-₹${Math.abs(t.amount).toLocaleString('en-IN')}`}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               )}
 
