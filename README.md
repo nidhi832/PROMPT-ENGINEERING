@@ -43,19 +43,50 @@ npm run dev -- --port 3000
 
 ## 🔬 Research & Evaluation Suite (Project Plan Section 8)
 
-The project evaluates prompt engineering techniques on a held-out test split (70/30) without data leakage:
-- **Arm A**: Zero-shot Plain Text (Baseline)
-- **Arm B**: Zero-shot with JSON Schema
-- **Arm C**: Few-shot with Labelled Demonstrations
-- **Arm D**: Role-based Prompting (Budget Coach persona)
-- **Arm E**: DSPy Prompt Optimization (`BootstrapFewShot`)
-- **Arm F**: TextGrad Refinement (Iterative textual gradients)
+Six prompt strategies ("arms") are compared on a held-out test split. Optimisers see only the DEV split;
+the 60 TEST transactions (10 deliberately ambiguous merchants) are used once, at the end.
 
-### Metrics Reported:
-- **Category Accuracy** (`93.3%` on optimized prompt vs `68.3%` on zero-shot)
-- **Macro F1 Score** (`0.935` balancing rare categories)
-- **Ambiguous Merchant Accuracy** (`90.0%` vs `30.0%`)
-- **Strict JSON Validity** (`100%`)
+| Arm | Technique |
+|---|---|
+| `zero_shot_plain` | Zero-shot, free-text answer (baseline) |
+| `zero_shot_json` | Zero-shot + JSON schema |
+| `role_guided` | Role + category guide + rules + JSON (best manual prompt) |
+| `few_shot` | Few-shot with labelled demonstrations |
+| `optimized_bootstrap` | Auto-selected demonstrations (re-implementation of the DSPy BootstrapFewShot idea) |
+| `optimized_textgrad` | Feedback-refined rules (re-implementation of the TextGrad idea) |
+
+### Results: `openai/gpt-oss-20b` via Groq, single run, 60 test transactions
+
+| Arm | Accuracy | Macro F1 | Ambiguous (10) | Strict JSON | Tokens / txn |
+|---|---|---|---|---|---|
+| zero_shot_plain | 93.3% | 0.931 | 80% | n/a | 73.5 |
+| zero_shot_json | 93.3% | 0.931 | 80% | 33.3% | 168.4 |
+| role_guided | 100% | 1.000 | 100% | 100% | 112.4 |
+| few_shot | 100% | 1.000 | 100% | 100% | 104.6 |
+| optimized_bootstrap | 100% | 1.000 | 100% | 66.7% | 140.2 |
+| optimized_textgrad | 100% | 1.000 | 100% | 100% | 113.7 |
+
+Full output: `results/eval_openai-compatible_openai-gpt-oss-20b.json`.
+
+**Findings**
+- Structured prompting fixed all 4 zero-shot errors (93.3% -> 100%), but with only 4 differing
+  transactions the gap is not statistically significant (exact McNemar p = 0.125).
+- Clearest effect: a JSON schema alone gave 33% strict JSON validity; adding role, category guide and
+  rules gave 100%.
+- The optimisers gave no extra gain because the best manual prompt already scored 100% (ceiling effect).
+
+**Limitations**
+- Synthetic transactions; 60 test rows; one run with one model.
+- 40 of the 60 test merchants also appear in the DEV split, which can favour the few-shot and optimised arms.
+- The "DSPy" and "TextGrad" arms re-implement those ideas; they do not use the libraries.
+
+**Reproduce** (free Groq key in `OPENAI_API_KEY`; the model is pinned for the whole run):
+```bash
+python evaluate.py --backend openai-compatible --list-models
+python evaluate.py --backend openai-compatible --model openai/gpt-oss-20b
+```
+`python evaluate.py --backend offline-simulator` runs without a key, but its scores come from a
+keyword simulator, not a language model.
 
 Run tests anytime with:
 ```bash
