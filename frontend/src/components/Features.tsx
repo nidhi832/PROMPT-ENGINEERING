@@ -36,7 +36,7 @@ export const Features: React.FC = () => {
       preview: (
         <div className="p-3 text-xs flex flex-col justify-between h-full">
           <div>
-            <div className="text-[10px] uppercase font-bold text-[#FF665C] mb-1">Feature 1: Expense Import</div>
+            <div className="text-[10px] uppercase font-bold text-[#FF665C] mb-1">Smart CSV Import</div>
             <div className="p-3 rounded-xl bg-[#F7F8FA] border border-[#EEEEEE] mb-2.5">
               <div className="flex items-center justify-between mb-1.5 text-[10px] font-bold text-[#858585]">
                 <span>CSV File Upload</span>
@@ -75,7 +75,7 @@ export const Features: React.FC = () => {
       preview: (
         <div className="p-3 text-xs flex flex-col justify-between h-full">
           <div>
-            <div className="text-[10px] uppercase font-bold text-[#FF665C] mb-1">Feature 2: Smart Categorization</div>
+            <div className="text-[10px] uppercase font-bold text-[#FF665C] mb-1">Automated Categorization</div>
             <div className="space-y-1.5 mb-2">
               <div className="p-2 rounded-lg bg-[#F7F8FA] border border-[#EEEEEE] flex justify-between items-center">
                 <div>
@@ -121,7 +121,7 @@ export const Features: React.FC = () => {
       preview: (
         <div className="p-3 text-xs flex flex-col justify-between h-full">
           <div>
-            <div className="text-[10px] uppercase font-bold text-[#FF665C] mb-1 text-center">Feature 3: Spending Analysis</div>
+            <div className="text-[10px] uppercase font-bold text-[#FF665C] mb-1 text-center">Live Spending Analysis</div>
             <div className="w-24 h-24 mx-auto my-1.5 rounded-full border-4 border-[#FF665C] border-t-[#3498F3] border-r-[#FF78B9] border-l-[#FFA502] flex items-center justify-center animate-spin" style={{ animationDuration: '24s' }}>
               <span className="text-[10px] font-extrabold">₹42.8k</span>
             </div>
@@ -155,7 +155,7 @@ export const Features: React.FC = () => {
       preview: (
         <div className="p-3 text-xs flex flex-col justify-between h-full">
           <div>
-            <div className="text-[10px] uppercase font-bold text-[#FF665C] mb-1.5">Feature 4: Ask SpendWise</div>
+            <div className="text-[10px] uppercase font-bold text-[#FF665C] mb-1.5">Conversational Q&amp;A</div>
             {/* User message */}
             <div className="bg-[#F7F8FA] p-2 rounded-xl border border-[#EEEEEE] mb-2 text-right">
               <span className="text-[9px] text-[#858585] block font-semibold mb-0.5">You asked:</span>
@@ -189,7 +189,7 @@ export const Features: React.FC = () => {
       preview: (
         <div className="p-3 text-xs flex flex-col justify-between h-full">
           <div>
-            <div className="text-[10px] uppercase font-bold text-[#FF665C] mb-1.5">Feature 5: Budget Suggestions</div>
+            <div className="text-[10px] uppercase font-bold text-[#FF665C] mb-1.5">Budget Coaching</div>
             <div className="p-2.5 rounded-xl bg-[#F7F8FA] border border-[#EEEEEE] mb-2">
               <div className="flex justify-between items-center text-[10px]">
                 <span className="text-[#858585] font-bold">Monthly Budget Goal</span>
@@ -226,7 +226,7 @@ export const Features: React.FC = () => {
       preview: (
         <div className="p-3 text-xs flex flex-col justify-between h-full">
           <div>
-            <div className="text-[10px] uppercase font-bold text-[#FF665C] mb-1.5">Feature 6: Monthly Report</div>
+            <div className="text-[10px] uppercase font-bold text-[#FF665C] mb-1.5">Monthly Financial Report</div>
             <div className="p-2.5 rounded-xl bg-[#F7F8FA] border border-[#EEEEEE] mb-2">
               <span className="text-[9px] uppercase font-bold text-[#858585]">October 2026 Statement</span>
               <div className="text-xs font-extrabold text-[#171717] mt-0.5">₹42,860.00 spent, led by Food &amp; Dining</div>
@@ -262,13 +262,13 @@ export const Features: React.FC = () => {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFF5F4] text-[11px] font-bold text-[#FF665C] mb-3">
-            <Sparkles className="w-3.5 h-3.5" /> PROPOSED WORKFLOW &amp; CORE FEATURES
+            <Sparkles className="w-3.5 h-3.5" /> SMART FINANCIAL WORKFLOW
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#171717] tracking-tight">
             Everything you need to manage your money.
           </h2>
           <p className="mt-3 text-base text-[#666666]">
-            The 6 core prompt engineering features from the SpendWise Project Plan.
+            Intelligent, automated personal finance management powered by modern AI.
           </p>
         </div>
 

@@ -50,8 +50,8 @@ export const HelpCenter: React.FC<HelpCenterProps> = ({ onOpenDashboard }) => {
                       <div className="text-[11px] text-[#858585]">Columns, date formats and validation</div>
                     </div>
                     <div className="p-3 rounded-lg border border-[#EEEEEE] bg-[#FAFAFA]">
-                      <div className="font-bold text-[#171717] mb-1">Prompt Lab Guide</div>
-                      <div className="text-[11px] text-[#858585]">Reading the evaluation results</div>
+                      <div className="font-bold text-[#171717] mb-1">RAG Advisor Guide</div>
+                      <div className="text-[11px] text-[#858585]">Tax rules, 50/30/20 &amp; policy citations</div>
                     </div>
                   </div>
                 </div>
@@ -67,7 +67,7 @@ export const HelpCenter: React.FC<HelpCenterProps> = ({ onOpenDashboard }) => {
               SpendWise Help Center
             </h3>
             <p className="text-base text-[#666666] leading-relaxed mb-8">
-              You can find out regular updates, user manuals, and prompt engineering architecture breakdowns.
+              Access product documentation, expense management guides, and financial planning tutorials.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">

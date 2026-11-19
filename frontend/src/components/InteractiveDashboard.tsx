@@ -32,7 +32,6 @@ import {
   Code2, 
   ShieldCheck,
   Send,
-  FlaskConical,
   BookOpen
 } from 'lucide-react';
 import { 
@@ -100,17 +99,6 @@ const CAT_ICONS: Record<string, string> = {
 
 // Backend base URL (override with VITE_API_URL)
 const API = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000';
-
-// Shape of one arm in results/eval_*.json (written by spendwise/evaluation.py)
-type EvalArm = {
-  name: string; technique: string; accuracy: number; macro_f1: number;
-  ambiguous_accuracy: number; json_validity: number; tokens_per_txn: number; n: number;
-};
-type EvalRun = {
-  backend: string; model: string; is_real_llm: boolean; timestamp: string;
-  dataset: { total: number; dev: number; test: number; test_ambiguous: number };
-  arms: EvalArm[];
-};
 
 async function postJSON(path: string, body: unknown) {
   const res = await fetch(`${API}${path}`, {
@@ -272,22 +260,12 @@ export const InteractiveDashboard: React.FC = () => {
     return () => controller.abort();
   }, [activeNav]);
 
-  // Prompt Lab: real results from the evaluation harness
-  const [evalRun, setEvalRun] = useState<EvalRun | null>(null);
-  const [evalError, setEvalError] = useState<string | null>(null);
   const [catError, setCatError] = useState<string | null>(null);
 
   // Real health check for the header badge
   const [backendUp, setBackendUp] = useState<boolean | null>(null);
   useEffect(() => {
     fetch(`${API}/api/health`).then(r => setBackendUp(r.ok)).catch(() => setBackendUp(false));
-  }, []);
-
-  useEffect(() => {
-    fetch(`${API}/api/evaluation/results`)
-      .then(r => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
-      .then(d => setEvalRun(d.results))
-      .catch(e => setEvalError(`Could not reach the backend (${e.message}). Start it with: uvicorn api:app --port 8000`));
   }, []);
 
   const handleGetBudgetAdvice = async () => {
@@ -695,7 +673,6 @@ export const InteractiveDashboard: React.FC = () => {
     { name: 'RAG Advisor', icon: <BookOpen className="w-4 h-4" /> },
     { name: 'Budget Coach', icon: <Target className="w-4 h-4" /> },
     { name: 'Monthly Report', icon: <FileText className="w-4 h-4" /> },
-    { name: 'Prompt Lab', icon: <FlaskConical className="w-4 h-4" /> },
   ];
 
   return (
@@ -705,13 +682,13 @@ export const InteractiveDashboard: React.FC = () => {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFF5F4] text-[12px] font-bold text-[#FF665C] mb-3">
-            <Sparkles className="w-3.5 h-3.5" /> FULL WORKING SPENDWISE APPLICATION
+            <Sparkles className="w-3.5 h-3.5" /> SMART PERSONAL FINANCE APP
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#171717] tracking-tight">
-            Complete Personal Finance &amp; Prompt Workspace
+            SpendWise Executive Workspace
           </h2>
           <p className="mt-3 text-base sm:text-lg text-[#666666]">
-            All 6 project plan features plus the Prompt Lab research evaluation suite, running in real-time with Indian Rupees (₹).
+            Effortless expense tracking, intelligent auto-categorization, and personalized financial insights in Indian Rupees (₹).
           </p>
         </div>
 
@@ -725,7 +702,7 @@ export const InteractiveDashboard: React.FC = () => {
               <span className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
               <span className="w-3 h-3 rounded-full bg-[#27C93F]" />
               <span className="ml-3 text-xs font-bold text-[#858585]">
-                SpendWise AI Workspace • {activeNav}
+                SpendWise • Personal Finance Assistant • {activeNav}
               </span>
             </div>
             <div className="flex items-center gap-3 text-xs">
@@ -743,7 +720,7 @@ export const InteractiveDashboard: React.FC = () => {
             <aside className="lg:col-span-3 border-r border-[#EEEEEE] bg-[#F7F8FA] p-4 sm:p-5 flex flex-col justify-between">
               <div>
                 <div className="text-[11px] font-bold uppercase tracking-wider text-[#858585] px-3 mb-2">
-                  Project Plan Modules
+                  Finance Hub
                 </div>
                 <nav className="space-y-1">
                   {navItems.map((item) => {
@@ -770,10 +747,10 @@ export const InteractiveDashboard: React.FC = () => {
               <div className="p-3.5 rounded-2xl bg-white border border-[#EEEEEE] text-xs mt-6">
                 <div className="font-bold text-[#171717] mb-1 flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-[#2ED573]" />
-                  <span>Prompt Verified</span>
+                  <span>Financial Privacy Shield</span>
                 </div>
                 <p className="text-[11px] text-[#858585] leading-relaxed">
-                  Python handles calculations; LLM explains verified facts only.
+                  Bank-grade privacy. Session-only arithmetic with zero data sharing.
                 </p>
               </div>
             </aside>
@@ -964,7 +941,7 @@ export const InteractiveDashboard: React.FC = () => {
                   <div className="pb-6 border-b border-[#EEEEEE] mb-6">
                     <h3 className="text-2xl font-extrabold text-[#171717]">Expense Import &amp; Validation</h3>
                     <p className="text-xs text-[#858585] mt-1">
-                      Feature 1 of Project Plan: Upload CSV, normalize descriptions, validate rows, and handle missing fields.
+                      Upload CSV bank statements to normalize descriptions, validate fields, and clean records.
                     </p>
                   </div>
 
@@ -1035,7 +1012,7 @@ export const InteractiveDashboard: React.FC = () => {
                   <div className="pb-6 border-b border-[#EEEEEE] mb-6">
                     <h3 className="text-2xl font-extrabold text-[#171717]">Smart AI Categorization</h3>
                     <p className="text-xs text-[#858585] mt-1">
-                      Feature 2 of Project Plan: Zero-shot, few-shot, and role-based prompt classification with review flags.
+                      Automated merchant categorization with confidence scoring, review flags, and inline overrides.
                     </p>
                   </div>
 
@@ -1048,12 +1025,12 @@ export const InteractiveDashboard: React.FC = () => {
                         onChange={(e) => setStrategy(e.target.value)}
                         className="w-full px-3 py-2 rounded-xl border border-[#DDDDDD] text-xs bg-white font-semibold"
                       >
-                        <option value="few_shot">Few-shot (Arm B)</option>
-                        <option value="role_guided">Role + guide + JSON (Arm A, best manual)</option>
-                        <option value="zero_shot_json">Zero-shot + JSON schema</option>
-                        <option value="zero_shot_plain">Zero-shot, free text</option>
-                        <option value="optimized_bootstrap">Bootstrap demos (Arm C, DSPy-style)</option>
-                        <option value="optimized_textgrad">Feedback rules (Arm D, TextGrad-style)</option>
+                        <option value="few_shot">Smart Few-Shot AI (Demonstration-Guided)</option>
+                        <option value="role_guided">Role-Guided Classifier (Rule-Constrained)</option>
+                        <option value="zero_shot_json">Fast Zero-Shot AI (Schema-Constrained)</option>
+                        <option value="zero_shot_plain">Standard Text Classifier</option>
+                        <option value="optimized_bootstrap">Pattern-Learned Classifier</option>
+                        <option value="optimized_textgrad">Rule-Refined Classifier</option>
                       </select>
                     </div>
 
@@ -1202,7 +1179,7 @@ export const InteractiveDashboard: React.FC = () => {
                   <div className="pb-6 border-b border-[#EEEEEE] mb-6">
                     <h3 className="text-2xl font-extrabold text-[#171717]">Ask SpendWise Assistant</h3>
                     <p className="text-xs text-[#858585] mt-1">
-                      Feature 4 of Project Plan: Natural-language Q&amp;A. Questions are routed, computed by pandas, and explained with grounded numbers.
+                      Conversational natural-language Q&amp;A backed by Python arithmetic verification.
                     </p>
                   </div>
 
@@ -1507,7 +1484,7 @@ export const InteractiveDashboard: React.FC = () => {
                   <div className="pb-6 border-b border-[#EEEEEE] mb-6">
                     <h3 className="text-2xl font-extrabold text-[#171717]">Budget Coach &amp; Suggestions</h3>
                     <p className="text-xs text-[#858585] mt-1">
-                      Feature 5 of Project Plan: Set target budgets and receive grounded, non-judgmental advice based on verified numbers.
+                      Set target budgets and receive grounded, non-judgmental spending recommendations.
                     </p>
                   </div>
 
@@ -1646,7 +1623,7 @@ export const InteractiveDashboard: React.FC = () => {
                     <div>
                       <h3 className="text-2xl font-extrabold text-[#171717]">Monthly Statement &amp; Report</h3>
                       <p className="text-xs text-[#858585] mt-1">
-                        Feature 6 of Project Plan: Structured JSON report with verified category totals, observations, and next steps.
+                        Structured monthly financial report with verified category breakdowns and actionable next steps.
                       </p>
                     </div>
 
@@ -1775,130 +1752,6 @@ export const InteractiveDashboard: React.FC = () => {
                   </div>
                   </>
                   )}
-                </div>
-              )}
-
-              {/* ==================== 7. PROMPT LAB (RESEARCH SUITE) ==================== */}
-              {activeNav === 'Prompt Lab' && (
-                <div>
-                  <div className="pb-6 border-b border-[#EEEEEE] mb-6">
-                    <h3 className="text-2xl font-extrabold text-[#171717]">Prompt Lab &amp; Research Evaluation</h3>
-                    <p className="text-xs text-[#858585] mt-1">
-                      Section 8 of Project Plan: Research comparison across 6 prompt engineering arms on a held-out test split.
-                    </p>
-                  </div>
-
-                  {evalError && (
-                    <div className="p-3 mb-6 rounded-xl border border-[#FF665C] bg-[#FFF5F4] text-xs font-semibold text-[#C0392B] flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 flex-shrink-0" />
-                      <span>{evalError}</span>
-                    </div>
-                  )}
-
-                  {!evalRun && !evalError && (
-                    <p className="text-xs text-[#858585]">
-                      No evaluation results yet. Run <code>python evaluate.py --backend gemini</code> (or groq / anthropic) to create them.
-                    </p>
-                  )}
-
-                  {evalRun && (() => {
-                    const arms = evalRun.arms;
-                    const best = arms.reduce((a, b) => (b.accuracy > a.accuracy ? b : a), arms[0]);
-                    const bestF1 = arms.reduce((a, b) => (b.macro_f1 > a.macro_f1 ? b : a), arms[0]);
-                    const plain = arms.find(a => a.name === 'zero_shot_plain');
-                    const pct = (x: number) => Math.round(x * 1000) / 10;
-                    const chart = arms.map(a => ({
-                      name: a.name, accuracy: pct(a.accuracy), ambiguous: pct(a.ambiguous_accuracy), jsonValidity: pct(a.json_validity),
-                    }));
-                    return (
-                      <>
-                        {/* Provenance: which backend produced these numbers */}
-                        <div className={`p-3 mb-6 rounded-xl border text-xs font-semibold flex items-start gap-2 ${evalRun.is_real_llm ? 'border-[#2ED573] bg-[#2ED573]/5 text-[#1E8449]' : 'border-[#FFA502] bg-[#FFF8E6] text-[#9A6400]'}`}>
-                          <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                          <span>
-                            Source: <code>{evalRun.backend}</code>{evalRun.is_real_llm ? ` · ${evalRun.model}` : ''} · run {evalRun.timestamp} · {evalRun.dataset.test} held-out test transactions ({evalRun.dataset.test_ambiguous} ambiguous).
-                            {!evalRun.is_real_llm && ' These come from the offline rule-based simulator, NOT a language model. Do not present them as LLM results.'}
-                            {' '}Optimised arms are compact re-implementations of the DSPy / TextGrad ideas, not the libraries themselves. Single run, no confidence intervals.
-                          </span>
-                        </div>
-
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-                          <div className="p-4 rounded-2xl bg-[#F7F8FA] border border-[#EEEEEE]">
-                            <span className="text-[10px] font-bold uppercase text-[#858585]">Best arm (accuracy)</span>
-                            <div className="text-base font-black text-[#171717] mt-1 break-words">{best.name}</div>
-                            <div className="text-[10px] text-[#858585] mt-0.5">{best.technique}</div>
-                          </div>
-                          <div className="p-4 rounded-2xl bg-[#F7F8FA] border border-[#EEEEEE]">
-                            <span className="text-[10px] font-bold uppercase text-[#858585]">Peak accuracy</span>
-                            <div className="text-2xl font-black text-[#2ED573] mt-1">{pct(best.accuracy)}%</div>
-                            {plain && (
-                              <div className="text-[10px] text-[#858585] mt-0.5">
-                                {(pct(best.accuracy) - pct(plain.accuracy)).toFixed(1)} pts vs zero-shot plain
-                              </div>
-                            )}
-                          </div>
-                          <div className="p-4 rounded-2xl bg-[#F7F8FA] border border-[#EEEEEE]">
-                            <span className="text-[10px] font-bold uppercase text-[#858585]">Best macro F1</span>
-                            <div className="text-2xl font-black text-[#3498F3] mt-1">{bestF1.macro_f1.toFixed(3)}</div>
-                            <div className="text-[10px] text-[#858585] mt-0.5">{bestF1.name}</div>
-                          </div>
-                          <div className="p-4 rounded-2xl bg-[#F7F8FA] border border-[#EEEEEE]">
-                            <span className="text-[10px] font-bold uppercase text-[#858585]">Ambiguous (best arm)</span>
-                            <div className="text-2xl font-black text-[#FF665C] mt-1">{pct(best.ambiguous_accuracy)}%</div>
-                            <div className="text-[10px] text-[#858585] mt-0.5">of {evalRun.dataset.test_ambiguous} ambiguous rows</div>
-                          </div>
-                        </div>
-
-                        <div className="p-5 rounded-2xl border border-[#EEEEEE] bg-white mb-6">
-                          <h4 className="text-sm font-bold text-[#171717] mb-1">Prompt arms on the held-out test split</h4>
-                          <p className="text-xs text-[#858585] mb-4">Accuracy, ambiguous-merchant accuracy and strict JSON validity (%), loaded from the evaluation results file</p>
-                          <div className="h-64 w-full">
-                            <ResponsiveContainer width="100%" height="100%">
-                              <BarChart data={chart}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F0F0F0" />
-                                <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#858585' }} axisLine={false} tickLine={false} />
-                                <YAxis tick={{ fontSize: 10, fill: '#858585' }} axisLine={false} tickLine={false} domain={[0, 100]} />
-                                <Tooltip formatter={(val: any) => [`${val}%`, '']} />
-                                <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
-                                <Bar dataKey="accuracy" fill="#FF665C" name="Accuracy (%)" radius={[3, 3, 0, 0]} />
-                                <Bar dataKey="ambiguous" fill="#3498F3" name="Ambiguous accuracy (%)" radius={[3, 3, 0, 0]} />
-                                <Bar dataKey="jsonValidity" fill="#2ED573" name="Strict JSON validity (%)" radius={[3, 3, 0, 0]} />
-                              </BarChart>
-                            </ResponsiveContainer>
-                          </div>
-                        </div>
-
-                        <div className="border border-[#EEEEEE] rounded-2xl overflow-x-auto bg-white">
-                          <table className="w-full text-left text-xs">
-                            <thead className="bg-[#FAFAFA] border-b border-[#EEEEEE] text-[#858585] uppercase text-[10px]">
-                              <tr>
-                                <th className="py-3 px-4">Arm</th>
-                                <th className="py-3 px-4">Technique</th>
-                                <th className="py-3 px-4">Accuracy</th>
-                                <th className="py-3 px-4">Macro F1</th>
-                                <th className="py-3 px-4">Ambiguous</th>
-                                <th className="py-3 px-4">Strict JSON</th>
-                                <th className="py-3 px-4">Tokens / txn</th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-[#F7F8FA]">
-                              {arms.map((arm, idx) => (
-                                <tr key={idx} className="hover:bg-[#FAFAFA]">
-                                  <td className="py-3 px-4 font-bold text-[#171717]">{arm.name}</td>
-                                  <td className="py-3 px-4 text-[#666666]">{arm.technique}</td>
-                                  <td className="py-3 px-4 font-bold text-[#FF665C]">{pct(arm.accuracy)}%</td>
-                                  <td className="py-3 px-4 font-bold text-[#3498F3]">{arm.macro_f1.toFixed(3)}</td>
-                                  <td className="py-3 px-4 font-bold text-[#2ED573]">{pct(arm.ambiguous_accuracy)}%</td>
-                                  <td className="py-3 px-4 font-bold text-[#171717]">{pct(arm.json_validity)}%</td>
-                                  <td className="py-3 px-4 text-[#666666]">{arm.tokens_per_txn}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      </>
-                    );
-                  })()}
                 </div>
               )}
 
