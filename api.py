@@ -66,6 +66,11 @@ def get_default_df():
         df["confidence"] = [p.confidence for p in preds]
         df["needs_review"] = [p.needs_review for p in preds]
         df["explanation"] = [p.explanation for p in preds]
+        df["suggested_categories"] = [
+            [s.model_dump() for s in p.suggested_categories] if hasattr(p, "suggested_categories") and p.suggested_categories else []
+            for p in preds
+        ]
+        df["flag"] = [getattr(p, "flag", None) or ("review" if p.needs_review else "verified") for p in preds]
         SESSION_DATA["df"] = df
         SESSION_DATA["import_rep"] = rep
     return SESSION_DATA["df"]
@@ -119,6 +124,11 @@ async def upload_csv(file: UploadFile = File(...)):
         df["confidence"] = [p.confidence for p in preds]
         df["needs_review"] = [p.needs_review for p in preds]
         df["explanation"] = [p.explanation for p in preds]
+        df["suggested_categories"] = [
+            [s.model_dump() for s in p.suggested_categories] if hasattr(p, "suggested_categories") and p.suggested_categories else []
+            for p in preds
+        ]
+        df["flag"] = [getattr(p, "flag", None) or ("review" if p.needs_review else "verified") for p in preds]
         
         SESSION_DATA["df"] = df
         SESSION_DATA["import_rep"] = rep
@@ -175,6 +185,11 @@ def run_categorization(req: CategorizeRequest):
     df["confidence"] = [p.confidence for p in preds]
     df["needs_review"] = [p.needs_review for p in preds]
     df["explanation"] = [p.explanation for p in preds]
+    df["suggested_categories"] = [
+        [s.model_dump() for s in p.suggested_categories] if hasattr(p, "suggested_categories") and p.suggested_categories else []
+        for p in preds
+    ]
+    df["flag"] = [getattr(p, "flag", None) or ("review" if p.needs_review else "verified") for p in preds]
     SESSION_DATA["df"] = df
 
     records = df.to_dict("records")

@@ -20,7 +20,9 @@ CATS = ", ".join(CATEGORIES)
 
 JSON_SCHEMA_TEXT = """Return ONLY valid JSON (no markdown fences) with this exact shape:
 {"results": [{"id": "<transaction id>", "category": "<one allowed category>", "confidence": <0.0-1.0>,
-  "explanation": "<max 15 words, based only on the description>", "needs_review": <true|false>}]}
+  "explanation": "<max 15 words, based only on the description>", "needs_review": <true|false>,
+  "suggested_categories": [{"category": "<category>", "reason": "<why this may fit>"}],
+  "flag": "<verified|review>", "needs_user_confirmation": <true|false>}]}
 Return one result per transaction, in the same order, using the same ids."""
 
 CATEGORY_GUIDE = """Category guide:
@@ -33,15 +35,17 @@ CATEGORY_GUIDE = """Category guide:
 - Education: courses (Coursera, Udemy), books, exam or tuition fees, stationery, library
 - Other: cash withdrawals, transfers to people, gifts, donations, personal services, anything unclear"""
 
-ROLE = ("You are SpendWise, a careful personal-finance categorisation assistant. You label bank transactions "
-        "for a student budgeting app. You never guess details that are not in the description.")
+ROLE = ("You are an expert personal finance transaction categorization assistant specializing in Indian consumer transactions. "
+        "Your task is to analyze transactions and assign each to the most appropriate existing category. "
+        "If a merchant is ambiguous or does not clearly fit, do not blindly assign Other: suggest up to three likely categories with reasons and mark for human review.")
 
-RULES = """Rules:
-1. Choose exactly one category from: {cats}.
-2. Use the transaction description only. Do not infer facts that are not present.
-3. If the merchant could reasonably belong to more than one category, or is unrecognisable, choose the most
-   likely category, lower the confidence below 0.6 and set needs_review to true.
-4. Payments to people (UPI transfer to a name) and cash withdrawals are Other.""".format(cats=CATS)
+RULES = """Instructions & Rules:
+1. Choose categories ONLY from: {cats}.
+2. If the transaction clearly belongs to one of the existing categories, assign that category and mark flag 'verified'.
+3. If the transaction does not clearly fit any existing category, do not blindly assign 'Other'. Suggest the most likely category based on merchant context.
+4. If the merchant is ambiguous or unrecognised, provide up to three possible category suggestions with reasons, set flag to 'review', and set needs_user_confirmation to true.
+5. Never invent merchant information or assume the purpose of a transaction without evidence.
+6. Payments to people (UPI transfer to a person's name) and cash withdrawals are Other.""".format(cats=CATS)
 
 
 @dataclass

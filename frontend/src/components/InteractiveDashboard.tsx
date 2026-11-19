@@ -223,7 +223,10 @@ export const InteractiveDashboard: React.FC = () => {
             date: String(r.date),
             account: r.account || (r.description?.toLowerCase().includes('swiggy') ? 'UPI' : r.description?.toLowerCase().includes('salary') ? 'Salary Account' : 'Debit Card'),
             icon: CAT_ICONS[r.category] || '💳',
-            status: r.needs_review ? 'review' : 'verified',
+            status: (r.needs_review || r.flag === 'review') ? 'review' : 'verified',
+            confidence: r.confidence ?? (r.needs_review ? 0.45 : 0.92),
+            reasoning: r.explanation || '',
+            suggestedCategories: (r.suggested_categories || []).map((s: any) => ({ category: s.category, reason: s.reason })),
           })));
           setImportReport({
             fileName: 'sample_expenses.csv (168 Student Transactions)',
@@ -456,7 +459,14 @@ export const InteractiveDashboard: React.FC = () => {
   const handleCategoryOverride = (txnId: string, newCat: Transaction['category']) => {
     setTransactions(prev => prev.map(t => {
       if (t.id === txnId) {
-        return { ...t, category: newCat, status: 'verified', icon: CAT_ICONS[newCat] || '💳' };
+        return {
+          ...t,
+          category: newCat,
+          status: 'verified',
+          confidence: 1.0,
+          icon: CAT_ICONS[newCat] || '💳',
+          suggestedCategories: []
+        };
       }
       return t;
     }));
@@ -487,7 +497,10 @@ export const InteractiveDashboard: React.FC = () => {
         date: String(r.date),
         account: 'Sample CSV',
         icon: CAT_ICONS[r.category] || '💳',
-        status: r.needs_review ? 'review' : 'verified',
+        status: (r.needs_review || r.flag === 'review') ? 'review' : 'verified',
+        confidence: r.confidence ?? (r.needs_review ? 0.45 : 0.92),
+        reasoning: r.explanation || '',
+        suggestedCategories: (r.suggested_categories || []).map((s: any) => ({ category: s.category, reason: s.reason })),
       })));
     } catch (e: any) {
       setCatError(`Categorisation failed: ${e.message}. Is the backend running on ${API}?`);
@@ -619,7 +632,10 @@ export const InteractiveDashboard: React.FC = () => {
           date: String(r.date),
           account: r.account || 'Uploaded CSV',
           icon: CAT_ICONS[r.category] || '💳',
-          status: r.needs_review ? 'review' : 'verified',
+          status: (r.needs_review || r.flag === 'review') ? 'review' : 'verified',
+          confidence: r.confidence ?? (r.needs_review ? 0.45 : 0.92),
+          reasoning: r.explanation || '',
+          suggestedCategories: (r.suggested_categories || []).map((s: any) => ({ category: s.category, reason: s.reason })),
         })));
         setImportReport({
           fileName: file.name,
@@ -660,7 +676,10 @@ export const InteractiveDashboard: React.FC = () => {
           date: String(r.date),
           account: r.account || (r.description?.toLowerCase().includes('swiggy') ? 'UPI' : 'Debit Card'),
           icon: CAT_ICONS[r.category] || '💳',
-          status: r.needs_review ? 'review' : 'verified',
+          status: (r.needs_review || r.flag === 'review') ? 'review' : 'verified',
+          confidence: r.confidence ?? (r.needs_review ? 0.45 : 0.92),
+          reasoning: r.explanation || '',
+          suggestedCategories: (r.suggested_categories || []).map((s: any) => ({ category: s.category, reason: s.reason })),
         })));
         setImportReport({
           fileName: 'sample_expenses.csv (Student Dataset)',
@@ -1158,20 +1177,50 @@ export const InteractiveDashboard: React.FC = () => {
                                   <option key={cat} value={cat}>{CAT_ICONS[cat]} {cat}</option>
                                 ))}
                               </select>
+                              {t.status === 'review' && t.suggestedCategories && t.suggestedCategories.length > 0 && (
+                                <div className="mt-1.5 flex flex-wrap items-center gap-1 max-w-xs">
+                                  <span className="text-[9px] font-bold text-[#858585] flex items-center gap-0.5">
+                                    <Sparkles className="w-2.5 h-2.5 text-[#3498F3]" /> AI Suggest:
+                                  </span>
+                                  {t.suggestedCategories.map((s, idx) => (
+                                    <button
+                                      key={idx}
+                                      onClick={() => handleCategoryOverride(t.id, s.category as any)}
+                                      title={s.reason}
+                                      className="px-2 py-0.5 rounded-full bg-[#3498F3]/10 hover:bg-[#3498F3] hover:text-white text-[#3498F3] text-[9px] font-bold transition-all flex items-center gap-1 cursor-pointer border border-[#3498F3]/20"
+                                    >
+                                      <span>{CAT_ICONS[s.category] || '💡'}</span>
+                                      <span>{s.category}</span>
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
                             </td>
                             <td className="py-3 px-4">
                               <div className="flex items-center gap-2">
                                 <div className="w-16 h-1.5 rounded-full bg-black/10 overflow-hidden">
-                                  <div className="h-full bg-[#2ED573]" style={{ width: '92%' }} />
+                                  <div
+                                    className={`h-full ${t.status === 'review' ? 'bg-[#FFA502]' : 'bg-[#2ED573]'}`}
+                                    style={{ width: `${Math.round((t.confidence ?? (t.status === 'review' ? 0.45 : 0.92)) * 100)}%` }}
+                                  />
                                 </div>
-                                <span className="text-[10px] font-bold text-[#666666]">0.92</span>
+                                <span className="text-[10px] font-bold text-[#666666]">
+                                  {(t.confidence ?? (t.status === 'review' ? 0.45 : 0.92)).toFixed(2)}
+                                </span>
                               </div>
                             </td>
                             <td className="py-3 px-4">
                               {t.status === 'review' ? (
-                                <span className="px-2 py-0.5 rounded bg-[#FFF8E7] text-[#D68100] border border-[#FFEAA7] font-bold text-[10px] flex items-center gap-1 w-max">
-                                  <AlertTriangle className="w-2.5 h-2.5" /> Review
-                                </span>
+                                <div>
+                                  <span className="px-2 py-0.5 rounded bg-[#FFF8E7] text-[#D68100] border border-[#FFEAA7] font-bold text-[10px] flex items-center gap-1 w-max">
+                                    <AlertTriangle className="w-2.5 h-2.5" /> Review
+                                  </span>
+                                  {t.reasoning && (
+                                    <div className="text-[9px] text-[#858585] mt-0.5 max-w-[140px] truncate" title={t.reasoning}>
+                                      {t.reasoning}
+                                    </div>
+                                  )}
+                                </div>
                               ) : (
                                 <span className="text-[#2ED573] font-bold">✓ Verified</span>
                               )}

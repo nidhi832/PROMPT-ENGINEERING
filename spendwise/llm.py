@@ -401,12 +401,66 @@ class OfflineSimulator(LLM):
             ranked = sorted(score.items(), key=lambda kv: -kv[1])
             (best, s1), (_, s2) = ranked[0], ranked[1]
             if s1 == 0:
-                best, conf, expl = "Other", 0.3, "Merchant not recognised from the description"
+                best, conf, expl = "Other", 0.45, "The merchant description is ambiguous."
             else:
                 conf = round(min(0.97, max(0.3, s1 / (s1 + s2 + 0.5))), 2)
                 expl = f"Matched {why.get(best, 'keywords')}"
-            out.append({"id": tid, "category": best, "confidence": conf, "explanation": expl,
-                        "needs_review": conf < 0.6})
+
+            # Check if flagged for review
+            needs_review = (conf < 0.75) or (best == "Other")
+            flag = "review" if needs_review else "verified"
+            needs_user_confirmation = needs_review
+
+            suggested_categories = []
+            if needs_review:
+                # Provide up to 3 domain-guided category suggestions
+                if "dunzo" in low:
+                    suggested_categories = [
+                        {"category": "Food", "reason": "Merchant may represent grocery or quick-commerce purchases"},
+                        {"category": "Health", "reason": "Merchant may provide pharmacy or health products"},
+                        {"category": "Transport", "reason": "Merchant provides local parcel courier services"}
+                    ]
+                elif any(w in low for w in ["gaming", "game", "steam", "playstation", "xbox"]):
+                    suggested_categories = [
+                        {"category": "Entertainment", "reason": "Gaming platforms and digital games fall under digital entertainment"},
+                        {"category": "Bills", "reason": "Recurring digital service subscription"}
+                    ]
+                elif any(w in low for w in ["atm", "fee", "charge", "penalty"]):
+                    suggested_categories = [
+                        {"category": "Bills", "reason": "Banking service fee or administrative transaction charge"}
+                    ]
+                elif any(w in low for w in ["clinic", "hospital", "pharma", "lab"]):
+                    suggested_categories = [
+                        {"category": "Health", "reason": "Medical consultations, diagnostic lab tests, or pharmacy care"}
+                    ]
+                elif any(w in low for w in ["flipkart", "amazon", "myntra"]):
+                    suggested_categories = [
+                        {"category": "Shopping", "reason": "General e-commerce retail and consumer goods"},
+                        {"category": "Education", "reason": "Academic books or educational electronics"}
+                    ]
+                else:
+                    for c_cand, s_cand in ranked:
+                        if c_cand != "Other" and len(suggested_categories) < 2:
+                            suggested_categories.append({
+                                "category": c_cand,
+                                "reason": f"Transaction characteristics suggest possible {c_cand} expense"
+                            })
+                    if not suggested_categories:
+                        suggested_categories = [
+                            {"category": "Food", "reason": "Merchant may represent daily food/grocery expense"},
+                            {"category": "Shopping", "reason": "Merchant may represent retail or lifestyle purchase"}
+                        ]
+
+            out.append({
+                "id": tid,
+                "category": best,
+                "confidence": conf,
+                "explanation": expl,
+                "needs_review": needs_review,
+                "suggested_categories": suggested_categories,
+                "flag": flag,
+                "needs_user_confirmation": needs_user_confirmation,
+            })
         if json_mode:
             return json.dumps({"results": out})
         return "\n".join(f"{o['id']}: {o['category']}" for o in out)

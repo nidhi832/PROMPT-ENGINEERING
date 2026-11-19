@@ -1,3 +1,8 @@
+export interface CategorySuggestion {
+  category: string;
+  reason: string;
+}
+
 export interface Transaction {
   id: string;
   title: string;
@@ -7,6 +12,9 @@ export interface Transaction {
   account: string;
   icon: string;
   status?: 'verified' | 'review';
+  confidence?: number;
+  reasoning?: string;
+  suggestedCategories?: CategorySuggestion[];
 }
 
 export interface BudgetCategory {

@@ -10,12 +10,20 @@ CATEGORIES = ["Food", "Transport", "Shopping", "Bills", "Entertainment", "Health
 Category = Literal["Food", "Transport", "Shopping", "Bills", "Entertainment", "Health", "Education", "Other"]
 
 
+class CategorySuggestion(BaseModel):
+    category: Category
+    reason: str
+
+
 class CategoryResult(BaseModel):
     id: str
     category: Category
     confidence: float = Field(ge=0.0, le=1.0)
-    explanation: str = Field(min_length=1, max_length=300)
+    explanation: str = Field(default="", min_length=0, max_length=500)
     needs_review: bool
+    suggested_categories: list[CategorySuggestion] = Field(default_factory=list)
+    flag: Optional[str] = None
+    needs_user_confirmation: Optional[bool] = None
 
 
 class BatchCategorization(BaseModel):
