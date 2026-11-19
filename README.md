@@ -8,7 +8,7 @@
 [![Tests](https://img.shields.io/badge/Tests-16%20Passed-2ED573?style=flat-square&logo=pytest&logoColor=white)](tests/)
 
 > **SpendWise** is an intelligent personal-finance assistant built with **Prompt Engineering**, **Automated Prompt Optimization (DSPy & TextGrad)**, and **Retrieval-Augmented Generation (RAG)**.  
-> It pairs an executive **React + Tailwind CSS frontend** (inspired by [RealByte Money Manager](https://www.realbyteapps.com/)) with a high-performance **FastAPI backend** running deterministic Python/pandas calculations for a strict **Zero-Hallucination Guarantee**.
+> It pairs a consumer-grade **React + Tailwind CSS frontend** (inspired by [RealByte Money Manager](https://www.realbyteapps.com/)) with a high-performance **FastAPI backend** running deterministic Python/pandas calculations for a strict **Zero-Hallucination Guarantee**. The consumer web dashboard provides intuitive expense tracking and advice, while researchers can evaluate prompt strategies via the offline and live CLI evaluation suite.
 
 ---
 
@@ -109,7 +109,24 @@ Six prompt strategies ("arms") are benchmarked on a held-out test split. Optimis
 | `optimized_bootstrap` | **100%** | **1.000** | **100%** | 66.7% | 140.2 |
 | `optimized_textgrad` | **100%** | **1.000** | **100%** | **100%** | 113.7 |
 
-Full report: `results/eval_openai-compatible_openai-gpt-oss-20b.json`.
+### Running Benchmarks via CLI
+
+The research evaluation suite can be run directly from the command line across any supported LLM backend:
+
+```bash
+# Offline rule-based simulator (reproducible baseline)
+python evaluate.py --backend offline-simulator
+
+# Google Gemini
+export GEMINI_API_KEY="your-api-key"
+python evaluate.py --backend gemini --model gemini-2.5-flash
+
+# OpenAI / Groq / Ollama
+export OPENAI_API_KEY="your-groq-key"
+python evaluate.py --backend openai-compatible --model openai/gpt-oss-20b
+```
+
+Evaluation output artifacts are persisted in `results/eval_<backend>_<model>.json`.
 
 ---
 
