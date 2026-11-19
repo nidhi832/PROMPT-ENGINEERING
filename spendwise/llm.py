@@ -322,7 +322,7 @@ GENERIC_LEXICON = {
     "Health": ["pharmacy", "medic", "doctor", "clinic", "hospital", "dental", "health", "gym", "fitness"],
     "Education": ["course", "book", "exam", "tuition", "school", "college", "university", "stationery",
                   "library", "fee"],
-    "Other": ["atm", "cash", "transfer", "gift", "donation", "salon", "haircut", "laundry"],
+    "Other": ["atm", "cash", "transfer", "gift", "donation", "salon", "haircut", "laundry", "beauty", "parlour", "spa"],
 }
 STOP = {"the", "and", "for", "order", "upi", "with", "from", "payment", "purchase", "like", "anything", "online",
         "membership", "subscription", "subscriptions", "service", "services", "personal", "unclear", "goods",
@@ -439,7 +439,7 @@ class OfflineSimulator(LLM):
                         {"category": "Fuel", "reason": "Vehicle fuel expense deserves its own category separate from Transport fares"},
                         {"category": "Vehicle", "reason": "Vehicle running cost not covered by cab/auto transport category"}
                     ]
-                elif any(w in low for w in ["salon", "haircut", "spa", "parlour", "grooming", "nail", "wax"]):
+                elif any(w in low for w in ["salon", "haircut", "spa", "parlour", "grooming", "nail", "wax", "beauty", "facial"]):
                     suggested_categories = [
                         {"category": "Personal Care", "reason": "Grooming and beauty services not covered by Shopping or Health"},
                         {"category": "Beauty", "reason": "Beauty treatments and personal grooming expense"}

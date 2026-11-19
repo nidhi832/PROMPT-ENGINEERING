@@ -582,29 +582,88 @@ export const InteractiveDashboard: React.FC = () => {
     }
   };
 
-  // Add Transaction
-  const handleAddTransaction = (e: React.FormEvent) => {
+  // Add Transaction — auto-AI-categorize via backend, show new-category suggestions if flagged
+  const handleAddTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTitle.trim() || !newAmount) return;
 
     const parsedAmount = Math.abs(parseFloat(newAmount));
     const finalAmount = newType === 'expense' ? -parsedAmount : parsedAmount;
+    const txnId = `T${Date.now().toString().slice(-4)}`;
 
-    const newTxn: Transaction = {
-      id: `T${Date.now().toString().slice(-4)}`,
+    // Optimistically add with pending state
+    const pendingTxn: Transaction = {
+      id: txnId,
       title: newTitle.trim(),
-      category: newCategory,
+      category: 'Other',
       amount: finalAmount,
       date: 'Today, 12 Nov 2026',
       account: newAccount,
-      icon: CAT_ICONS[newCategory] || '💳',
-      status: 'verified',
+      icon: '⏳',
+      status: 'review',
+      confidence: 0,
+      reasoning: 'AI categorizing…',
+      suggestedCategories: [],
     };
-
-    setTransactions([newTxn, ...transactions]);
+    setTransactions(prev => [pendingTxn, ...prev]);
     setNewTitle('');
     setNewAmount('');
     setIsAddModalOpen(false);
+
+    // Call backend to AI-categorize the new transaction
+    try {
+      const d = await postJSON('/api/categorize', {
+        transactions: [{ id: txnId, description: newTitle.trim(), amount: Math.abs(parsedAmount) }],
+        strategy: 'role_guided',
+        backend: backend === 'offline' ? 'offline-simulator' : backend,
+      });
+      const r = (d.results || [])[0];
+      if (r) {
+        setTransactions(prev => prev.map(t => t.id === txnId ? {
+          ...t,
+          category: r.category || 'Other',
+          icon: CAT_ICONS[r.category] || '💳',
+          status: (r.needs_review || r.flag === 'review') ? 'review' : 'verified',
+          confidence: r.confidence ?? 0.45,
+          reasoning: r.explanation || '',
+          suggestedCategories: (r.suggested_categories || []).map((s: any) => ({ category: s.category, reason: s.reason })),
+        } : t));
+      }
+    } catch (err: any) {
+      console.error("Auto-categorize error:", err);
+      // Fallback: assign domain-guided suggestions based on keywords
+      const low = newTitle.toLowerCase();
+      let fallbackSugg: Array<{ category: string; reason: string }> = [];
+      if (/haircut|salon|spa|parlour|beauty|grooming|wax|facial/.test(low)) {
+        fallbackSugg = [
+          { category: 'Personal Care', reason: 'Grooming and beauty services not covered by predefined categories' },
+          { category: 'Beauty', reason: 'Beauty treatments and personal care expense' }
+        ];
+      } else if (/gym|fitness|yoga|cult/.test(low)) {
+        fallbackSugg = [
+          { category: 'Fitness', reason: 'Fitness training or gym membership' },
+          { category: 'Wellness', reason: 'Health and wellness routine' }
+        ];
+      } else if (/petrol|fuel|diesel|cng/.test(low)) {
+        fallbackSugg = [
+          { category: 'Fuel', reason: 'Vehicle fuel expense' },
+          { category: 'Vehicle', reason: 'Automobile running and maintenance cost' }
+        ];
+      } else {
+        fallbackSugg = [
+          { category: 'Miscellaneous', reason: 'Custom transaction not matching standard predefined categories' }
+        ];
+      }
+      setTransactions(prev => prev.map(t => t.id === txnId ? {
+        ...t,
+        category: 'Other',
+        icon: '💡',
+        confidence: 0.45,
+        status: 'review',
+        reasoning: 'Ambiguous merchant context — human review needed',
+        suggestedCategories: fallbackSugg,
+      } : t));
+    }
   };
 
   // CSV Drag and Drop - Live Python backend upload
@@ -1957,15 +2016,9 @@ export const InteractiveDashboard: React.FC = () => {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-bold text-[#555555] block mb-1">Category</label>
-                  <select
-                    value={newCategory}
-                    onChange={(e) => setNewCategory(e.target.value as any)}
-                    className="w-full px-3 py-2 rounded-xl border border-[#EEEEEE] text-xs bg-white focus:outline-none focus:border-[#FF665C]"
-                  >
-                    {CATEGORIES.map(cat => (
-                      <option key={cat} value={cat}>{CAT_ICONS[cat]} {cat}</option>
-                    ))}
-                  </select>
+                  <div className="w-full px-3 py-2 rounded-xl border border-dashed border-[#22C55E]/50 bg-[#F0FDF4] text-xs text-[#16A34A] font-bold flex items-center gap-1.5">
+                    <Sparkles className="w-3 h-3" /> AI will suggest
+                  </div>
                 </div>
                 <div>
                   <label className="text-xs font-bold text-[#555555] block mb-1">Account</label>
@@ -1993,9 +2046,9 @@ export const InteractiveDashboard: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 rounded-xl bg-[#FF665C] hover:bg-[#EE554B] text-white text-xs font-bold shadow-md shadow-[#FF665C]/25"
+                  className="flex-1 py-2.5 rounded-xl bg-[#FF665C] hover:bg-[#EE554B] text-white text-xs font-bold shadow-md shadow-[#FF665C]/25 flex items-center justify-center gap-1.5"
                 >
-                  Save Entry
+                  <Sparkles className="w-3.5 h-3.5" /> Save &amp; Auto-Categorize
                 </button>
               </div>
             </form>

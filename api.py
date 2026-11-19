@@ -158,11 +158,11 @@ class CategorizeRequest(BaseModel):
     backend: str = "offline-simulator"
     model: Optional[str] = None
     api_key: Optional[str] = None
+    transactions: Optional[List[Dict[str, Any]]] = None
 
 
 @app.post("/api/categorize")
 def run_categorization(req: CategorizeRequest):
-    df = get_default_df().copy()
     llm = _llm(req.backend, req.model, req.api_key)
     
     labelled = load_labelled()
@@ -172,10 +172,37 @@ def run_categorization(req: CategorizeRequest):
         for name, d in json.loads(f.read_text()).items():
             strategies[name] = PromptTemplate.from_dict(d)
     if req.strategy not in strategies:
-        raise HTTPException(status_code=400,
-                            detail=f"Unknown strategy '{req.strategy}'. Run evaluate.py first for optimised arms. "
-                                   f"Available: {sorted(strategies)}")
-    strat = strategies[req.strategy]
+        strat = strategies.get("role_guided") or strategies.get("few_shot")
+    else:
+        strat = strategies[req.strategy]
+
+    # If specific transactions were provided (e.g. single/new transaction from UI)
+    if req.transactions:
+        items = [
+            {"id": str(t.get("id", f"T{i}")), "description": str(t.get("description", t.get("title", "")))}
+            for i, t in enumerate(req.transactions)
+        ]
+        try:
+            preds, _ = categorise(items, strat, llm)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+        results = [
+            {
+                "id": p.id,
+                "category": p.category,
+                "confidence": p.confidence,
+                "explanation": p.explanation,
+                "needs_review": p.needs_review,
+                "suggested_categories": [s.model_dump() for s in p.suggested_categories] if hasattr(p, "suggested_categories") and p.suggested_categories else [],
+                "flag": getattr(p, "flag", None) or ("review" if p.needs_review else "verified"),
+                "needs_user_confirmation": getattr(p, "needs_user_confirmation", p.needs_review),
+            }
+            for p in preds
+        ]
+        return {"results": results}
+
+    df = get_default_df().copy()
 
     try:
         preds, cstats = categorise(df[["id", "description"]].to_dict("records"), strat, llm)
