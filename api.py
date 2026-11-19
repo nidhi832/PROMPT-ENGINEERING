@@ -15,7 +15,7 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from spendwise import analytics, assistant
+from spendwise import analytics, assistant, rag
 from spendwise.categorizer import categorise
 from spendwise.data import load_transactions
 from spendwise.evaluation import list_results, load_labelled, run_evaluation
@@ -303,6 +303,37 @@ def get_evaluation_results():
         return {"results": None}
     res = json.loads(files[0].read_text())
     return {"results": res}
+
+
+class RAGRequest(BaseModel):
+    question: str
+    backend: str = "offline-simulator"
+    model: Optional[str] = None
+    api_key: Optional[str] = None
+    top_k: int = 3
+
+
+@app.post("/api/rag/ask")
+def ask_rag_advisor(req: RAGRequest):
+    df = get_default_df()
+    llm = _llm(req.backend, req.model, req.api_key)
+    try:
+        res = rag.query_rag(req.question, df, llm, top_k=req.top_k)
+        return {
+            "answer": res.answer,
+            "citations": res.citations,
+            "retrieved_chunks": res.retrieved_chunks,
+            "facts_used": res.facts_used,
+            "grounded": res.grounded,
+            "trace": res.trace,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/rag/knowledge-base")
+def get_knowledge_base():
+    return {"documents": rag.get_retriever().get_all_documents()}
 
 
 if __name__ == "__main__":

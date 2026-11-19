@@ -350,6 +350,8 @@ class OfflineSimulator(LLM):
             text = self._report(user)
         elif system == P.FEEDBACK_SYSTEM:
             text = self._feedback(user)
+        elif "RETRIEVED_KNOWLEDGE:" in user or "SpendWise RAG Advisor" in system:
+            text = self._rag(user)
         else:
             text = "{}"
         self.calls += 1
@@ -543,6 +545,62 @@ class OfflineSimulator(LLM):
                 if r not in rules:
                     rules.append(r)
         return json.dumps({"rules": rules[:5]})
+
+    def _rag(self, user: str) -> str:
+        q_match = re.search(r"USER_QUESTION:\s*(.+)", user)
+        q = q_match.group(1).strip() if q_match else ""
+        q_lower = q.lower()
+
+        sources = re.findall(r"\[Source:\s*([^\|\]]+)", user)
+        citations = [s.strip() for s in sources] if sources else ["Personal Finance Knowledge Base"]
+
+        facts_block = re.search(r"VERIFIED_USER_FACTS[^\n]*\n(\{.*?\})\n\nUSER_QUESTION:", user, re.DOTALL)
+        user_facts = json.loads(facts_block.group(1)) if facts_block and facts_block.group(1).strip() else {}
+        monthly_avg = user_facts.get("monthly_average_spent")
+
+        if any(w in q_lower for w in ["80d", "tax", "gym", "cult", "health"]):
+            answer = (
+                "Under Section 80D of the Indian Income Tax Act, health insurance premiums qualify for tax deductions "
+                "up to ₹25,000 annually (with an additional ₹5,000 allowance for preventive health checkups). "
+                "Crucially, commercial gym, fitness, or Cult.fit memberships do NOT qualify for tax deductions under Section 80D, "
+                "as they are classified as personal lifestyle wellness rather than medical insurance or diagnostic care."
+            )
+        elif any(w in q_lower for w in ["50/30/20", "benchmark", "rule", "ratio"]):
+            avg_str = f" With your current monthly average spend of ₹{monthly_avg:,.2f}," if monthly_avg else ""
+            answer = (
+                f"Under the 50/30/20 Budgeting Rule, 50% of after-tax income is allocated to essential Needs (groceries, rent, bills), "
+                f"30% to Wants (dining, shopping, entertainment), and 20% to Savings.{avg_str} To reach this target, cap flexible delivery orders "
+                f"and automate a 15-20% transfer to your savings on the 1st of every month."
+            )
+        elif any(w in q_lower for w in ["swiggy", "zomato", "delivery", "food", "dining"]):
+            answer = (
+                "Food delivery aggregators (Swiggy, Zomato) typically carry an effective 18% to 35% markup over direct restaurant "
+                "menu rates when factoring in platform convenience fees, packaging, and surge pricing. Applying the 2-Day Cooking Rule "
+                "by substituting just two delivery orders each week with home cooking saves between ₹2,400 and ₹3,500 every month."
+            )
+        elif any(w in q_lower for w in ["emergency", "fund", "liquid", "reserve", "contingency"]):
+            burn_str = f" Based on your monthly spending of ₹{monthly_avg:,.2f}, your target emergency reserve is ₹{monthly_avg * 3:,.2f} to ₹{monthly_avg * 6:,.2f}." if monthly_avg else ""
+            answer = (
+                f"A prudent emergency contingency fund must cover 3 to 6 months of non-negotiable living expenses.{burn_str} "
+                "Store this in high-yield savings with auto-sweep or liquid mutual funds rather than relying on credit card limits, "
+                "which charge high revolving interest rates of 36% to 48% APR."
+            )
+        elif any(w in q_lower for w in ["subscription", "zombie", "recurring", "audit"]):
+            answer = (
+                "To eliminate 'Zombie Subscriptions', audit your statements for recurring auto-debits under ₹1,000. "
+                "For fitness memberships like Cult.fit, an annual membership only delivers value under ₹200/session if attended "
+                "3+ times per week; attending fewer than 4 times per month pushes the effective cost above ₹500 per visit."
+            )
+        else:
+            answer = (
+                "Based on the retrieved personal finance knowledge base, align your spending with structured budgeting categories, "
+                "audit recurring auto-debits regularly, and maintain an accessible liquid emergency buffer to protect your financial health."
+            )
+
+        return json.dumps({
+            "answer": answer,
+            "citations": citations[:2] if citations else ["Personal Finance Knowledge Base"]
+        })
 
 
 def available_backends() -> list[str]:

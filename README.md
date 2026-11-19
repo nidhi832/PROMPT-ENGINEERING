@@ -38,6 +38,7 @@ npm run dev -- --port 3000
 | **4** | **Ask SpendWise** | Conversational natural-language Q&A (*"How much did I spend on food in October?"*). | Intent query routing, pandas computation, grounded explanation, and grounding verification badge. |
 | **5** | **Budget Suggestions** | Enter monthly budget or savings goal; receive practical suggestions. | Constrained prompt produces grounded suggestions with estimated monthly savings and guard-rails. |
 | **6** | **Monthly Report** | Statement headline, observations, next steps, category breakdowns. | Pydantic validated `MonthlyReport` schema with one-click Markdown and JSON downloads. |
+| **7** | **RAG Financial Advisor** | Domain knowledge retrieval (Indian tax Section 80D/80C, 50/30/20 rules, Swiggy markup audit). | TF-IDF semantic vector retrieval across policy chunks combined with verified transaction arithmetic and explicit citations. |
 
 ---
 
