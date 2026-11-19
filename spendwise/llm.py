@@ -413,42 +413,87 @@ class OfflineSimulator(LLM):
 
             suggested_categories = []
             if needs_review:
-                # Provide up to 3 domain-guided category suggestions
-                if "dunzo" in low:
+                # Suggest NEW category names NOT in the existing list — to help user expand their categories
+                if any(w in low for w in ["gym", "fitness", "yoga", "crossfit", "cult", "cure.fit"]):
                     suggested_categories = [
-                        {"category": "Food", "reason": "Merchant may represent grocery or quick-commerce purchases"},
-                        {"category": "Health", "reason": "Merchant may provide pharmacy or health products"},
-                        {"category": "Transport", "reason": "Merchant provides local parcel courier services"}
+                        {"category": "Fitness", "reason": "Gym membership or fitness class not covered by existing Health category"},
+                        {"category": "Wellness", "reason": "Wellness or self-care activity outside standard health spending"}
                     ]
-                elif any(w in low for w in ["gaming", "game", "steam", "playstation", "xbox"]):
+                elif any(w in low for w in ["hotel", "hostel", "airbnb", "oyo", "flight", "makemytrip", "goibibo", "irctc", "train ticket"]):
                     suggested_categories = [
-                        {"category": "Entertainment", "reason": "Gaming platforms and digital games fall under digital entertainment"},
-                        {"category": "Bills", "reason": "Recurring digital service subscription"}
+                        {"category": "Travel", "reason": "Accommodation or inter-city travel not covered by Transport"},
+                        {"category": "Vacation", "reason": "Leisure travel expense for a trip or holiday"}
                     ]
-                elif any(w in low for w in ["atm", "fee", "charge", "penalty"]):
+                elif any(w in low for w in ["rent", "flat", "pgpayment", "landlord", "lease", "deposit"]):
                     suggested_categories = [
-                        {"category": "Bills", "reason": "Banking service fee or administrative transaction charge"}
+                        {"category": "Rent", "reason": "Monthly accommodation rent — a recurring fixed expense deserving its own category"},
+                        {"category": "Housing", "reason": "Housing-related payment not covered by Bills"}
                     ]
-                elif any(w in low for w in ["clinic", "hospital", "pharma", "lab"]):
+                elif any(w in low for w in ["insurance", "policy", "premium", "lic", "hdfc life", "bajaj allianz"]):
                     suggested_categories = [
-                        {"category": "Health", "reason": "Medical consultations, diagnostic lab tests, or pharmacy care"}
+                        {"category": "Insurance", "reason": "Insurance premium payment not covered by any existing category"},
+                        {"category": "Financial Services", "reason": "Financial product payment outside standard bill categories"}
                     ]
-                elif any(w in low for w in ["flipkart", "amazon", "myntra"]):
+                elif any(w in low for w in ["petrol", "fuel", "cng", "diesel", "hp petrol", "ioc", "bharat petroleum"]):
                     suggested_categories = [
-                        {"category": "Shopping", "reason": "General e-commerce retail and consumer goods"},
-                        {"category": "Education", "reason": "Academic books or educational electronics"}
+                        {"category": "Fuel", "reason": "Vehicle fuel expense deserves its own category separate from Transport fares"},
+                        {"category": "Vehicle", "reason": "Vehicle running cost not covered by cab/auto transport category"}
+                    ]
+                elif any(w in low for w in ["salon", "haircut", "spa", "parlour", "grooming", "nail", "wax"]):
+                    suggested_categories = [
+                        {"category": "Personal Care", "reason": "Grooming and beauty services not covered by Shopping or Health"},
+                        {"category": "Beauty", "reason": "Beauty treatments and personal grooming expense"}
+                    ]
+                elif any(w in low for w in ["donation", "charity", "ngo", "temple", "church", "mosque", "trust"]):
+                    suggested_categories = [
+                        {"category": "Charity", "reason": "Charitable giving or religious donation — a distinct financial category"},
+                        {"category": "Donations", "reason": "Voluntary giving not captured by any existing category"}
+                    ]
+                elif any(w in low for w in ["pet", "vet", "dog food", "cat food", "petsmart", "drools"]):
+                    suggested_categories = [
+                        {"category": "Pets", "reason": "Pet food, vet visits, or pet care not covered by existing categories"},
+                        {"category": "Animal Care", "reason": "Expenses related to pet ownership and veterinary care"}
+                    ]
+                elif any(w in low for w in ["dunzo", "blinkit", "zepto", "swiggy instamart", "bigbasket"]):
+                    suggested_categories = [
+                        {"category": "Groceries", "reason": "Quick-commerce grocery delivery deserves its own category separate from restaurant Food"},
+                        {"category": "Household", "reason": "Household essentials and daily necessities via delivery"}
+                    ]
+                elif any(w in low for w in ["gaming", "game", "steam", "playstation", "xbox", "pubg", "battlepass"]):
+                    suggested_categories = [
+                        {"category": "Gaming", "reason": "Gaming purchases are distinct from general Entertainment subscriptions"},
+                        {"category": "Digital Goods", "reason": "In-app purchases or digital game content"}
+                    ]
+                elif any(w in low for w in ["atm", "cash withdrawal", "fee", "bank charge", "penalty"]):
+                    suggested_categories = [
+                        {"category": "Banking Fees", "reason": "ATM fees and bank charges deserve their own category for financial tracking"},
+                        {"category": "Miscellaneous", "reason": "Administrative or one-off bank transaction charge"}
+                    ]
+                elif any(w in low for w in ["clinic", "hospital", "pharma", "lab", "diagnostic", "scan"]):
+                    suggested_categories = [
+                        {"category": "Medical", "reason": "Hospital visits and diagnostics are distinct from pharmacy Health spending"},
+                        {"category": "Healthcare", "reason": "Formal medical treatment expense beyond OTC pharmacy purchases"}
+                    ]
+                elif any(w in low for w in ["invest", "mutual fund", "sip", "zerodha", "groww", "stocks", "gold"]):
+                    suggested_categories = [
+                        {"category": "Investments", "reason": "Investment or savings transfer — not an expense, but tracked separately"},
+                        {"category": "Savings", "reason": "Wealth-building transaction deserving its own financial category"}
                     ]
                 else:
-                    for c_cand, s_cand in ranked:
-                        if c_cand != "Other" and len(suggested_categories) < 2:
-                            suggested_categories.append({
-                                "category": c_cand,
-                                "reason": f"Transaction characteristics suggest possible {c_cand} expense"
-                            })
+                    # Generic new-category suggestions based on transaction tokens
+                    suggestions_map = [
+                        (["subscription", "plan", "renew", "auto-pay"], "Subscriptions", "Recurring digital subscription not covered by Bills or Entertainment"),
+                        (["repair", "service", "maintenance", "fix"], "Home Maintenance", "Repair or maintenance service not covered by existing categories"),
+                        (["wedding", "event", "party", "celebration"], "Events & Celebrations", "Event or celebration expense outside standard spending categories"),
+                        (["stationery", "pen", "notebook", "supplies"], "Office Supplies", "Stationery or office materials separate from Education fees"),
+                    ]
+                    for keywords, new_cat, reason in suggestions_map:
+                        if any(w in low for w in keywords) and len(suggested_categories) < 2:
+                            suggested_categories.append({"category": new_cat, "reason": reason})
                     if not suggested_categories:
                         suggested_categories = [
-                            {"category": "Food", "reason": "Merchant may represent daily food/grocery expense"},
-                            {"category": "Shopping", "reason": "Merchant may represent retail or lifestyle purchase"}
+                            {"category": "Miscellaneous", "reason": "Transaction does not fit any predefined category — consider creating a custom category"},
+                            {"category": "Uncategorized", "reason": "Unrecognised merchant or payment type — user review needed to assign a custom label"}
                         ]
 
             out.append({

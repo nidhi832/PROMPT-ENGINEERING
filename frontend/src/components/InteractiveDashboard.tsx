@@ -1180,16 +1180,16 @@ export const InteractiveDashboard: React.FC = () => {
                               {t.status === 'review' && t.suggestedCategories && t.suggestedCategories.length > 0 && (
                                 <div className="mt-1.5 flex flex-wrap items-center gap-1 max-w-xs">
                                   <span className="text-[9px] font-bold text-[#858585] flex items-center gap-0.5">
-                                    <Sparkles className="w-2.5 h-2.5 text-[#3498F3]" /> AI Suggest:
+                                    <Sparkles className="w-2.5 h-2.5 text-[#22C55E]" /> New category?
                                   </span>
                                   {t.suggestedCategories.map((s, idx) => (
                                     <button
                                       key={idx}
-                                      onClick={() => handleCategoryOverride(t.id, s.category as any)}
-                                      title={s.reason}
-                                      className="px-2 py-0.5 rounded-full bg-[#3498F3]/10 hover:bg-[#3498F3] hover:text-white text-[#3498F3] text-[9px] font-bold transition-all flex items-center gap-1 cursor-pointer border border-[#3498F3]/20"
+                                      onClick={() => alert(`💡 Suggested new category: "${s.category}"\n\n${s.reason}\n\nThis category doesn't exist yet. You can add it to your category list to better track these transactions.`)}
+                                      title={`➕ ${s.reason}`}
+                                      className="px-2 py-0.5 rounded-full bg-[#22C55E]/10 hover:bg-[#22C55E] hover:text-white text-[#16A34A] text-[9px] font-bold transition-all flex items-center gap-1 cursor-pointer border border-[#22C55E]/30"
                                     >
-                                      <span>{CAT_ICONS[s.category] || '💡'}</span>
+                                      <span>➕</span>
                                       <span>{s.category}</span>
                                     </button>
                                   ))}

@@ -21,7 +21,7 @@ CATS = ", ".join(CATEGORIES)
 JSON_SCHEMA_TEXT = """Return ONLY valid JSON (no markdown fences) with this exact shape:
 {"results": [{"id": "<transaction id>", "category": "<one allowed category>", "confidence": <0.0-1.0>,
   "explanation": "<max 15 words, based only on the description>", "needs_review": <true|false>,
-  "suggested_categories": [{"category": "<category>", "reason": "<why this may fit>"}],
+  "suggested_categories": [{"category": "<NEW category name NOT in the existing list>", "reason": "<why this new category would better describe the transaction>"}],
   "flag": "<verified|review>", "needs_user_confirmation": <true|false>}]}
 Return one result per transaction, in the same order, using the same ids."""
 
@@ -37,15 +37,20 @@ CATEGORY_GUIDE = """Category guide:
 
 ROLE = ("You are an expert personal finance transaction categorization assistant specializing in Indian consumer transactions. "
         "Your task is to analyze transactions and assign each to the most appropriate existing category. "
-        "If a merchant is ambiguous or does not clearly fit, do not blindly assign Other: suggest up to three likely categories with reasons and mark for human review.")
+        "If a transaction does not clearly fit any existing category, assign 'Other' and suggest up to three NEW category names "
+        "that do NOT exist in the predefined list (e.g. 'Fitness', 'Travel', 'Rent', 'Insurance', 'Groceries', 'Fuel', 'Personal Care', 'Pets', 'Charity'). "
+        "These suggestions help the user expand their category list. Mark ambiguous transactions for human review.")
 
 RULES = """Instructions & Rules:
 1. Choose categories ONLY from: {cats}.
 2. If the transaction clearly belongs to one of the existing categories, assign that category and mark flag 'verified'.
-3. If the transaction does not clearly fit any existing category, do not blindly assign 'Other'. Suggest the most likely category based on merchant context.
-4. If the merchant is ambiguous or unrecognised, provide up to three possible category suggestions with reasons, set flag to 'review', and set needs_user_confirmation to true.
-5. Never invent merchant information or assume the purpose of a transaction without evidence.
-6. Payments to people (UPI transfer to a person's name) and cash withdrawals are Other.""".format(cats=CATS)
+3. If the transaction does not clearly fit any existing category, assign 'Other' and set flag to 'review'.
+4. For 'review' transactions, suggest up to three NEW category names that are NOT in the predefined list above.
+   These suggestions tell the user what new category they could create (e.g. 'Fitness', 'Travel', 'Rent', 'Insurance', 'Fuel', 'Personal Care', 'Pets', 'Charity', 'Subscriptions').
+   Do NOT suggest categories that already exist in the predefined list.
+5. Set needs_user_confirmation to true for all 'review' transactions.
+6. Never invent merchant information or assume the purpose of a transaction without evidence.
+7. Payments to people (UPI transfer to a person's name) and cash withdrawals are Other.""".format(cats=CATS)
 
 
 @dataclass
