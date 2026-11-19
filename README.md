@@ -197,10 +197,4 @@ To test all 6 core functional features via script:
 python test_project_plan_features.py
 ```
 
----
 
-## 🔒 Safety, Privacy & Boundaries
-
-- **Educational Only**: Does not connect to real bank accounts or request banking credentials.
-- **Session-Only Processing**: No financial data is retained after the session closes.
-- **Zero Hallucination Guarantee**: All arithmetic calculations are executed in Python and verified via grounding checks before display.
