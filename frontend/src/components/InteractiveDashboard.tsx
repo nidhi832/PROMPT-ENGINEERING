@@ -165,6 +165,7 @@ export const InteractiveDashboard: React.FC = () => {
   const [budgetLimit, setBudgetLimit] = useState(38000);
   const [savingsGoal, setSavingsGoal] = useState(15000);
   const [userIncome, setUserIncome] = useState(85000);
+  const [lastAnalyzedInputs, setLastAnalyzedInputs] = useState<{ budget: number; goal: number; income: number } | null>(null);
   const [budgetAdvice, setBudgetAdvice] = useState<null | {
     summary: string;
     suggestions: Array<{ title: string; detail: string; saving: number; category: string }>;
@@ -173,6 +174,12 @@ export const InteractiveDashboard: React.FC = () => {
     flags: string[];
     avgMonthly: number;
     monthsOfData: number;
+    userBudget?: number;
+    userGoal?: number;
+    userIncome?: number;
+    spendingAllowed?: number;
+    gapVsBudget?: number;
+    gapVsGoal?: number;
   }>(null);
   const [budgetLoading, setBudgetLoading] = useState(false);
   const [budgetError, setBudgetError] = useState<string | null>(null);
@@ -274,6 +281,7 @@ export const InteractiveDashboard: React.FC = () => {
       const d = await postJSON('/api/assistant/budget', {
         monthly_budget: budgetLimit || null, savings_goal: savingsGoal || null, income: userIncome || null, backend,
       });
+      setLastAnalyzedInputs({ budget: budgetLimit, goal: savingsGoal, income: userIncome });
       setBudgetAdvice({
         summary: d.summary,
         suggestions: d.suggestions.map((x: any) => ({
@@ -284,6 +292,12 @@ export const InteractiveDashboard: React.FC = () => {
         flags: d.flags || [],
         avgMonthly: d.facts?.average_monthly_total ?? 0,
         monthsOfData: d.facts?.months_of_data ?? 0,
+        userBudget: d.facts?.user_monthly_budget,
+        userGoal: d.facts?.user_monthly_savings_goal,
+        userIncome: d.facts?.user_monthly_income,
+        spendingAllowed: d.facts?.spending_allowed_for_goal,
+        gapVsBudget: d.facts?.gap_vs_budget,
+        gapVsGoal: d.facts?.gap_vs_goal,
       });
     } catch (e: any) {
       setBudgetAdvice(null);
@@ -1519,6 +1533,13 @@ export const InteractiveDashboard: React.FC = () => {
                     </div>
                   </div>
 
+                  {lastAnalyzedInputs && budgetAdvice && (lastAnalyzedInputs.budget !== budgetLimit || lastAnalyzedInputs.goal !== savingsGoal || lastAnalyzedInputs.income !== userIncome) && (
+                    <div className="mb-4 p-3 rounded-xl bg-[#FFF8E6] border border-[#FFA502] text-[#9A6400] text-xs font-semibold flex items-center gap-2 animate-pulse">
+                      <AlertTriangle className="w-4 h-4 flex-shrink-0 text-[#FFA502]" />
+                      <span>Input values changed! Click <strong>Get suggestions</strong> below to recalculate your budget advice and metrics.</span>
+                    </div>
+                  )}
+
                   <button
                     onClick={handleGetBudgetAdvice}
                     disabled={budgetLoading}
@@ -1546,31 +1567,85 @@ export const InteractiveDashboard: React.FC = () => {
                     {/* Gauge Card: every number comes from the backend's verified facts */}
                     <div className="lg:col-span-5 p-5 rounded-2xl border border-[#EEEEEE] bg-[#F7F8FA] flex flex-col justify-between">
                       <div>
-                        <span className="text-[10px] font-bold uppercase text-[#858585]">Budget Tracking</span>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-[10px] font-bold uppercase text-[#858585]">Budget Tracking</span>
+                          <span className="text-[11px] font-semibold text-[#858585]">{budgetAdvice.monthsOfData} months data</span>
+                        </div>
                         <h4 className="text-base font-bold text-[#171717] mt-1">Average Monthly Spend</h4>
-                        <div className="text-3xl font-extrabold text-[#FF665C] mt-2">
+                        <div className="text-3xl font-extrabold text-[#FF665C] mt-1">
                           ₹{budgetAdvice.avgMonthly.toLocaleString('en-IN')}
                         </div>
-                        <p className="text-xs text-[#858585] mt-1">
-                          Over {budgetAdvice.monthsOfData} months · Target limit: ₹{budgetLimit.toLocaleString('en-IN')}
-                        </p>
+
+                        {/* Budget Limit Tracker */}
+                        {budgetLimit > 0 && (
+                          <div className="mt-4 p-3 rounded-xl bg-white border border-[#EEEEEE]">
+                            <div className="flex justify-between text-xs font-bold mb-1">
+                              <span>Target Budget Limit</span>
+                              <span className="text-[#171717]">₹{budgetLimit.toLocaleString('en-IN')}</span>
+                            </div>
+                            <div className="w-full h-2 rounded-full bg-black/10 overflow-hidden my-1.5">
+                              <div
+                                className={`h-full rounded-full ${budgetAdvice.avgMonthly > budgetLimit ? 'bg-[#FF665C]' : 'bg-[#2ED573]'}`}
+                                style={{ width: `${Math.min(100, (100 * budgetAdvice.avgMonthly) / budgetLimit)}%` }}
+                              />
+                            </div>
+                            <div className="flex justify-between text-[11px] font-semibold">
+                              <span className="text-[#858585]">
+                                Utilization: {Math.round((100 * budgetAdvice.avgMonthly) / budgetLimit)}%
+                              </span>
+                              {budgetAdvice.avgMonthly > budgetLimit ? (
+                                <span className="text-[#FF665C] font-bold">
+                                  +₹{(budgetAdvice.avgMonthly - budgetLimit).toLocaleString('en-IN')} over budget
+                                </span>
+                              ) : (
+                                <span className="text-[#2ED573] font-bold">
+                                  ₹{(budgetLimit - budgetAdvice.avgMonthly).toLocaleString('en-IN')} buffer left
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Savings Goal Tracker */}
+                        {userIncome > 0 && savingsGoal > 0 && (
+                          <div className="mt-3 p-3 rounded-xl bg-white border border-[#EEEEEE]">
+                            <div className="flex justify-between text-xs font-bold mb-1">
+                              <span>Monthly Savings Goal</span>
+                              <span className="text-[#171717]">₹{savingsGoal.toLocaleString('en-IN')}</span>
+                            </div>
+                            {(() => {
+                              const actualSaving = Math.max(0, userIncome - budgetAdvice.avgMonthly);
+                              const pct = Math.round((actualSaving / savingsGoal) * 100);
+                              return (
+                                <>
+                                  <div className="w-full h-2 rounded-full bg-black/10 overflow-hidden my-1.5">
+                                    <div
+                                      className={`h-full rounded-full ${actualSaving >= savingsGoal ? 'bg-[#2ED573]' : 'bg-[#FFA502]'}`}
+                                      style={{ width: `${Math.min(100, pct)}%` }}
+                                    />
+                                  </div>
+                                  <div className="flex justify-between text-[11px] font-semibold">
+                                    <span className="text-[#858585]">
+                                      Saving: ₹{Math.round(actualSaving).toLocaleString('en-IN')}/mo ({pct}%)
+                                    </span>
+                                    {actualSaving >= savingsGoal ? (
+                                      <span className="text-[#2ED573] font-bold">✓ Goal achieved!</span>
+                                    ) : (
+                                      <span className="text-[#FFA502] font-bold">
+                                        ₹{Math.round(savingsGoal - actualSaving).toLocaleString('en-IN')} to go
+                                      </span>
+                                    )}
+                                  </div>
+                                </>
+                              );
+                            })()}
+                          </div>
+                        )}
                       </div>
 
-                      {budgetLimit > 0 && (
-                        <div className="my-4">
-                          <div className="flex justify-between text-xs font-bold mb-1">
-                            <span>Utilization</span>
-                            <span className="text-[#FF665C]">{Math.round((100 * budgetAdvice.avgMonthly) / budgetLimit)}%</span>
-                          </div>
-                          <div className="w-full h-3 rounded-full bg-black/10 overflow-hidden">
-                            <div className="h-full bg-[#FF665C] rounded-full" style={{ width: `${Math.min(100, (100 * budgetAdvice.avgMonthly) / budgetLimit)}%` }} />
-                          </div>
-                        </div>
-                      )}
-
-                      <div className={`p-2.5 rounded-xl bg-white border text-[11px] font-bold flex items-center gap-1.5 ${budgetAdvice.grounded ? 'border-[#2ED573] text-[#2ED573]' : 'border-[#FF665C] text-[#FF665C]'}`}>
+                      <div className={`mt-4 p-2.5 rounded-xl bg-white border text-[11px] font-bold flex items-center gap-1.5 ${budgetAdvice.grounded ? 'border-[#2ED573] text-[#2ED573]' : 'border-[#FF665C] text-[#FF665C]'}`}>
                         {budgetAdvice.grounded ? <ShieldCheck className="w-4 h-4 flex-shrink-0" /> : <AlertTriangle className="w-4 h-4 flex-shrink-0" />}
-                        <span>{budgetAdvice.grounded ? 'Grounding check passed: every ₹ figure matches Python totals' : 'Grounding check FAILED: some figures were not in the verified facts'}</span>
+                        <span>{budgetAdvice.grounded ? 'Grounding check passed: figures match Python totals' : 'Grounding check FAILED'}</span>
                       </div>
                       {budgetAdvice.flags.map((f, k) => (
                         <p key={k} className="mt-2 text-[11px] text-[#C0392B]">Guard-rail: {f}</p>

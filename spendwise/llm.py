@@ -504,15 +504,46 @@ class OfflineSimulator(LLM):
             t, d = tips[c]
             sugg.append({"title": t, "detail": f"{d} You average ₹{v:,.2f} a month on {c}.", "category": c,
                          "estimated_monthly_saving": round(v * 0.15, 2)})
-        gap = f.get("gap_vs_budget", f.get("gap_vs_goal"))
-        if gap is None:
-            summary = f"You average ₹{f['average_monthly_total']:,.2f} a month over {f['months_of_data']} months."
-        elif gap > 0:
-            summary = (f"You average ₹{f['average_monthly_total']:,.2f} a month, which is ₹{gap:,.2f} above your "
-                       "target. The suggestions below focus on your largest flexible categories.")
+        has_budget = f.get("gap_vs_budget") is not None
+        has_goal = f.get("gap_vs_goal") is not None
+        avg_total = f["average_monthly_total"]
+
+        if has_budget and has_goal:
+            b_gap = f["gap_vs_budget"]
+            g_gap = f["gap_vs_goal"]
+            b_val = f["user_monthly_budget"]
+            s_val = f["user_monthly_savings_goal"]
+            i_val = f["user_monthly_income"]
+            b_str = (f"₹{b_gap:,.2f} over your ₹{b_val:,.2f} budget" if b_gap > 0 
+                     else f"₹{abs(b_gap):,.2f} under your ₹{b_val:,.2f} budget")
+            if g_gap <= 0:
+                g_str = f"on track for your ₹{s_val:,.2f} savings goal (income: ₹{i_val:,.2f})"
+            else:
+                g_str = f"₹{g_gap:,.2f} short of your ₹{s_val:,.2f} savings goal (income: ₹{i_val:,.2f})"
+            summary = (f"You average ₹{avg_total:,.2f} a month ({b_str}). You are {g_str}. "
+                       "The recommendations below highlight potential savings in your flexible spending.")
+        elif has_budget:
+            b_gap = f["gap_vs_budget"]
+            b_val = f["user_monthly_budget"]
+            if b_gap > 0:
+                summary = (f"You average ₹{avg_total:,.2f} a month, which is ₹{b_gap:,.2f} above your "
+                           f"₹{b_val:,.2f} target limit.")
+            else:
+                summary = (f"You average ₹{avg_total:,.2f} a month, which is ₹{abs(b_gap):,.2f} under your "
+                           f"₹{b_val:,.2f} target limit.")
+        elif has_goal:
+            g_gap = f["gap_vs_goal"]
+            s_val = f["user_monthly_savings_goal"]
+            i_val = f["user_monthly_income"]
+            p_val = f.get("spending_allowed_for_goal", 0.0)
+            if g_gap <= 0:
+                summary = (f"You average ₹{avg_total:,.2f} a month. With an income of ₹{i_val:,.2f}, "
+                           f"you are on track for your ₹{s_val:,.2f} savings goal.")
+            else:
+                summary = (f"You average ₹{avg_total:,.2f} a month. To reach your ₹{s_val:,.2f} "
+                           f"savings goal on ₹{i_val:,.2f} income, monthly spending must stay below ₹{p_val:,.2f} (gap: ₹{g_gap:,.2f}).")
         else:
-            summary = (f"You average ₹{f['average_monthly_total']:,.2f} a month, ₹{abs(gap):,.2f} under your "
-                       "target - nice work. These ideas can grow the buffer further.")
+            summary = f"You average ₹{avg_total:,.2f} a month over {f['months_of_data']} months."
         return json.dumps({"summary": summary, "suggestions": sugg, "missing_information": missing})
 
     def _report(self, user: str) -> str:
