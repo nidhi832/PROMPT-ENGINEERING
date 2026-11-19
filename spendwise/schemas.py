@@ -11,7 +11,7 @@ Category = Literal["Food", "Transport", "Shopping", "Bills", "Entertainment", "H
 
 
 class CategorySuggestion(BaseModel):
-    category: Category
+    category: str
     reason: str
 
 
