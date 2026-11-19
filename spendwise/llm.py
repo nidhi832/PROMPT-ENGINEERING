@@ -12,6 +12,12 @@ import hashlib
 import json
 import os
 import socket
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 import re
 import time
 import urllib.error
